@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-vault-yellow: #F1F78C;
+  --color-vault-cream: #F8F9E9;
+  --color-vault-green: #1ECC62;
+  --color-vault-dark: #002D0F;
+  --color-vault-darker: #012F12;
+
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #F8F9E9;
+    color: #002D0F;
+    font-family: var(--font-sans);
+  }
+
+  /* Custom Vault Green Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F8F9E9;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1ECC62;
+    border-radius: 9999px;
+    border: 2px solid #F8F9E9;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #16b856;
+  }
+
+  * {
+    scrollbar-color: #1ECC62 #F8F9E9;
+    scrollbar-width: thin;
+  }
+}
