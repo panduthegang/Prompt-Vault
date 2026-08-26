@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../components/Landing-Page/Hero';
 import Stats from '../components/Landing-Page/Stats';
 import Process from '../components/Landing-Page/Process';
+import FAQ from '../components/Landing-Page/FAQ';
 import Footer from '../components/Footer';
 
 export default function LandingPage() {
@@ -16,11 +17,15 @@ export default function LandingPage() {
       {/* Second Section: Process */}
       <Process />
 
-      {/* Third Section: World-Class Footer */}
+      {/* Third Section: FAQ */}
+      <FAQ />
+
+      {/* Fourth Section: World-Class Footer */}
       <Footer />
     </div>
   );
 }
+
 
 
 

@@ -10,57 +10,57 @@ export default function Hero({ className = '' }: HeroProps) {
     <section className={`w-full flex-1 min-h-0 flex flex-col border-b-2 border-vault-dark ${className}`}>
       <div className="grid grid-cols-1 lg:grid-cols-2 w-full flex-1 min-h-0">
         {/* Left Column: Solid Yellow Panel with Right Border */}
-        <div className="bg-vault-yellow px-6 sm:px-8 md:px-10 lg:px-12 xl:px-14 py-4 sm:py-6 lg:py-6 xl:py-8 flex flex-col justify-between space-y-4 lg:space-y-0 lg:border-r-2 border-vault-dark overflow-hidden">
+        <div className="bg-vault-yellow px-4 sm:px-6 md:px-8 lg:px-8 xl:px-12 py-6 sm:py-8 lg:py-10 xl:py-12 flex flex-col justify-between items-center text-center space-y-6 lg:space-y-0 lg:border-r-2 border-vault-dark overflow-hidden">
           {/* Top Rating & Avatar Group */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <div className="flex -space-x-2.5 overflow-hidden">
               <img
-                className="inline-block h-7 w-7 sm:h-8 sm:w-8 rounded-full ring-2 ring-vault-yellow object-cover"
+                className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-vault-yellow object-cover"
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
                 alt="Builder Avatar 1"
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
               <img
-                className="inline-block h-7 w-7 sm:h-8 sm:w-8 rounded-full ring-2 ring-vault-yellow object-cover"
+                className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-vault-yellow object-cover"
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
                 alt="Builder Avatar 2"
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
               <img
-                className="inline-block h-7 w-7 sm:h-8 sm:w-8 rounded-full ring-2 ring-vault-yellow object-cover"
+                className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-vault-yellow object-cover"
                 src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80"
                 alt="Builder Avatar 3"
                 loading="lazy"
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center text-vault-dark text-[10px] sm:text-[11px] font-bold tracking-widest" aria-hidden="true">
+            <div className="flex flex-col text-left">
+              <div className="flex items-center text-vault-dark text-[11px] sm:text-xs font-bold tracking-widest" aria-hidden="true">
                 ★★★★★
               </div>
-              <span className="font-sans text-[11px] sm:text-xs lg:text-[13px] text-vault-dark/85 font-medium leading-tight">
+              <span className="font-sans text-xs sm:text-[13px] lg:text-sm text-vault-dark/85 font-medium leading-tight">
                 Rated 4.9 / 5 by 4,900+ builders
               </span>
             </div>
           </div>
 
           {/* Center Headline & Subtitle */}
-          <div className="space-y-2.5 sm:space-y-3.5 my-auto py-2">
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[36px] xl:text-[48px] 2xl:text-[58px] leading-[0.92] tracking-tight text-vault-dark font-normal uppercase">
+          <div className="space-y-3.5 sm:space-y-4 my-auto py-2 sm:py-3 w-full max-w-2xl xl:max-w-3xl mx-auto flex flex-col items-center">
+            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[56px] xl:text-[72px] 2xl:text-[84px] leading-[0.93] tracking-tight text-vault-dark font-normal uppercase text-center w-full">
               <span className="block">YOU DESERVE TO</span>
               <span className="block">SAVE WHAT</span>
-              <span className="block">INSPIRES YOU</span>
+              <span className="block italic">INSPIRES YOU</span>
             </h1>
 
-            <p className="font-sans text-xs sm:text-sm lg:text-xs xl:text-sm 2xl:text-base text-vault-dark/80 max-w-lg leading-relaxed font-normal">
+            <p className="font-sans text-xs sm:text-sm md:text-[15px] xl:text-[16.5px] 2xl:text-[18px] text-vault-dark/85 max-w-xl xl:max-w-2xl leading-relaxed font-normal pt-1 sm:pt-2 text-center">
               We know what it feels like to lose game-changing prompts — the messy notes, the lost bookmarks, the forgotten AI workflows. At Prompt Vault, our only job is to give you instant access to your best creative genius, safely and permanently.
             </p>
           </div>
 
           {/* Bottom Action CTAs */}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             {/* Two-tone Green & Darker Green Expanding Pill Button */}
             <a
               id="hero-primary-cta"
@@ -68,7 +68,7 @@ export default function Hero({ className = '' }: HeroProps) {
               className="group relative inline-flex items-stretch cursor-pointer select-none active:scale-[0.97] transition-transform duration-200"
             >
               {/* Front Green Pill */}
-              <span className="relative z-10 inline-flex items-center justify-center bg-vault-green text-vault-dark border border-vault-dark rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-sans font-semibold text-xs sm:text-sm lg:text-[14px] tracking-tight shadow-xs group-hover:brightness-[1.03] transition-all duration-300">
+              <span className="relative z-10 inline-flex items-center justify-center bg-vault-green text-vault-dark border border-vault-dark rounded-full px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 font-sans font-semibold text-xs sm:text-sm lg:text-[15px] tracking-tight shadow-xs group-hover:brightness-[1.03] transition-all duration-300">
                 Get Started Free
               </span>
 
@@ -82,7 +82,7 @@ export default function Hero({ className = '' }: HeroProps) {
             <a
               id="hero-secondary-cta"
               href="#how-it-works"
-              className="inline-flex items-center justify-center bg-transparent border-2 border-vault-dark text-vault-dark font-sans font-semibold text-xs sm:text-sm lg:text-[13.5px] px-5 sm:px-6 py-2 rounded-full hover:bg-vault-dark hover:text-vault-cream active:scale-[0.97] transition-all duration-300"
+              className="inline-flex items-center justify-center bg-transparent border-2 border-vault-dark text-vault-dark font-sans font-semibold text-xs sm:text-sm lg:text-[14.5px] px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 rounded-full hover:bg-vault-dark hover:text-vault-cream active:scale-[0.97] transition-all duration-300"
             >
               <span>See How It Works</span>
             </a>
