@@ -92,7 +92,7 @@ export default function Hero({ className = '' }: HeroProps) {
         {/* Right Column: Visual Photo Panel */}
         <div className="relative w-full h-full min-h-[260px] lg:min-h-0 bg-[#E8EFE8] flex items-center justify-center overflow-hidden border-t-2 lg:border-t-0 border-vault-dark">
           <img
-            src="/Hero.png"
+            src="https://prompt-vault-by-harsh.vercel.app/Hero.png"
             alt="Prompt Vault Hero Visual"
             className="w-full h-full object-cover object-center"
             loading="eager"
