@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Internal Documentation & Agent Memory
+CONTEXT.md
+DESIGN.md
+MEMORY.md
