@@ -66,23 +66,8 @@ export default function Process({ className = '' }: ProcessProps) {
               </div>
             </div>
 
-            {/* Card 03 - Top Right */}
+            {/* Card 02 - Top Right */}
             <div className="border-b-2 border-vault-dark p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-4 hover:bg-vault-yellow/20 transition-colors duration-150">
-              <span className="font-serif italic text-4xl sm:text-5xl lg:text-6xl text-vault-green font-normal leading-none select-none">
-                03
-              </span>
-              <div className="space-y-2">
-                <h3 className="font-serif text-xl sm:text-2xl text-vault-dark font-normal tracking-tight">
-                  Instant Search — Always Fast
-                </h3>
-                <p className="font-sans text-xs sm:text-sm text-vault-dark/80 leading-relaxed">
-                  Full-text search across every saved prompt and file means nothing you save ever gets lost in the scroll again.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 02 - Bottom Left */}
-            <div className="border-b-2 sm:border-b-0 sm:border-r-2 border-vault-dark p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-4 hover:bg-vault-yellow/20 transition-colors duration-150">
               <span className="font-serif italic text-4xl sm:text-5xl lg:text-6xl text-vault-green font-normal leading-none select-none">
                 02
               </span>
@@ -92,6 +77,21 @@ export default function Process({ className = '' }: ProcessProps) {
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-vault-dark/80 leading-relaxed">
                   Organize by project, topic, or tool. Prompt Vault adapts to how you think, not the other way around.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 03 - Bottom Left */}
+            <div className="border-b-2 sm:border-b-0 sm:border-r-2 border-vault-dark p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-4 hover:bg-vault-yellow/20 transition-colors duration-150">
+              <span className="font-serif italic text-4xl sm:text-5xl lg:text-6xl text-vault-green font-normal leading-none select-none">
+                03
+              </span>
+              <div className="space-y-2">
+                <h3 className="font-serif text-xl sm:text-2xl text-vault-dark font-normal tracking-tight">
+                  Instant Search — Always Fast
+                </h3>
+                <p className="font-sans text-xs sm:text-sm text-vault-dark/80 leading-relaxed">
+                  Full-text search across every saved prompt and file means nothing you save ever gets lost in the scroll again.
                 </p>
               </div>
             </div>
