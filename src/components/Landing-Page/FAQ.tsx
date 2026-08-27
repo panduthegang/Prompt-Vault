@@ -67,7 +67,7 @@ export default function FAQ({ className = '' }: FAQProps) {
   return (
     <section
       id="faqs"
-      className={`w-full bg-vault-yellow text-vault-dark py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 border-t-2 border-vault-dark ${className}`}
+      className={`w-full bg-vault-yellow text-vault-dark py-14 sm:py-18 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 rounded-xl sm:rounded-2xl overflow-hidden ${className}`}
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
@@ -126,9 +126,8 @@ export default function FAQ({ className = '' }: FAQProps) {
                 <div
                   key={item.id}
                   id={item.id}
-                  className={`w-full bg-vault-cream border-2 border-vault-dark rounded-[20px] sm:rounded-[24px] transition-all duration-300 overflow-hidden ${
-                    isOpen ? 'shadow-md ring-2 ring-vault-dark/10' : 'hover:border-vault-dark/80 hover:bg-vault-cream/95'
-                  }`}
+                  className={`w-full bg-vault-cream border-2 border-vault-dark rounded-[20px] sm:rounded-[24px] transition-all duration-300 overflow-hidden ${isOpen ? 'shadow-md ring-2 ring-vault-dark/10' : 'hover:border-vault-dark/80 hover:bg-vault-cream/95'
+                    }`}
                 >
                   {/* Header Button */}
                   <button
@@ -144,11 +143,10 @@ export default function FAQ({ className = '' }: FAQProps) {
 
                     {/* Eye Icon Circle Indicator */}
                     <div
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full shrink-0 flex items-center justify-center border-2 border-vault-dark transition-all duration-300 ${
-                        isOpen
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full shrink-0 flex items-center justify-center border-2 border-vault-dark transition-all duration-300 ${isOpen
                           ? 'bg-vault-green text-vault-dark shadow-xs scale-105'
                           : 'bg-vault-dark text-vault-green group-hover:scale-105'
-                      }`}
+                        }`}
                       aria-hidden="true"
                     >
                       {isOpen ? (
@@ -179,9 +177,8 @@ export default function FAQ({ className = '' }: FAQProps) {
                     id={`${item.id}-answer`}
                     role="region"
                     aria-labelledby={item.id}
-                    className={`grid transition-all duration-300 ease-in-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
-                    }`}
+                    className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                      }`}
                   >
                     <div className="overflow-hidden">
                       <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">

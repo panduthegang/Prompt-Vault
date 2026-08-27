@@ -10,9 +10,7 @@ export default function Navbar({ className = '' }: NavbarProps) {
 
   const navLinks = [
     { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Browse Prompts', href: '#browse' },
-    { label: 'Skill Library', href: '#skills' },
-    { label: 'Pricing', href: '#pricing' },
+    { label: 'Why Prompt Vault', href: '#comparison' },
     { label: 'FAQs', href: '#faqs' },
   ];
 
