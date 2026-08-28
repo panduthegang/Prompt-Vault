@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowUpRight,
   ArrowLeft,
@@ -15,7 +17,14 @@ export interface SigninProps {
   onSwitchToSignup?: () => void;
 }
 
+const fadeSlideVariants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
+};
+
 export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -50,7 +59,7 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
           if (onBackToHome) {
             onBackToHome();
           } else {
-            window.location.hash = '';
+            navigate('/');
           }
         }}
         className="absolute top-4 left-4 sm:top-8 sm:left-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-vault-cream border-2 border-vault-dark text-vault-dark font-sans text-xs sm:text-sm font-semibold hover:bg-vault-yellow transition-all duration-200 shadow-xs cursor-pointer select-none group z-30"
@@ -60,9 +69,16 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
       </button>
 
       {/* Main 2-Grid Modal Window Container */}
-      <div className="w-full max-w-4xl bg-vault-cream border-2 border-vault-dark rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-sm grid grid-cols-1 md:grid-cols-12 relative z-10 my-auto mt-14 sm:mt-auto">
+      <motion.div
+        layoutId="auth-card"
+        className="w-full max-w-4xl bg-vault-cream border-2 border-vault-dark rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-sm grid grid-cols-1 md:grid-cols-12 relative z-10 my-auto mt-14 sm:mt-auto"
+      >
         {/* Left Column (5 cols): Atmospheric Noise & Vault Art (Hidden on Mobile) */}
-        <div className="hidden md:flex md:col-span-5 bg-vault-dark text-vault-cream p-8 sm:p-10 flex-col justify-between relative overflow-hidden border-r-2 border-vault-dark md:min-h-[580px]">
+        <motion.div
+          layoutId="auth-left-panel"
+          layout
+          className="hidden md:flex md:col-span-5 bg-vault-dark text-vault-cream p-8 sm:p-10 flex-col justify-between relative overflow-hidden border-r-2 border-vault-dark md:min-h-[580px]"
+        >
           {/* Subtle noise texture SVG overlay */}
           <div
             className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
@@ -84,18 +100,32 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
 
           {/* Center Graphic & Editorial Statement */}
           <div className="relative z-10 my-auto py-6 space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-vault-cream text-vault-dark border-2 border-vault-dark flex items-center justify-center rotate-[-3deg] hover:rotate-0 transition-transform duration-300">
+            <motion.div
+              layoutId="brand-badge"
+              className="w-14 h-14 rounded-2xl bg-vault-cream text-vault-dark border-2 border-vault-dark flex items-center justify-center rotate-[-3deg] hover:rotate-0 transition-transform duration-300"
+            >
               <ShieldCheck className="w-7 h-7 text-vault-dark stroke-[2]" />
-            </div>
+            </motion.div>
 
-            <h3 className="font-serif text-2xl sm:text-3xl text-vault-cream font-normal leading-tight tracking-tight uppercase">
-              <span className="block">SAVE WHAT</span>
-              <span className="block italic text-vault-yellow">INSPIRES YOU</span>
-            </h3>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key="signin-headline"
+                variants={fadeSlideVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="space-y-4"
+              >
+                <h3 className="font-serif text-2xl sm:text-3xl text-vault-cream font-normal leading-tight tracking-tight uppercase">
+                  <span className="block">SAVE WHAT</span>
+                  <span className="block italic text-vault-yellow">INSPIRES YOU</span>
+                </h3>
 
-            <p className="font-sans text-xs sm:text-[13px] text-vault-cream/75 leading-relaxed max-w-xs">
-              Instant 1-click clipboard access to your master prompts, agent skill.md rules, and AI parameters.
-            </p>
+                <p className="font-sans text-xs sm:text-[13px] text-vault-cream/75 leading-relaxed max-w-xs">
+                  Instant 1-click clipboard access to your master prompts, agent skill.md rules, and AI parameters.
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Bottom Trust Badge */}
@@ -106,25 +136,37 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
             </div>
             <span className="text-[11px] text-vault-cream/50">v2.1</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column (7 cols): Clean Signin Form */}
-        <div className="col-span-12 md:col-span-7 bg-vault-cream p-6 sm:p-10 lg:p-12 flex flex-col justify-between space-y-6">
+        <motion.div
+          layout
+          className="col-span-12 md:col-span-7 bg-vault-cream p-6 sm:p-10 lg:p-12 flex flex-col justify-between space-y-6"
+        >
           {/* Header & Mobile Brand Indicator */}
-          <div className="space-y-2">
-            <span className="font-serif italic text-xl text-vault-dark font-normal tracking-tight block md:hidden">
-              Prompt Vault
-            </span>
-            <span className="font-sans text-xs font-bold uppercase tracking-widest text-vault-dark/60 block">
-              Welcome Back
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-vault-dark font-normal tracking-tight uppercase">
-              SIGN IN TO YOUR VAULT
-            </h2>
-            <p className="font-sans text-xs sm:text-sm text-vault-dark/75">
-              Enter your email and password to access your private repository.
-            </p>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="signin-header"
+              variants={fadeSlideVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="space-y-2"
+            >
+              <span className="font-serif italic text-xl text-vault-dark font-normal tracking-tight block md:hidden">
+                Prompt Vault
+              </span>
+              <span className="font-sans text-xs font-bold uppercase tracking-widest text-vault-dark/60 block">
+                Welcome Back
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-vault-dark font-normal tracking-tight uppercase">
+                SIGN IN TO YOUR VAULT
+              </h2>
+              <p className="font-sans text-xs sm:text-sm text-vault-dark/75">
+                Enter your email and password to access your private repository.
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
           {submitted ? (
             /* Success confirmation state */
@@ -195,7 +237,7 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-vault-dark/60 hover:text-vault-dark focus:outline-none"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-vault-dark/60 hover:text-vault-dark focus:outline-none cursor-pointer"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? (
@@ -208,10 +250,10 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
                 </div>
 
                 {/* Primary Expanding Submit Button */}
-                <div className="pt-1">
+                <motion.div layoutId="auth-submit" className="pt-1">
                   <button
                     type="submit"
-                    disabled={isLoading}  
+                    disabled={isLoading}
                     className="group relative w-full inline-flex items-stretch cursor-pointer select-none active:scale-[0.98] transition-transform duration-200"
                   >
                     <span className="relative z-10 w-full inline-flex items-center justify-center bg-vault-green text-vault-dark border-2 border-vault-dark rounded-full py-3 font-sans font-bold text-xs sm:text-sm tracking-tight shadow-xs group-hover:brightness-[1.03] transition-all duration-300">
@@ -221,7 +263,7 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
                       <ArrowUpRight className="w-4 h-4 stroke-[2.5] shrink-0 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-105" />
                     </span>
                   </button>
-                </div>
+                </motion.div>
               </form>
 
               {/* Or Divider */}
@@ -239,7 +281,6 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
                   type="button"
                   className="w-full flex items-center justify-center gap-3 py-2.5 sm:py-3 px-5 rounded-full bg-white border-2 border-vault-dark text-vault-dark font-sans text-xs sm:text-sm font-semibold hover:bg-vault-yellow/40 active:scale-[0.98] transition-all duration-200 shadow-2xs cursor-pointer select-none"
                 >
-                  {/* Google G SVG */}
                   <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
                     <path
                       fill="#4285F4"
@@ -266,25 +307,34 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
 
           {/* Bottom Switch to Sign Up */}
           <div className="text-center pt-2 border-t border-vault-dark/15">
-            <p className="font-sans text-xs sm:text-[13px] text-vault-dark/80">
-              Don't have a vault yet?{' '}
-              <button
-                type="button"
-                onClick={() => {
-                  if (onSwitchToSignup) {
-                    onSwitchToSignup();
-                  } else {
-                    window.location.hash = '#signup';
-                  }
-                }}
-                className="font-bold text-vault-dark hover:underline underline-offset-4 cursor-pointer"
+            <AnimatePresence mode="wait">
+              <motion.p
+                key="signin-switch-text"
+                variants={fadeSlideVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="font-sans text-xs sm:text-[13px] text-vault-dark/80"
               >
-                Create one free ↗
-              </button>
-            </p>
+                Don't have a vault yet?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onSwitchToSignup) {
+                      onSwitchToSignup();
+                    } else {
+                      navigate('/signup');
+                    }
+                  }}
+                  className="font-bold text-vault-dark hover:underline underline-offset-4 cursor-pointer"
+                >
+                  Create one free ↗
+                </button>
+              </motion.p>
+            </AnimatePresence>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 
 export interface HeroProps {
@@ -62,9 +63,9 @@ export default function Hero({ className = '' }: HeroProps) {
           {/* Bottom Action CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             {/* Two-tone Green & Darker Green Expanding Pill Button */}
-            <a
+            <Link
               id="hero-primary-cta"
-              href="#get-started"
+              to="/signin"
               className="group relative inline-flex items-stretch cursor-pointer select-none active:scale-[0.97] transition-transform duration-200"
             >
               {/* Front Green Pill */}
@@ -76,7 +77,7 @@ export default function Hero({ className = '' }: HeroProps) {
               <span className="relative -ml-6 sm:-ml-7 z-0 inline-flex items-center justify-center bg-vault-darker text-vault-green border border-vault-dark rounded-r-full pl-7 sm:pl-8 pr-3.5 sm:pr-4 max-w-0 opacity-0 -translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-w-[68px] sm:group-hover:max-w-[74px] group-hover:opacity-100 group-hover:translate-x-0 overflow-hidden">
                 <ArrowUpRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-105" />
               </span>
-            </a>
+            </Link>
 
             {/* Outlined Pill Button */}
             <a
