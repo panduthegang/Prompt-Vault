@@ -576,7 +576,7 @@ export default function Dashboard() {
 
       {/* QUICK ADD PROMPT MODAL */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-vault-dark/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-vault-cream border-2 border-vault-dark rounded-[28px] p-6 sm:p-8 space-y-5 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             <button
               type="button"

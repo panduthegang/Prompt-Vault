@@ -11,6 +11,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   MoreHorizontal,
+  LogOut,
   X,
 } from 'lucide-react';
 
@@ -42,6 +43,10 @@ export default function Sidebar({
     { id: 'community', label: 'Community', icon: Users, count: 4 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
+
+  const handleLogout = () => {
+    navigate('/');
+  };
 
   // First 3 items for mobile quick bottom bar
   const mobileQuickItems = navItems.slice(0, 3);
@@ -164,29 +169,65 @@ export default function Sidebar({
           </nav>
         </div>
 
-        {/* Bottom User Profile with Tooltip */}
-        <div
-          className={`pt-5 border-t border-vault-cream/15 flex items-center ${isCollapsed ? 'justify-center relative group/user' : 'gap-3'
-            }`}
-        >
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer"
-          />
+        {/* Bottom User Profile & Logout */}
+        <div className="pt-4 border-t border-vault-cream/15">
           {!isCollapsed ? (
-            <div>
-              <span className="font-sans text-xs font-bold text-vault-cream block leading-snug">
-                Harsh Rathod
-              </span>
-              <span className="font-sans text-[11px] text-vault-cream/60 block">
-                harsh@vault.ai
-              </span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                  alt="User Avatar"
+                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer"
+                />
+                <div className="min-w-0">
+                  <span className="font-sans text-xs font-bold text-vault-cream block leading-snug truncate">
+                    Harsh Rathod
+                  </span>
+                  <span className="font-sans text-[11px] text-vault-cream/60 block truncate">
+                    harsh@vault.ai
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-8 h-8 rounded-xl bg-vault-cream/10 hover:bg-red-500/20 text-vault-cream/70 hover:text-red-300 border border-vault-cream/15 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                title="Log Out"
+                aria-label="Log Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
           ) : (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/user:opacity-100 group-hover/user:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
-              <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-lg font-sans text-xs font-bold">
-                Harsh Rathod <span className="text-[10px] font-normal text-vault-dark/60 block">harsh@vault.ai</span>
+            <div className="flex flex-col items-center gap-2.5">
+              <div className="relative group/user flex items-center justify-center">
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                  alt="User Avatar"
+                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer"
+                />
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/user:opacity-100 group-hover/user:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
+                  <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-lg font-sans text-xs font-bold">
+                    Harsh Rathod <span className="text-[10px] font-normal text-vault-dark/60 block">harsh@vault.ai</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dedicated Collapsed Log Out Icon Button */}
+              <div className="relative group/logout flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-9 h-9 rounded-xl bg-vault-cream/10 hover:bg-red-500/20 text-vault-cream/70 hover:text-red-300 border border-vault-cream/15 flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="Log Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/logout:opacity-100 group-hover/logout:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
+                  <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1 rounded-xl shadow-lg font-sans text-xs font-bold">
+                    Log Out
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -247,7 +288,7 @@ export default function Sidebar({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsBottomSheetOpen(false)}
-              className="fixed inset-0 bg-vault-dark/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-black/60"
             />
 
             {/* Draggable Bottom Sheet Modal */}
@@ -332,7 +373,7 @@ export default function Sidebar({
                 })}
               </div>
 
-              {/* Bottom Sheet User Profile Card */}
+              {/* Bottom Sheet User Profile Card & Logout */}
               <div className="pt-2.5 border-t border-vault-dark/10 flex items-center justify-between bg-white/60 p-3 rounded-2xl border border-vault-dark/10">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <img
@@ -345,14 +386,19 @@ export default function Sidebar({
                       Harsh Rathod
                     </span>
                     <span className="font-sans text-[10px] text-vault-dark/60 block truncate">
-                      harsh@vault.ai • Pro Tier
+                      harsh@vault.ai
                     </span>
                   </div>
                 </div>
 
-                <span className="font-sans text-[10px] uppercase font-bold tracking-widest text-vault-dark/50 bg-vault-cream px-2 py-0.5 rounded-md border border-vault-dark/10 shrink-0">
-                  v2.1
-                </span>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-700 border border-red-500/30 text-xs font-bold cursor-pointer transition-colors shrink-0"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Log Out</span>
+                </button>
               </div>
             </motion.div>
           </div>
