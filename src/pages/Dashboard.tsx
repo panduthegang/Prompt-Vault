@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import {
   Sparkles,
-  Search,
   Bell,
-  ChevronDown,
-  ArrowUpRight,
   Copy,
   Check,
   Star,
@@ -14,7 +11,6 @@ import {
   MoreHorizontal,
   Filter,
   X,
-  Plus,
   TrendingUp,
   Layers,
 } from 'lucide-react';
