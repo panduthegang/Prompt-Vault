@@ -38,6 +38,9 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
     setTimeout(() => {
       setIsLoading(false);
       setSubmitted(true);
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 800);
     }, 900);
   };
 
@@ -279,6 +282,7 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
               <div>
                 <button
                   type="button"
+                  onClick={() => navigate('/dashboard')}
                   className="w-full flex items-center justify-center gap-3 py-2.5 sm:py-3 px-5 rounded-full bg-white border-2 border-vault-dark text-vault-dark font-sans text-xs sm:text-sm font-semibold hover:bg-vault-yellow/40 active:scale-[0.98] transition-all duration-200 shadow-2xs cursor-pointer select-none"
                 >
                   <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
