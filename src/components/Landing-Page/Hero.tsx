@@ -97,6 +97,8 @@ export default function Hero({ className = '' }: HeroProps) {
             alt="Prompt Vault Hero Visual"
             className="w-full h-full object-cover object-center"
             loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
       </div>
