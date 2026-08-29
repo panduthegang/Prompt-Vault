@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /signin
+Allow: /signup
+
+# Disallow private user workspaces
+Disallow: /dashboard
+
+# Sitemaps
+Sitemap: https://prompt-vault-by-harsh.vercel.app/sitemap.xml
