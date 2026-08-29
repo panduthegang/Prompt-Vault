@@ -28,7 +28,7 @@ export default function Sidebar({
   onTabChange,
   promptCount,
   onOpenAddModal,
-  isCollapsed = false,
+  isCollapsed = true,
   onToggleCollapse,
 }: SidebarProps) {
   const navigate = useNavigate();

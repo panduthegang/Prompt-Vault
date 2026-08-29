@@ -157,7 +157,7 @@ const COMMUNITY_PROMPTS: CommunityItem[] = [
 // ==========================================
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
   const [prompts, setPrompts] = useState<PromptItem[]>(INITIAL_PROMPTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('All');
