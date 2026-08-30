@@ -32,7 +32,5 @@
     <text x="3" y="3" class="logo-text" fill="#001807" opacity="0.6">PV</text>
     <text x="0" y="0" class="logo-text">PV</text>
   </g>
-
-  <!-- Neo-Brutalist Brand Accent Indicator Dot -->
-  <circle cx="396" cy="160" r="22" class="accent-dot" stroke="#002D0F" stroke-width="6" />
+  
 </svg>
