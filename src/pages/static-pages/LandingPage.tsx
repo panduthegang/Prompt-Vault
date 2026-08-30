@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Landing-Page/Hero';
-import Stats from '../components/Landing-Page/Stats';
-import Process from '../components/Landing-Page/Process';
-import Comparison from '../components/Landing-Page/Comparison';
-import FAQ from '../components/Landing-Page/FAQ';
-import Footer from '../components/Footer';
+import Navbar from '../../components/Navbar';
+import Hero from '../../components/Landing-Page/Hero';
+import Stats from '../../components/Landing-Page/Stats';
+import Process from '../../components/Landing-Page/Process';
+import Comparison from '../../components/Landing-Page/Comparison';
+import FAQ from '../../components/Landing-Page/FAQ';
+import Footer from '../../components/Footer';
 
 export default function LandingPage() {
   return (
