@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight, Github, Twitter, Disc as Discord, Linkedin, ShieldCheck } from 'lucide-react';
 
 export interface FooterProps {
@@ -15,18 +16,16 @@ export default function Footer({ className = '' }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand Col (~4 cols) */}
           <div className="lg:col-span-5 space-y-6">
-            <a
-              href="#"
+            <Link
+              to="/"
               className="font-serif italic text-3xl sm:text-4xl text-vault-cream font-normal tracking-tight hover:text-vault-yellow transition-colors inline-block"
             >
               Prompt Vault
-            </a>
+            </Link>
 
             <p className="font-sans text-sm text-vault-cream/75 max-w-sm leading-relaxed font-normal">
               The premier repository for high-impact AI prompts, web discovery bookmarks, and custom skill.md systems. Built for creators who refuse to lose inspiration.
             </p>
-
-            
           </div>
 
           {/* Nav Column 1 - Product */}
@@ -36,11 +35,11 @@ export default function Footer({ className = '' }: FooterProps) {
             </h3>
             <ul className="space-y-2.5">
               {[
-                { label: 'Prompt Search', href: '#search' },
-                { label: 'Skill.md Library', href: '#skills' },
-                { label: 'Chrome Extension', href: '#extension' },
-                { label: 'CLI & API Sync', href: '#cli' },
-                { label: 'Changelog', href: '#changelog' },
+                { label: 'Prompt Search', href: '/#search' },
+                { label: 'Skill.md Library', href: '/#skills' },
+                { label: 'Chrome Extension', href: '/#extension' },
+                { label: 'CLI & API Sync', href: '/#cli' },
+                { label: 'Changelog', href: '/#changelog' },
               ].map((item) => (
                 <li key={item.label}>
                   <a
@@ -60,22 +59,46 @@ export default function Footer({ className = '' }: FooterProps) {
               Resources
             </h3>
             <ul className="space-y-2.5">
-              {[
-                { label: 'How It Works', href: '#how-it-works' },
-                { label: 'Prompting Guide', href: '#guide' },
-                { label: 'Community Vaults', href: '#community' },
-                { label: 'Security & Privacy', href: '#security' },
-                { label: 'FAQ', href: '#faqs' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a
+                  href="/#how-it-works"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  How It Works
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/#guide"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  Prompting Guide
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/#community"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  Community Vaults
+                </a>
+              </li>
+              <li>
+                <Link
+                  to="/privacy"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  Security &amp; Privacy
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="/#faqs"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  FAQ
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -107,8 +130,6 @@ export default function Footer({ className = '' }: FooterProps) {
                 </a>
               ))}
             </div>
-
-            
           </div>
         </div>
       </div>
@@ -144,12 +165,12 @@ export default function Footer({ className = '' }: FooterProps) {
 
           {/* Legal Links */}
           <div className="flex items-center gap-5 text-vault-cream/60">
-            <a href="#privacy" className="hover:text-vault-cream transition-colors">
+            <Link to="/privacy" className="hover:text-vault-cream hover:underline transition-colors">
               Privacy Policy
-            </a>
-            <a href="#terms" className="hover:text-vault-cream transition-colors">
+            </Link>
+            <Link to="/terms" className="hover:text-vault-cream hover:underline transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

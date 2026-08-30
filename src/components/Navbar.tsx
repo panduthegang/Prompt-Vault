@@ -10,9 +10,9 @@ export default function Navbar({ className = '' }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Why Prompt Vault', href: '#comparison' },
-    { label: 'FAQs', href: '#faqs' },
+    { label: 'How It Works', href: '/#how-it-works' },
+    { label: 'Why Prompt Vault', href: '/#comparison' },
+    { label: 'FAQs', href: '/#faqs' },
   ];
 
   return (
