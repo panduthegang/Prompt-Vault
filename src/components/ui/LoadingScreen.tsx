@@ -70,6 +70,15 @@ export default function LoadingScreen({ onComplete, duration = 2000 }: LoadingSc
     }
   };
 
+  // Lock body scroll while the loader is on screen, reset to top on exit
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+      window.scrollTo(0, 0);
+    };
+  }, []);
+
   if (!visible) return null;
 
   return (
