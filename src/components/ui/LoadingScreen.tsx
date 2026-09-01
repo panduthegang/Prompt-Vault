@@ -16,11 +16,10 @@ const PHRASES = [
 export default function LoadingScreen({ onComplete, duration = 2000 }: LoadingScreenProps) {
   const [count, setCount] = useState(0);
   const [phraseIndex, setPhraseIndex] = useState(0);
-  // Two-phase exit: countDone triggers the slide-up, visible controls mount/unmount
   const [countDone, setCountDone] = useState(false);
-  const [visible, setVisible] = useState(true);
 
   const triggerExit = useCallback(() => {
+    document.body.style.overflow = '';
     setCountDone(true);
   }, []);
 
@@ -42,7 +41,7 @@ export default function LoadingScreen({ onComplete, duration = 2000 }: LoadingSc
         clearInterval(interval);
         setCount(100);
         // Brief hold at 100% before starting the slide-up
-        setTimeout(triggerExit, 250);
+        setTimeout(triggerExit, 200);
       }
     }, 20);
 
@@ -62,35 +61,34 @@ export default function LoadingScreen({ onComplete, duration = 2000 }: LoadingSc
     };
   }, [duration, triggerExit]);
 
-  // After the exit animation completes, truly unmount and notify parent
-  const handleAnimationComplete = () => {
-    if (countDone) {
-      setVisible(false);
-      onComplete?.();
-    }
-  };
-
-  // Lock body scroll while the loader is on screen, reset to top on exit
+  // Lock body scroll only while loader is active, immediately restore on exit or unmount
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    if (!countDone) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
     return () => {
       document.body.style.overflow = '';
-      window.scrollTo(0, 0);
     };
-  }, []);
+  }, [countDone]);
 
-  if (!visible) return null;
+  // After the exit animation completes, notify parent to unmount
+  const handleExitComplete = () => {
+    document.body.style.overflow = '';
+    onComplete?.();
+  };
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={handleExitComplete}>
       {!countDone && (
         <motion.div
           key="editorial-loader"
           initial={{ y: '0%' }}
           animate={{ y: '0%' }}
           exit={{ y: '-100%' }}
-          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
-          onAnimationComplete={handleAnimationComplete}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[99999] bg-vault-cream text-vault-dark flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 select-none overflow-hidden border-b-4 border-vault-dark"
         >
           {/* Top Editorial Header */}
