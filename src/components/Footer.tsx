@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Github, Twitter, Linkedin, ShieldCheck } from 'lucide-react';
 
 export interface FooterProps {
@@ -7,7 +7,25 @@ export interface FooterProps {
 }
 
 export default function Footer({ className = '' }: FooterProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const currentYear = new Date().getFullYear();
+
+  const handleFooterNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/#')) {
+      e.preventDefault();
+      const targetId = href.replace('/#', '');
+      if (location.pathname === '/') {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', href);
+        }
+      } else {
+        navigate(`/${href.replace('/', '')}`);
+      }
+    }
+  };
 
   return (
     <footer className={`w-full bg-vault-dark text-vault-cream border-t-2 border-vault-dark overflow-hidden ${className}`}>
@@ -58,6 +76,7 @@ export default function Footer({ className = '' }: FooterProps) {
                 <li key={item.label}>
                   <a
                     href={item.href}
+                    onClick={(e) => handleFooterNav(e, item.href)}
                     className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
                   >
                     {item.label}
@@ -76,6 +95,7 @@ export default function Footer({ className = '' }: FooterProps) {
               <li>
                 <a
                   href="/#how-it-works"
+                  onClick={(e) => handleFooterNav(e, '/#how-it-works')}
                   className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
                 >
                   How It Works
@@ -84,6 +104,7 @@ export default function Footer({ className = '' }: FooterProps) {
               <li>
                 <a
                   href="/#guide"
+                  onClick={(e) => handleFooterNav(e, '/#guide')}
                   className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
                 >
                   Prompting Guide
@@ -92,6 +113,7 @@ export default function Footer({ className = '' }: FooterProps) {
               <li>
                 <a
                   href="/#community"
+                  onClick={(e) => handleFooterNav(e, '/#community')}
                   className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
                 >
                   Community Vaults
@@ -108,6 +130,7 @@ export default function Footer({ className = '' }: FooterProps) {
               <li>
                 <a
                   href="/#faqs"
+                  onClick={(e) => handleFooterNav(e, '/#faqs')}
                   className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
                 >
                   FAQ

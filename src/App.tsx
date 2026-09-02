@@ -15,8 +15,19 @@ function AppRoutes() {
   const location = useLocation();
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    if (location.hash) {
+      const targetId = location.hash.replace('#', '');
+      const timer = setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 120);
+      return () => clearTimeout(timer);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, location.hash]);
 
   return (
     <AnimatePresence mode="wait">
@@ -39,14 +50,25 @@ function AppRoutes() {
 const LOADING_SCREEN_DURATION_MS = 3500;
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    try {
+      return !sessionStorage.getItem('prompt_vault_seen_intro');
+    } catch {
+      return false;
+    }
+  });
 
   return (
     <BrowserRouter>
       {isLoading && (
         <LoadingScreen
           duration={LOADING_SCREEN_DURATION_MS}
-          onComplete={() => setIsLoading(false)}
+          onComplete={() => {
+            try {
+              sessionStorage.setItem('prompt_vault_seen_intro', 'true');
+            } catch {}
+            setIsLoading(false);
+          }}
         />
       )}
       <AppRoutes />

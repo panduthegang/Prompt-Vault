@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 
 export interface NavbarProps {
@@ -7,6 +7,8 @@ export interface NavbarProps {
 }
 
 export default function Navbar({ className = '' }: NavbarProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -75,17 +77,27 @@ export default function Navbar({ className = '' }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMobileMenuOpen]);
 
-  // Smooth local anchor scroll handler when on the landing page
+  // Client-side smooth navigation handler for anchor links
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+
     if (href.startsWith('/#')) {
       const targetId = href.replace('/#', '');
-      const element = document.getElementById(targetId);
-      if (element) {
-        e.preventDefault();
-        setIsMobileMenuOpen(false);
-        element.scrollIntoView({ behavior: 'smooth' });
-        window.history.pushState(null, '', href);
+
+      if (location.pathname === '/') {
+        // Already on landing page: smooth scroll directly without reload
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', href);
+        }
+      } else {
+        // On another route (e.g. /prompts): SPA client navigation to landing page with hash
+        navigate(`/${href.replace('/', '')}`);
       }
+    } else {
+      navigate(href);
     }
   };
 

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Copy,
   Check,
-  ChevronRight,
   Lock,
   ArrowUpRight,
   Zap,
@@ -230,26 +229,6 @@ export default function Prompts() {
       <Navbar />
 
       <main className="flex-1 w-full flex flex-col">
-        {/* Sub-header Breadcrumbs / Status ticker */}
-        <div className="w-full bg-vault-cream border-b-2 border-vault-dark py-2 sm:py-2.5 px-4 sm:px-6 md:px-10 lg:px-14">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs font-sans font-semibold">
-            <div className="flex items-center gap-1.5 sm:gap-2 text-vault-dark/70">
-              <Link to="/" className="hover:text-vault-dark transition-colors">
-                Home
-              </Link>
-              <ChevronRight className="w-3.5 h-3.5 text-vault-dark/40" />
-              <span className="text-vault-dark bg-vault-yellow px-2.5 py-0.5 rounded-full border border-vault-dark font-bold text-[11px] sm:text-xs">
-                Prompts
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-sans font-bold text-vault-dark/80">
-              <span className="w-2 h-2 rounded-full bg-vault-green animate-pulse shrink-0" />
-              <span>2,400+ Verified AI Prompts</span>
-            </div>
-          </div>
-        </div>
-
         {/* Compact, Focused Hero Section */}
         <section className="w-full bg-vault-yellow border-b-2 border-vault-dark px-4 sm:px-6 md:px-10 lg:px-14 py-6 sm:py-8 lg:py-10 text-center relative overflow-hidden">
           <div className="max-w-3xl mx-auto space-y-2.5 sm:space-y-3">
