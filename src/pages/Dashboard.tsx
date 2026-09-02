@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { copyToClipboard } from '../utils/clipboard';
 import {
@@ -153,6 +154,7 @@ const COMMUNITY_PROMPTS: CommunityItem[] = [
 // MAIN DASHBOARD PAGE COMPONENT
 // ==========================================
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
   const [prompts, setPrompts] = useState<PromptItem[]>(INITIAL_PROMPTS);
@@ -267,7 +269,7 @@ export default function Dashboard() {
 
             {/* Account / User Avatar */}
             <div
-              onClick={() => showToast('Harsh Rathod (harsh@vault.ai)')}
+              onClick={() => navigate('/settings')}
               className="flex items-center gap-2.5 cursor-pointer group"
               title="Account Settings"
             >

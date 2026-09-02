@@ -52,7 +52,16 @@ export default function Sidebar({
   const mobileQuickItems = navItems.slice(0, 3);
 
   const handleSelectTab = (tabId: string) => {
-    onTabChange(tabId);
+    if (tabId === 'settings') {
+      navigate('/settings');
+    } else if (tabId === 'dashboard') {
+      navigate('/dashboard');
+    } else {
+      if (window.location.pathname !== '/dashboard') {
+        navigate('/dashboard');
+      }
+      onTabChange(tabId);
+    }
     setIsBottomSheetOpen(false);
   };
 
@@ -118,7 +127,18 @@ export default function Sidebar({
                 <div key={nav.id} className="relative group/tooltip flex items-center justify-center w-full">
                   <button
                     type="button"
-                    onClick={() => onTabChange(nav.id)}
+                    onClick={() => {
+                      if (nav.id === 'settings') {
+                        navigate('/settings');
+                      } else if (nav.id === 'dashboard' && window.location.pathname !== '/dashboard') {
+                        navigate('/dashboard');
+                      } else {
+                        if (window.location.pathname !== '/dashboard') {
+                          navigate('/dashboard');
+                        }
+                        onTabChange(nav.id);
+                      }
+                    }}
                     className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0 py-2.5' : 'justify-between px-3.5 py-2.5'
                       } rounded-xl font-sans text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${isActive
                         ? 'bg-vault-yellow text-vault-dark border-2 border-vault-dark shadow-xs font-bold'
@@ -173,7 +193,11 @@ export default function Sidebar({
         <div className="pt-4 border-t border-vault-cream/15">
           {!isCollapsed ? (
             <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                onClick={() => navigate('/settings')}
+                className="flex items-center gap-2.5 min-w-0 cursor-pointer hover:opacity-85 transition-opacity"
+                title="Account Settings"
+              >
                 <img
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
                   alt="User Avatar"
@@ -202,9 +226,10 @@ export default function Sidebar({
             <div className="flex flex-col items-center gap-2.5">
               <div className="relative group/user flex items-center justify-center">
                 <img
+                  onClick={() => navigate('/settings')}
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
                   alt="User Avatar"
-                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer"
+                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer hover:ring-2 hover:ring-vault-yellow transition-all"
                 />
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/user:opacity-100 group-hover/user:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
                   <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-lg font-sans text-xs font-bold">
@@ -245,7 +270,18 @@ export default function Sidebar({
             <button
               key={item.id}
               type="button"
-              onClick={() => onTabChange(item.id)}
+              onClick={() => {
+                if (item.id === 'dashboard' && window.location.pathname !== '/dashboard') {
+                  navigate('/dashboard');
+                } else if (item.id === 'settings') {
+                  navigate('/settings');
+                } else {
+                  if (window.location.pathname !== '/dashboard') {
+                    navigate('/dashboard');
+                  }
+                  onTabChange(item.id);
+                }
+              }}
               className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${isActive
                   ? 'bg-vault-yellow text-vault-dark font-bold shadow-xs'
                   : 'text-vault-cream/75 hover:text-vault-cream'
@@ -375,7 +411,14 @@ export default function Sidebar({
 
               {/* Bottom Sheet User Profile Card & Logout */}
               <div className="pt-2.5 border-t border-vault-dark/10 flex items-center justify-between bg-white/60 p-3 rounded-2xl border border-vault-dark/10">
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div
+                  onClick={() => {
+                    navigate('/settings');
+                    setIsBottomSheetOpen(false);
+                  }}
+                  className="flex items-center gap-2.5 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
+                  title="Account Settings"
+                >
                   <img
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
                     alt="User Avatar"
