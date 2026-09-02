@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <clipPath id="avatarClip3">
+      <circle cx="60" cy="60" r="58" />
+    </clipPath>
+  </defs>
+  
+  <!-- Outer Border & Background -->
+  <circle cx="60" cy="60" r="58" fill="#EBF7F2" stroke="#002D0F" stroke-width="4" />
+  
+  <g clip-path="url(#avatarClip3)">
+    <!-- Backdrop Glow -->
+    <circle cx="60" cy="60" r="42" fill="#B2F1C7" opacity="0.6" />
+
+    <!-- Shoulders & Dark Green Turtleneck -->
+    <path d="M22 125 C22 96 38 86 60 86 C82 86 98 96 98 125 Z" fill="#002D0F" />
+    <!-- Turtleneck Collar with ribbed lines -->
+    <path d="M47 75 L73 75 C75 88 45 88 47 75 Z" fill="#0A3C18" stroke="#002D0F" stroke-width="2" />
+    <path d="M52 76 L52 83 M60 76 L60 84 M68 76 L68 83" stroke="#9BF00B" stroke-width="1.5" />
+
+    <!-- Neck -->
+    <rect x="52" y="66" width="16" height="12" rx="3" fill="#ECC099" />
+
+    <!-- Ears -->
+    <circle cx="36" cy="54" r="6" fill="#ECC099" stroke="#002D0F" stroke-width="2" />
+    <circle cx="84" cy="54" r="6" fill="#ECC099" stroke="#002D0F" stroke-width="2" />
+
+    <!-- Head -->
+    <ellipse cx="60" cy="53" rx="21" ry="24" fill="#ECC099" stroke="#002D0F" stroke-width="2.5" />
+
+    <!-- Eyebrows -->
+    <path d="M46 41 Q52 38 56 42" stroke="#1F1E24" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    <path d="M64 42 Q68 38 74 41" stroke="#1F1E24" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+    <!-- Eyes (Focused & Calm) -->
+    <ellipse cx="51" cy="48" rx="3" ry="3.5" fill="#002D0F" />
+    <circle cx="52" cy="47" r="1" fill="#FFFFFF" />
+    <ellipse cx="69" cy="48" rx="3" ry="3.5" fill="#002D0F" />
+    <circle cx="70" cy="47" r="1" fill="#FFFFFF" />
+
+    <!-- Nose & Confident Smirk -->
+    <path d="M59 53 L61 55 L58 56" stroke="#D39768" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <path d="M54 62 Q61 66 67 61" stroke="#002D0F" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+    <!-- Wavy Voluminous Hair with Highlights -->
+    <path d="M35 48 C30 30 40 20 54 18 C64 16 78 18 84 28 C89 36 86 46 84 50 C80 34 72 26 58 26 C44 26 38 36 35 48 Z" fill="#1F1E24" stroke="#002D0F" stroke-width="2" />
+    <path d="M42 28 Q52 24 64 26" stroke="#4F4B5C" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M50 20 Q62 18 72 22" stroke="#4F4B5C" stroke-width="2" stroke-linecap="round" fill="none" />
+  </g>
+</svg>

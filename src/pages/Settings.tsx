@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import {
   User,
   Shield,
@@ -23,26 +24,34 @@ interface UserProfile {
   avatar: string;
 }
 
+interface ActiveToast {
+  id: string;
+  type: ToastType;
+  title?: string;
+  message: string;
+}
+
 const DEFAULT_PROFILE: UserProfile = {
   name: 'Harsh Rathod',
   username: 'harshrathod',
   email: 'harsh@vault.ai',
   bio: 'Principal AI Engineer & Prompt Architect building next-gen agent workflows.',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+  avatar: '/avatars/avatar-1.svg',
 };
 
 const PRESET_AVATARS = [
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80',
-  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=120&q=80',
+  { id: 'avatar-1', src: '/avatars/avatar-1.svg', label: 'Boy Developer (Cap & Headphones)' },
+  { id: 'avatar-2', src: '/avatars/avatar-2.svg', label: 'Girl Designer (Glasses & Hoops)' },
+  { id: 'avatar-3', src: '/avatars/avatar-3.svg', label: 'Boy Creator (Wavy Hair & Turtleneck)' },
+  { id: 'avatar-4', src: '/avatars/avatar-4.svg', label: 'Girl Engineer (Cyber Headset & Bangs)' },
+  { id: 'avatar-5', src: '/avatars/avatar-5.svg', label: 'Cyber Specialist (Matrix Shades & Beanie)' },
 ];
 
 export default function Settings() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [activeToast, setActiveToast] = useState<ActiveToast | null>(null);
 
   // Profile State
   const [profile, setProfile] = useState<UserProfile>(() => {
@@ -50,12 +59,16 @@ export default function Settings() {
       const saved = localStorage.getItem('prompt_vault_user_profile');
       if (saved) {
         const parsed = JSON.parse(saved);
+        const avatar =
+          parsed.avatar && !parsed.avatar.includes('unsplash')
+            ? parsed.avatar
+            : DEFAULT_PROFILE.avatar;
         return {
           name: parsed.name || DEFAULT_PROFILE.name,
           username: parsed.username || DEFAULT_PROFILE.username,
           email: parsed.email || DEFAULT_PROFILE.email,
           bio: parsed.bio || DEFAULT_PROFILE.bio,
-          avatar: parsed.avatar || DEFAULT_PROFILE.avatar,
+          avatar: avatar,
         };
       }
       return DEFAULT_PROFILE;
@@ -77,9 +90,13 @@ export default function Settings() {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2500);
+  const showToast = (message: string, type: ToastType = 'success', title?: string) => {
+    setActiveToast({
+      id: Date.now().toString(),
+      type,
+      title,
+      message,
+    });
   };
 
   const handleStartEditing = () => {
@@ -90,16 +107,17 @@ export default function Settings() {
   const handleCancelEditing = () => {
     setEditForm(profile);
     setIsEditingProfile(false);
+    showToast('Profile edits were discarded', 'info', 'Cancelled');
   };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editForm.username.trim()) {
-      showToast('Username cannot be empty');
+      showToast('Username cannot be empty', 'error', 'Validation Error');
       return;
     }
     if (!editForm.name.trim()) {
-      showToast('Name cannot be empty');
+      showToast('Full name cannot be empty', 'error', 'Validation Error');
       return;
     }
 
@@ -114,21 +132,21 @@ export default function Settings() {
     } catch {}
 
     setIsEditingProfile(false);
-    showToast('Profile updated successfully!');
+    showToast('Your profile information has been saved successfully!', 'success', 'Profile Updated');
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentPassword) {
-      showToast('Please enter your current password');
+      showToast('Please enter your current password to continue', 'error', 'Authentication Required');
       return;
     }
     if (newPassword.length < 8) {
-      showToast('New password must be at least 8 characters');
+      showToast('New password must contain at least 8 characters', 'warning', 'Password Too Short');
       return;
     }
     if (newPassword !== confirmPassword) {
-      showToast('New passwords do not match');
+      showToast('New passwords do not match. Please verify and retype.', 'error', 'Mismatch');
       return;
     }
 
@@ -138,19 +156,25 @@ export default function Settings() {
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      showToast('Password updated successfully!');
+      showToast('Your master password has been changed securely!', 'success', 'Password Changed');
     }, 800);
   };
 
   return (
     <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-vault-dark text-vault-cream border-2 border-vault-green px-5 py-3 rounded-full shadow-lg flex items-center gap-3 animate-bounce">
-          <Sparkles className="w-4 h-4 text-vault-green fill-vault-green shrink-0" />
-          <span className="font-sans text-xs sm:text-sm font-semibold">{toastMessage}</span>
-        </div>
-      )}
+      {/* Dynamic Toast Notifications (Supports Success, Error, Warning, Info) */}
+      <ToastContainer>
+        {activeToast && (
+          <Toast
+            key={activeToast.id}
+            type={activeToast.type}
+            title={activeToast.title}
+            message={activeToast.message}
+            duration={3500}
+            onClose={() => setActiveToast(null)}
+          />
+        )}
+      </ToastContainer>
 
       {/* Dark Sidebar */}
       <Sidebar
@@ -256,7 +280,7 @@ export default function Settings() {
                   <img
                     src={profile.avatar}
                     alt={profile.name}
-                    className="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-vault-dark object-cover shadow-sm ring-2 ring-vault-green/40"
+                    className="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-vault-dark object-cover shadow-sm ring-2 ring-vault-green/40 bg-vault-cream"
                   />
                   <div className="space-y-1">
                     <h3 className="font-serif text-2xl text-vault-dark font-normal">{profile.name}</h3>
@@ -324,26 +348,27 @@ export default function Settings() {
                     <img
                       src={editForm.avatar}
                       alt="Selected Avatar"
-                      className="w-18 h-18 rounded-full border-2 border-vault-dark object-cover shadow-xs ring-4 ring-vault-yellow"
+                      className="w-18 h-18 rounded-full border-2 border-vault-dark object-cover shadow-xs ring-4 ring-vault-yellow bg-vault-cream"
                     />
 
                     <div className="space-y-1.5">
                       <span className="text-xs font-sans font-semibold text-vault-dark/70 block">
                         Pick a preset avatar:
                       </span>
-                      <div className="flex items-center gap-2">
-                        {PRESET_AVATARS.map((preset, idx) => (
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        {PRESET_AVATARS.map((preset) => (
                           <button
-                            key={idx}
+                            key={preset.id}
                             type="button"
-                            onClick={() => setEditForm({ ...editForm, avatar: preset })}
+                            onClick={() => setEditForm({ ...editForm, avatar: preset.src })}
                             className={`rounded-full border-2 transition-all p-0.5 cursor-pointer ${
-                              editForm.avatar === preset
-                                ? 'border-vault-dark ring-2 ring-vault-green scale-105'
-                                : 'border-vault-dark/30 hover:border-vault-dark opacity-75 hover:opacity-100'
+                              editForm.avatar === preset.src
+                                ? 'border-vault-dark ring-2 ring-vault-green scale-110 shadow-xs'
+                                : 'border-vault-dark/30 hover:border-vault-dark opacity-80 hover:opacity-100 hover:scale-105'
                             }`}
+                            title={preset.label}
                           >
-                            <img src={preset} alt={`Avatar ${idx + 1}`} className="w-10 h-10 rounded-full object-cover" />
+                            <img src={preset.src} alt={preset.label} className="w-11 h-11 rounded-full object-cover bg-vault-cream" />
                           </button>
                         ))}
                       </div>

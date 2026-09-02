@@ -222,6 +222,17 @@ export default function Dashboard() {
     return matchesSearch && matchesTag;
   });
 
+  const userAvatar = (() => {
+    try {
+      const saved = localStorage.getItem('prompt_vault_user_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
+      }
+    } catch {}
+    return '/avatars/avatar-1.svg';
+  })();
+
   return (
     <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
       {/* Toast Notification Floating Pill */}
@@ -274,9 +285,9 @@ export default function Dashboard() {
               title="Account Settings"
             >
               <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                src={userAvatar}
                 alt="Harsh Rathod Avatar"
-                className="w-10 h-10 rounded-full border-2 border-vault-dark object-cover group-hover:ring-2 group-hover:ring-vault-green group-hover:scale-105 transition-all shadow-xs"
+                className="w-10 h-10 rounded-full border-2 border-vault-dark object-cover group-hover:ring-2 group-hover:ring-vault-green group-hover:scale-105 transition-all shadow-xs bg-vault-cream"
               />
             </div>
           </div>

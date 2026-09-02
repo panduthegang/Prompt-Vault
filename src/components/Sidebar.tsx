@@ -35,6 +35,17 @@ export default function Sidebar({
   const navigate = useNavigate();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
+  const userAvatar = (() => {
+    try {
+      const saved = localStorage.getItem('prompt_vault_user_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
+      }
+    } catch {}
+    return '/avatars/avatar-1.svg';
+  })();
+
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'prompts', label: 'Saved Prompts', icon: Bookmark, count: promptCount },
@@ -199,9 +210,9 @@ export default function Sidebar({
                 title="Account Settings"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                  src={userAvatar}
                   alt="User Avatar"
-                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer"
+                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer bg-vault-cream"
                 />
                 <div className="min-w-0">
                   <span className="font-sans text-xs font-bold text-vault-cream block leading-snug truncate">
@@ -227,9 +238,9 @@ export default function Sidebar({
               <div className="relative group/user flex items-center justify-center">
                 <img
                   onClick={() => navigate('/settings')}
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                  src={userAvatar}
                   alt="User Avatar"
-                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer hover:ring-2 hover:ring-vault-yellow transition-all"
+                  className="w-9 h-9 rounded-full border-2 border-vault-green object-cover shrink-0 cursor-pointer hover:ring-2 hover:ring-vault-yellow transition-all bg-vault-cream"
                 />
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/user:opacity-100 group-hover/user:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
                   <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-lg font-sans text-xs font-bold">
@@ -420,9 +431,9 @@ export default function Sidebar({
                   title="Account Settings"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                    src={userAvatar}
                     alt="User Avatar"
-                    className="w-9 h-9 rounded-full border-2 border-vault-dark object-cover shrink-0"
+                    className="w-9 h-9 rounded-full border-2 border-vault-dark object-cover shrink-0 bg-vault-cream"
                   />
                   <div className="min-w-0">
                     <span className="font-sans text-xs font-bold text-vault-dark block truncate">

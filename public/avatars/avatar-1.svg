@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <clipPath id="avatarClip1">
+      <circle cx="60" cy="60" r="58" />
+    </clipPath>
+  </defs>
+  
+  <!-- Outer Border & Background -->
+  <circle cx="60" cy="60" r="58" fill="#EBF3E8" stroke="#002D0F" stroke-width="4" />
+  
+  <g clip-path="url(#avatarClip1)">
+    <!-- Aura / Backdrop Glow -->
+    <circle cx="60" cy="60" r="42" fill="#E4E989" opacity="0.6" />
+    
+    <!-- Body / Shoulders -->
+    <path d="M25 125 C25 96 40 85 60 85 C80 85 95 96 95 125 Z" fill="#002D0F" />
+    <!-- Hoodie V-Neck -->
+    <path d="M48 85 L60 102 L72 85 Z" fill="#9BF00B" />
+    <path d="M54 85 L60 94 L66 85 Z" fill="#F7F4E9" />
+    
+    <!-- Neck -->
+    <rect x="52" y="70" width="16" height="18" rx="4" fill="#F8D3B4" />
+    <path d="M52 76 Q60 82 68 76 L68 82 L52 82 Z" fill="#E6B894" />
+
+    <!-- Head & Ears -->
+    <circle cx="37" cy="55" r="7" fill="#F8D3B4" stroke="#002D0F" stroke-width="2" />
+    <circle cx="83" cy="55" r="7" fill="#F8D3B4" stroke="#002D0F" stroke-width="2" />
+    <ellipse cx="60" cy="54" rx="22" ry="24" fill="#F8D3B4" stroke="#002D0F" stroke-width="2.5" />
+
+    <!-- Eyes & Eyebrows -->
+    <path d="M47 43 Q52 40 55 43" stroke="#002D0F" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    <path d="M65 43 Q68 40 73 43" stroke="#002D0F" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    
+    <circle cx="51" cy="49" r="3" fill="#002D0F" />
+    <circle cx="52" cy="48" r="1" fill="#FFFFFF" />
+    <circle cx="69" cy="49" r="3" fill="#002D0F" />
+    <circle cx="70" cy="48" r="1" fill="#FFFFFF" />
+
+    <!-- Glasses (Tech Wireframe) -->
+    <rect x="43" y="44" width="16" height="11" rx="4" fill="none" stroke="#002D0F" stroke-width="2" />
+    <rect x="61" y="44" width="16" height="11" rx="4" fill="none" stroke="#002D0F" stroke-width="2" />
+    <path d="M59 49 L61 49" stroke="#002D0F" stroke-width="2" />
+
+    <!-- Nose & Smile -->
+    <path d="M59 55 Q60 57 61 55" stroke="#D79E78" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M53 62 Q60 68 67 62" stroke="#002D0F" stroke-width="2.5" stroke-linecap="round" fill="#FFFFFF" />
+
+    <!-- Hair under Cap -->
+    <path d="M38 46 Q45 35 60 35 Q75 35 82 46" fill="#4A3728" />
+
+    <!-- Cap Base & Peak (Forward Snapback) -->
+    <path d="M36 40 C36 22 84 22 84 40 Z" fill="#002D0F" stroke="#002D0F" stroke-width="2" />
+    <path d="M30 38 C30 33 55 32 90 38 C90 41 82 43 30 42 Z" fill="#9BF00B" stroke="#002D0F" stroke-width="2" />
+    <circle cx="60" cy="23" r="3" fill="#9BF00B" />
+
+    <!-- Over-Ear Headphones -->
+    <path d="M34 50 C30 30 90 30 86 50" stroke="#002D0F" stroke-width="4" stroke-linecap="round" fill="none" />
+    <rect x="30" y="46" width="8" height="18" rx="4" fill="#9BF00B" stroke="#002D0F" stroke-width="2" />
+    <rect x="82" y="46" width="8" height="18" rx="4" fill="#9BF00B" stroke="#002D0F" stroke-width="2" />
+  </g>
+</svg>

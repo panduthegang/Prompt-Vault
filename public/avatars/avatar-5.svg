@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <clipPath id="avatarClip5">
+      <circle cx="60" cy="60" r="58" />
+    </clipPath>
+  </defs>
+  
+  <!-- Outer Border & Background -->
+  <circle cx="60" cy="60" r="58" fill="#F4F8EB" stroke="#002D0F" stroke-width="4" />
+  
+  <g clip-path="url(#avatarClip5)">
+    <!-- Backdrop Glow -->
+    <circle cx="60" cy="60" r="42" fill="#CEF089" opacity="0.6" />
+
+    <!-- Shoulders / Cyber Hoodie -->
+    <path d="M20 125 C20 95 36 84 60 84 C84 84 100 95 100 125 Z" fill="#002D0F" />
+    <!-- Hoodie Strings -->
+    <path d="M52 86 L51 106" stroke="#9BF00B" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="51" cy="107" r="2" fill="#E4E989" />
+    <path d="M68 86 L69 106" stroke="#9BF00B" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="69" cy="107" r="2" fill="#E4E989" />
+
+    <!-- Neck -->
+    <rect x="52" y="68" width="16" height="18" rx="4" fill="#E8B896" />
+
+    <!-- Ears -->
+    <circle cx="36" cy="56" r="6" fill="#E8B896" stroke="#002D0F" stroke-width="2" />
+    <circle cx="84" cy="56" r="6" fill="#E8B896" stroke="#002D0F" stroke-width="2" />
+
+    <!-- Head -->
+    <ellipse cx="60" cy="55" rx="21" ry="23" fill="#E8B896" stroke="#002D0F" stroke-width="2.5" />
+
+    <!-- Sleek Neon Matrix Shades / Futuristic Glasses -->
+    <path d="M40 44 L80 44 C82 44 83 48 81 53 L76 56 C74 57 70 58 60 58 C50 58 46 57 44 56 L39 53 C37 48 38 44 40 44 Z" fill="#002D0F" stroke="#002D0F" stroke-width="2" />
+    <!-- Glowing Green Glare / Reflection on Visor -->
+    <path d="M43 47 L77 47" stroke="#9BF00B" stroke-width="2" stroke-linecap="round" />
+    <path d="M46 51 L60 51" stroke="#E4E989" stroke-width="1.5" stroke-linecap="round" />
+    <path d="M68 51 L74 51" stroke="#9BF00B" stroke-width="1.5" stroke-linecap="round" />
+
+    <!-- Nose & Confident Smile -->
+    <path d="M59 60 Q60 62 61 60" stroke="#C5906E" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M53 66 Q60 71 67 66" stroke="#002D0F" stroke-width="2.5" stroke-linecap="round" fill="#FFFFFF" />
+
+    <!-- Beanie Hat (Vault Green/Yellow) -->
+    <path d="M36 44 C34 20 86 20 84 44 Z" fill="#E4E989" stroke="#002D0F" stroke-width="2" />
+    <!-- Beanie Fold Rib -->
+    <rect x="34" y="38" width="52" height="9" rx="4" fill="#9BF00B" stroke="#002D0F" stroke-width="2" />
+    <!-- Beanie Top Seam -->
+    <path d="M60 20 L60 26" stroke="#002D0F" stroke-width="2" />
+  </g>
+</svg>

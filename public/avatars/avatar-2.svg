@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <clipPath id="avatarClip2">
+      <circle cx="60" cy="60" r="58" />
+    </clipPath>
+  </defs>
+  
+  <!-- Outer Border & Background -->
+  <circle cx="60" cy="60" r="58" fill="#FBF7EE" stroke="#002D0F" stroke-width="4" />
+  
+  <g clip-path="url(#avatarClip2)">
+    <!-- Aura / Backdrop Glow -->
+    <circle cx="60" cy="60" r="42" fill="#F8E5A7" opacity="0.6" />
+
+    <!-- Hair Back Volume -->
+    <path d="M30 45 C20 70 30 95 38 100 C45 85 40 60 40 50 Z" fill="#2B2118" />
+    <path d="M90 45 C100 70 90 95 82 100 C75 85 80 60 80 50 Z" fill="#2B2118" />
+
+    <!-- Shoulders & Coat -->
+    <path d="M22 125 C22 98 38 88 60 88 C82 88 98 98 98 125 Z" fill="#E4E989" stroke="#002D0F" stroke-width="2.5" />
+    <path d="M48 88 L60 108 L72 88 Z" fill="#002D0F" />
+    
+    <!-- Neck -->
+    <rect x="53" y="72" width="14" height="18" rx="4" fill="#FCD9BC" />
+    <path d="M53 78 Q60 83 67 78 L67 84 L53 84 Z" fill="#EBB995" />
+
+    <!-- Ears & Gold Hoops -->
+    <circle cx="36" cy="58" r="6" fill="#FCD9BC" stroke="#002D0F" stroke-width="2" />
+    <circle cx="84" cy="58" r="6" fill="#FCD9BC" stroke="#002D0F" stroke-width="2" />
+    <circle cx="35" cy="63" r="4" fill="none" stroke="#E5A93C" stroke-width="2" />
+    <circle cx="85" cy="63" r="4" fill="none" stroke="#E5A93C" stroke-width="2" />
+
+    <!-- Head -->
+    <ellipse cx="60" cy="56" rx="21" ry="23" fill="#FCD9BC" stroke="#002D0F" stroke-width="2.5" />
+
+    <!-- Face Blush -->
+    <ellipse cx="45" cy="63" rx="4" ry="2" fill="#F49E9E" opacity="0.6" />
+    <ellipse cx="75" cy="63" rx="4" ry="2" fill="#F49E9E" opacity="0.6" />
+
+    <!-- Eyebrows -->
+    <path d="M47 45 Q52 42 56 45" stroke="#2B2118" stroke-width="2.2" stroke-linecap="round" fill="none" />
+    <path d="M64 45 Q68 42 73 45" stroke="#2B2118" stroke-width="2.2" stroke-linecap="round" fill="none" />
+
+    <!-- Eyes (Round & Friendly) -->
+    <ellipse cx="51" cy="50" rx="3.5" ry="4" fill="#002D0F" />
+    <circle cx="52" cy="49" r="1.3" fill="#FFFFFF" />
+    <ellipse cx="69" cy="50" rx="3.5" ry="4" fill="#002D0F" />
+    <circle cx="70" cy="49" r="1.3" fill="#FFFFFF" />
+
+    <!-- Round Chic Glasses -->
+    <circle cx="51" cy="50" r="8" fill="none" stroke="#002D0F" stroke-width="2" />
+    <circle cx="69" cy="50" r="8" fill="none" stroke="#002D0F" stroke-width="2" />
+    <path d="M59 50 L61 50" stroke="#002D0F" stroke-width="2" />
+
+    <!-- Nose & Lips -->
+    <path d="M60 56 Q61 58 60 59" stroke="#DB9A74" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M54 65 Q60 70 66 65" stroke="#C44D58" stroke-width="2.5" stroke-linecap="round" fill="#F77884" />
+
+    <!-- Modern Bob Haircut & Fringe -->
+    <path d="M37 54 C35 32 50 24 60 24 C70 24 85 32 83 54 C78 40 73 34 60 35 C47 34 42 40 37 54 Z" fill="#2B2118" stroke="#002D0F" stroke-width="2" />
+    <path d="M42 36 Q52 42 60 41 Q68 42 78 36" fill="none" stroke="#2B2118" stroke-width="2" />
+  </g>
+</svg>
