@@ -47,3 +47,42 @@
     scrollbar-width: thin;
   }
 }
+
+/* Glowing Border Energy Beams & Core Pulse */
+@keyframes pulseBeamFlow {
+  0% {
+    stroke-dashoffset: 780;
+    opacity: 0.15;
+  }
+  35% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+  }
+}
+
+@keyframes powerReactorPulse {
+  0%, 100% {
+    transform: scale(0.94);
+    opacity: 0.45;
+    filter: blur(14px);
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.95;
+    filter: blur(20px);
+  }
+}
+
+.animate-beam-flow {
+  animation: pulseBeamFlow 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-power-reactor {
+  animation: powerReactorPulse 2.6s ease-in-out infinite;
+}
