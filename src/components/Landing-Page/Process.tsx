@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight, FolderLock, Sparkles } from 'lucide-react';
 
 export interface ProcessProps {
@@ -9,7 +10,7 @@ export default function Process({ className = '' }: ProcessProps) {
   return (
     <section
       id="how-it-works"
-      className={`w-full bg-vault-yellow text-vault-dark py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 border-t-2 border-vault-dark ${className}`}
+      className={`w-full bg-vault-yellow text-vault-dark py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 border-t-2 border-vault-dark scroll-mt-20 ${className}`}
     >
       <div className="max-w-7xl mx-auto flex flex-col space-y-12 sm:space-y-16">
         {/* Section Header */}
@@ -116,9 +117,9 @@ export default function Process({ className = '' }: ProcessProps) {
         {/* Bottom CTA Row */}
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           {/* Primary Expanding Two-tone Pill Button */}
-          <a
+          <Link
             id="process-primary-cta"
-            href="#get-started"
+            to="/signin"
             className="group relative inline-flex items-stretch cursor-pointer select-none active:scale-[0.97] transition-transform duration-200"
           >
             <span className="relative z-10 inline-flex items-center justify-center bg-vault-green text-vault-dark border border-vault-dark rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-sans font-semibold text-xs sm:text-sm lg:text-[14px] tracking-tight shadow-xs group-hover:brightness-[1.03] transition-all duration-300">
@@ -127,15 +128,15 @@ export default function Process({ className = '' }: ProcessProps) {
             <span className="relative -ml-6 z-0 inline-flex items-center justify-center bg-vault-darker text-vault-green border border-vault-dark rounded-r-full pl-7 pr-3.5 max-w-0 opacity-0 -translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-w-[68px] group-hover:opacity-100 group-hover:translate-x-0 overflow-hidden">
               <ArrowUpRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-105" />
             </span>
-          </a>
+          </Link>
 
           {/* Secondary Outline Pill Button */}
           <a
             id="process-secondary-cta"
-            href="#how-it-works"
+            href="#comparison"
             className="inline-flex items-center justify-center bg-transparent border-2 border-vault-dark text-vault-dark font-sans font-semibold text-xs sm:text-sm lg:text-[13.5px] px-5 sm:px-6 py-2 rounded-full hover:bg-vault-dark hover:text-vault-cream active:scale-[0.97] transition-all duration-300"
           >
-            <span>See How It Works</span>
+            <span>Why Prompt Vault</span>
           </a>
         </div>
       </div>

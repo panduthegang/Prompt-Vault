@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight, Eye } from 'lucide-react';
 
 export interface FAQItem {
@@ -67,7 +68,7 @@ export default function FAQ({ className = '' }: FAQProps) {
   return (
     <section
       id="faqs"
-      className={`w-full bg-vault-yellow text-vault-dark py-14 sm:py-18 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 rounded-xl sm:rounded-2xl overflow-hidden ${className}`}
+      className={`w-full bg-vault-yellow text-vault-dark py-14 sm:py-18 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 rounded-xl sm:rounded-2xl overflow-hidden scroll-mt-20 ${className}`}
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
@@ -94,9 +95,9 @@ export default function FAQ({ className = '' }: FAQProps) {
             {/* Action Buttons Row */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
               {/* Primary Expanding Two-tone Button */}
-              <a
+              <Link
                 id="faq-primary-cta"
-                href="#get-started"
+                to="/signin"
                 className="group relative inline-flex items-stretch cursor-pointer select-none active:scale-[0.97] transition-transform duration-200"
               >
                 <span className="relative z-10 inline-flex items-center justify-center bg-vault-green text-vault-dark border border-vault-dark rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-sans font-semibold text-xs sm:text-sm lg:text-[14px] tracking-tight shadow-xs group-hover:brightness-[1.03] transition-all duration-300">
@@ -105,7 +106,7 @@ export default function FAQ({ className = '' }: FAQProps) {
                 <span className="relative -ml-6 z-0 inline-flex items-center justify-center bg-vault-darker text-vault-green border border-vault-dark rounded-r-full pl-7 pr-3.5 max-w-0 opacity-0 -translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-w-[68px] group-hover:opacity-100 group-hover:translate-x-0 overflow-hidden">
                   <ArrowUpRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-105" />
                 </span>
-              </a>
+              </Link>
 
               {/* Secondary Outlined Pill Button */}
               <a

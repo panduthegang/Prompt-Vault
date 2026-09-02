@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Github, Twitter, Disc as Discord, Linkedin, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, Github, Twitter, Linkedin, ShieldCheck } from 'lucide-react';
 
 export interface FooterProps {
   className?: string;
@@ -34,9 +34,23 @@ export default function Footer({ className = '' }: FooterProps) {
               Product
             </h3>
             <ul className="space-y-2.5">
+              <li>
+                <Link
+                  to="/prompts"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  Prompt Search
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/prompts"
+                  className="font-sans text-sm text-vault-cream/70 hover:text-vault-yellow hover:translate-x-0.5 transition-all inline-block"
+                >
+                  Skill.md Prompts
+                </Link>
+              </li>
               {[
-                { label: 'Prompt Search', href: '/#search' },
-                { label: 'Skill.md Library', href: '/#skills' },
                 { label: 'Chrome Extension', href: '/#extension' },
                 { label: 'CLI & API Sync', href: '/#cli' },
                 { label: 'Changelog', href: '/#changelog' },
@@ -115,7 +129,6 @@ export default function Footer({ className = '' }: FooterProps) {
               {[
                 { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
                 { icon: Github, href: 'https://github.com', label: 'GitHub' },
-                { icon: Discord, href: 'https://discord.com', label: 'Discord' },
                 { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
               ].map((social) => (
                 <a
