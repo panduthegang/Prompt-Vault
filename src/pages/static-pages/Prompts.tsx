@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { copyToClipboard } from '../../utils/clipboard';
 
 interface PromptItem {
   id: string;
@@ -213,12 +214,14 @@ Iterate until Agent B signs off with 100% confidence.`,
 export default function Prompts() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => {
-      setCopiedId(null);
-    }, 2000);
+  const handleCopy = async (id: string, text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setCopiedId(id);
+      setTimeout(() => {
+        setCopiedId(null);
+      }, 2000);
+    }
   };
 
   return (

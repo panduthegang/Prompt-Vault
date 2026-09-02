@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import { copyToClipboard } from '../utils/clipboard';
 import {
   Sparkles,
   Bell,
@@ -173,11 +174,13 @@ export default function Dashboard() {
     setTimeout(() => setToastMessage(null), 2500);
   };
 
-  const handleCopyPrompt = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    showToast('Prompt copied to clipboard!');
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopyPrompt = async (id: string, text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setCopiedId(id);
+      showToast('Prompt copied to clipboard!');
+      setTimeout(() => setCopiedId(null), 2000);
+    }
   };
 
   const handleToggleStar = (id: string) => {
