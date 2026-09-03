@@ -11,6 +11,7 @@ import {
   MoreHorizontal,
   LogOut,
   X,
+  Plus,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -277,42 +278,100 @@ export default function Sidebar({
       {/* ========================================================= */}
       {/* 2. MOBILE FLOATING BOTTOM BAR (Floating dock on < lg)      */}
       {/* ========================================================= */}
-      <div className="lg:hidden fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-40 max-w-md mx-auto bg-vault-dark border-2 border-vault-dark rounded-2xl p-1.5 shadow-2xl flex items-center justify-around">
-        {mobileQuickItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          return (
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-40 max-w-md mx-auto bg-vault-dark border-2 border-vault-dark rounded-2xl p-1.5 shadow-2xl flex items-center justify-between gap-1">
+        {activeTab === 'vault' ? (
+          /* VAULT DEDICATED BOTTOM BAR: Dashboard | Vault | More | + Add to Vault */
+          <>
             <button
-              key={item.id}
               type="button"
-              onClick={() => handleSelectTab(item.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${isActive
-                  ? 'bg-vault-yellow text-vault-dark font-bold shadow-xs'
-                  : 'text-vault-cream/75 hover:text-vault-cream'
-                }`}
+              onClick={() => handleSelectTab('dashboard')}
+              className="h-11 flex flex-col items-center justify-center gap-0.5 px-2.5 rounded-xl transition-all cursor-pointer text-vault-cream/75 hover:text-vault-cream shrink-0"
             >
-              <Icon className="w-4.5 h-4.5 stroke-[2.2]" />
+              <LayoutDashboard className="w-4.5 h-4.5 stroke-[2.2]" />
               <span className="font-sans text-[10px] font-semibold tracking-tight">
-                {item.label}
+                Dashboard
               </span>
             </button>
-          );
-        })}
 
-        {/* 4th "More" Trigger Button for Draggable Bottom Sheet */}
-        <button
-          type="button"
-          onClick={() => setIsBottomSheetOpen(true)}
-          className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${isBottomSheetOpen || ['skills', 'community', 'settings'].includes(activeTab)
-              ? 'bg-vault-yellow/20 text-vault-yellow font-bold'
-              : 'text-vault-cream/75 hover:text-vault-cream'
-            }`}
-        >
-          <MoreHorizontal className="w-4.5 h-4.5 stroke-[2.2]" />
-          <span className="font-sans text-[10px] font-semibold tracking-tight">
-            More
-          </span>
-        </button>
+            <button
+              type="button"
+              onClick={() => handleSelectTab('vault')}
+              className="h-11 flex flex-col items-center justify-center gap-0.5 px-2.5 rounded-xl transition-all cursor-pointer bg-vault-yellow text-vault-dark font-bold shadow-xs shrink-0"
+            >
+              <Bookmark className="w-4.5 h-4.5 stroke-[2.2]" />
+              <span className="font-sans text-[10px] font-semibold tracking-tight">
+                Vault
+              </span>
+            </button>
+
+            {/* 3rd "More" Trigger Button */}
+            <button
+              type="button"
+              onClick={() => setIsBottomSheetOpen(true)}
+              className={`h-11 flex flex-col items-center justify-center gap-0.5 px-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
+                isBottomSheetOpen || ['skills', 'community', 'settings'].includes(activeTab)
+                  ? 'bg-vault-yellow/20 text-vault-yellow font-bold'
+                  : 'text-vault-cream/75 hover:text-vault-cream'
+              }`}
+            >
+              <MoreHorizontal className="w-4.5 h-4.5 stroke-[2.2]" />
+              <span className="font-sans text-[10px] font-semibold tracking-tight">
+                More
+              </span>
+            </button>
+
+            {/* Wide + Add to Vault Action Button (Height matched to icon buttons) */}
+            <button
+              type="button"
+              onClick={() => onOpenAddModal?.()}
+              className="h-11 flex-1 px-3.5 rounded-xl bg-vault-green text-vault-dark border-2 border-vault-dark font-sans text-xs font-bold shadow-xs hover:brightness-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap min-w-0 ml-1"
+            >
+              <Plus className="w-4 h-4 stroke-[2.8]" />
+              <span className="truncate">Add to Vault</span>
+            </button>
+          </>
+        ) : (
+          /* STANDARD BOTTOM BAR: Dashboard | Vault | Community | More */
+          <>
+            {mobileQuickItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleSelectTab(item.id)}
+                  className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-vault-yellow text-vault-dark font-bold shadow-xs'
+                      : 'text-vault-cream/75 hover:text-vault-cream'
+                  }`}
+                >
+                  <Icon className="w-4.5 h-4.5 stroke-[2.2]" />
+                  <span className="font-sans text-[10px] font-semibold tracking-tight">
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
+
+            {/* 4th "More" Trigger Button for Draggable Bottom Sheet */}
+            <button
+              type="button"
+              onClick={() => setIsBottomSheetOpen(true)}
+              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${
+                isBottomSheetOpen || ['skills', 'community', 'settings'].includes(activeTab)
+                  ? 'bg-vault-yellow/20 text-vault-yellow font-bold'
+                  : 'text-vault-cream/75 hover:text-vault-cream'
+              }`}
+            >
+              <MoreHorizontal className="w-4.5 h-4.5 stroke-[2.2]" />
+              <span className="font-sans text-[10px] font-semibold tracking-tight">
+                More
+              </span>
+            </button>
+          </>
+        )}
       </div>
 
       {/* ====================================================================== */}
