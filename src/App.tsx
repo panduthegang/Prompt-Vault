@@ -11,6 +11,7 @@ import Signin from './pages/Signin';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import Vault from './pages/Vault';
 
 function AppRoutes() {
   const location = useLocation();
@@ -39,6 +40,8 @@ function AppRoutes() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/vault" element={<Vault />} />
+        <Route path="/saved" element={<Navigate to="/vault" replace />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />

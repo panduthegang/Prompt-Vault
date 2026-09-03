@@ -4,8 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
   Bookmark,
-  Folder,
-  FileCode,
   Users,
   Settings,
   PanelLeftClose,
@@ -48,9 +46,7 @@ export default function Sidebar({
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'prompts', label: 'Saved Prompts', icon: Bookmark, count: promptCount },
-    { id: 'folders', label: 'Collections', icon: Folder, count: 12 },
-    { id: 'skills', label: 'Skill.md Rules', icon: FileCode, count: 48 },
+    { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
     { id: 'community', label: 'Community', icon: Users, count: 4 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
@@ -67,11 +63,14 @@ export default function Sidebar({
       navigate('/settings');
     } else if (tabId === 'dashboard') {
       navigate('/dashboard');
+    } else if (tabId === 'vault' || tabId === 'prompts') {
+      navigate('/vault');
+      onTabChange?.('vault');
     } else {
       if (window.location.pathname !== '/dashboard') {
         navigate('/dashboard');
       }
-      onTabChange(tabId);
+      onTabChange?.(tabId);
     }
     setIsBottomSheetOpen(false);
   };
@@ -82,7 +81,7 @@ export default function Sidebar({
       {/* 1. DESKTOP SIDEBAR (Visible only on lg+)  */}
       {/* ========================================== */}
       <aside
-        className={`hidden lg:flex bg-vault-dark text-vault-cream rounded-[28px] p-4 sm:p-5 flex-col justify-between shrink-0 border-2 border-vault-dark shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] lg:sticky lg:top-6 lg:h-[calc(100vh-48px)] ${isCollapsed ? 'w-[84px]' : 'w-[280px] xl:w-[300px]'
+        className={`hidden lg:flex bg-vault-dark text-vault-cream rounded-[28px] p-4 sm:p-5 flex-col justify-between shrink-0 border-2 border-vault-dark shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] lg:sticky lg:top-6 lg:h-[calc(100vh-48px)] z-40 ${isCollapsed ? 'w-[84px]' : 'w-[280px] xl:w-[300px]'
           }`}
       >
         <div className="space-y-6">
@@ -138,18 +137,7 @@ export default function Sidebar({
                 <div key={nav.id} className="relative group/tooltip flex items-center justify-center w-full">
                   <button
                     type="button"
-                    onClick={() => {
-                      if (nav.id === 'settings') {
-                        navigate('/settings');
-                      } else if (nav.id === 'dashboard' && window.location.pathname !== '/dashboard') {
-                        navigate('/dashboard');
-                      } else {
-                        if (window.location.pathname !== '/dashboard') {
-                          navigate('/dashboard');
-                        }
-                        onTabChange(nav.id);
-                      }
-                    }}
+                    onClick={() => handleSelectTab(nav.id)}
                     className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0 py-2.5' : 'justify-between px-3.5 py-2.5'
                       } rounded-xl font-sans text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${isActive
                         ? 'bg-vault-yellow text-vault-dark border-2 border-vault-dark shadow-xs font-bold'
@@ -181,13 +169,13 @@ export default function Sidebar({
 
                   {/* Floating Tooltip when Collapsed */}
                   {isCollapsed && (
-                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-x-0 transition-all duration-200 z-50 flex items-center">
-                      <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-2 whitespace-nowrap">
-                        <span className="font-sans text-xs font-bold tracking-tight">
+                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-x-0 transition-all duration-200 z-50 flex items-center whitespace-nowrap">
+                      <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-xl flex items-center gap-2 whitespace-nowrap">
+                        <span className="font-sans text-xs font-bold tracking-tight whitespace-nowrap">
                           {nav.label}
                         </span>
                         {nav.count !== undefined && (
-                          <span className="text-[10px] font-bold bg-vault-yellow text-vault-dark border border-vault-dark px-1.5 py-0.2 rounded-full">
+                          <span className="text-[10px] font-bold bg-vault-yellow text-vault-dark border border-vault-dark px-1.5 py-0.2 rounded-full shrink-0">
                             {nav.count}
                           </span>
                         )}
@@ -281,18 +269,7 @@ export default function Sidebar({
             <button
               key={item.id}
               type="button"
-              onClick={() => {
-                if (item.id === 'dashboard' && window.location.pathname !== '/dashboard') {
-                  navigate('/dashboard');
-                } else if (item.id === 'settings') {
-                  navigate('/settings');
-                } else {
-                  if (window.location.pathname !== '/dashboard') {
-                    navigate('/dashboard');
-                  }
-                  onTabChange(item.id);
-                }
-              }}
+              onClick={() => handleSelectTab(item.id)}
               className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${isActive
                   ? 'bg-vault-yellow text-vault-dark font-bold shadow-xs'
                   : 'text-vault-cream/75 hover:text-vault-cream'

@@ -296,7 +296,11 @@ export default function Dashboard() {
         {/* STAT CARDS ROW — 2 Columns on Mobile, 4 Columns on Desktop */}
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
           {/* Card 1: Total Prompts — YELLOW ACCENT SURFACE */}
-          <div className="bg-vault-yellow rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 border-2 border-vault-dark shadow-xs flex flex-col justify-between space-y-2.5 sm:space-y-3">
+          <div
+            onClick={() => navigate('/vault?tab=prompts')}
+            className="bg-vault-yellow rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 border-2 border-vault-dark shadow-xs flex flex-col justify-between space-y-2.5 sm:space-y-3 cursor-pointer hover:scale-[1.01] transition-transform"
+            title="Open Prompts Library"
+          >
             <div className="flex items-center justify-between">
               <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-vault-dark/70">
                 Total Prompts
@@ -331,11 +335,15 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Card 3: Collections — CREAM SURFACE */}
-          <div className="bg-vault-cream rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 border-2 border-vault-dark/15 shadow-xs flex flex-col justify-between space-y-2.5 sm:space-y-3">
+          {/* Card 3: Collections / Links — CREAM SURFACE */}
+          <div
+            onClick={() => navigate('/vault?tab=links')}
+            className="bg-vault-cream rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 border-2 border-vault-dark/15 shadow-xs flex flex-col justify-between space-y-2.5 sm:space-y-3 cursor-pointer hover:scale-[1.01] transition-transform"
+            title="Open Websites & Collections"
+          >
             <div className="flex items-center justify-between">
               <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-vault-dark/60">
-                Collections
+                Collections &amp; Links
               </span>
               <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-vault-dark/40" />
             </div>
@@ -352,7 +360,11 @@ export default function Dashboard() {
           </div>
 
           {/* Card 4: Skill.md Files — CREAM SURFACE */}
-          <div className="bg-vault-cream rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 border-2 border-vault-dark/15 shadow-xs flex flex-col justify-between space-y-2.5 sm:space-y-3">
+          <div
+            onClick={() => navigate('/vault?tab=skills')}
+            className="bg-vault-cream rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 border-2 border-vault-dark/15 shadow-xs flex flex-col justify-between space-y-2.5 sm:space-y-3 cursor-pointer hover:scale-[1.01] transition-transform"
+            title="Open Skill.md Rules"
+          >
             <div className="flex items-center justify-between">
               <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-vault-dark/60">
                 Skill.md Files
@@ -364,7 +376,7 @@ export default function Dashboard() {
                 48
               </span>
               <span className="font-sans text-[10px] sm:text-[11px] font-bold bg-vault-yellow text-vault-dark border border-vault-dark px-2 py-0.5 rounded-full self-start sm:self-auto">
-                2d ago
+                Open &rarr;
               </span>
             </div>
           </div>
@@ -375,9 +387,18 @@ export default function Dashboard() {
           {/* Header with Filter Pills */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-vault-dark/10">
             <div>
-              <h2 className="font-serif text-2xl text-vault-dark font-normal">
-                Your Vault Prompts
-              </h2>
+              <div className="flex items-center gap-3">
+                <h2 className="font-serif text-2xl text-vault-dark font-normal">
+                  Your Vault Prompts
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => navigate('/vault')}
+                  className="font-sans text-xs font-bold text-vault-dark underline hover:text-vault-dark/70 cursor-pointer"
+                >
+                  View All in Vault &rarr;
+                </button>
+              </div>
               <p className="font-sans text-xs text-vault-dark/55 font-medium pt-0.5">
                 Click copy to grab any prompt to clipboard instantly.
               </p>
@@ -588,7 +609,7 @@ export default function Dashboard() {
 
       {/* QUICK ADD PROMPT MODAL */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-vault-cream border-2 border-vault-dark rounded-[28px] p-6 sm:p-8 space-y-5 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             <button
               type="button"
