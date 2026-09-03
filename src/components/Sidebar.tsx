@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,7 +17,7 @@ export interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   promptCount: number;
-  onOpenAddModal: () => void;
+  onOpenAddModal?: () => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
 }
@@ -32,6 +32,21 @@ export default function Sidebar({
 }: SidebarProps) {
   const navigate = useNavigate();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  // Lock background scrolling when mobile bottom sheet is open
+  useEffect(() => {
+    if (isBottomSheetOpen) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
+    }
+  }, [isBottomSheetOpen]);
 
   const userAvatar = (() => {
     try {

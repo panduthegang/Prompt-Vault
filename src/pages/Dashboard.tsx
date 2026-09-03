@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import CustomSelect, { SelectOption } from '../components/ui/Select';
 import { copyToClipboard } from '../utils/clipboard';
 import {
   Sparkles,
@@ -13,22 +12,9 @@ import {
   Heart,
   MoreHorizontal,
   Filter,
-  X,
   TrendingUp,
   Layers,
-  Code2,
-  Server,
-  Megaphone,
-  Palette,
 } from 'lucide-react';
-
-const DASHBOARD_CATEGORY_OPTIONS: SelectOption[] = [
-  { value: 'Agent Skills', label: 'Agent Skills', icon: Layers, description: 'Autonomous agent protocols & workflows' },
-  { value: 'Frontend', label: 'Frontend', icon: Code2, description: 'UI/UX, React, Tailwind & styling' },
-  { value: 'Backend', label: 'Backend', icon: Server, description: 'APIs, database queries & microservices' },
-  { value: 'Marketing', label: 'Marketing', icon: Megaphone, description: 'Copywriting, launch posts & positioning' },
-  { value: 'Design Systems', label: 'Design Systems', icon: Palette, description: 'Design tokens, layout & component patterns' },
-];
 
 // ==========================================
 // TYPES & MOCK DATA
@@ -174,12 +160,6 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('All');
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  // Form State for Quick Add
-  const [newTitle, setNewTitle] = useState('');
-  const [newCategory, setNewCategory] = useState('Agent Skills');
-  const [newSnippet, setNewSnippet] = useState('');
 
   // Toast Notification
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -204,27 +184,6 @@ export default function Dashboard() {
     );
   };
 
-  const handleAddPrompt = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle.trim() || !newSnippet.trim()) return;
-
-    const newPrompt: PromptItem = {
-      id: Date.now().toString(),
-      title: newTitle,
-      category: newCategory,
-      snippet: newSnippet,
-      fullPrompt: newSnippet,
-      timestamp: 'Saved just now',
-      isStarred: false,
-    };
-
-    setPrompts([newPrompt, ...prompts]);
-    setNewTitle('');
-    setNewSnippet('');
-    setIsAddModalOpen(false);
-    showToast('New prompt added to your Vault!');
-  };
-
   // Filtered prompts
   const filteredPrompts = prompts.filter((p) => {
     const matchesSearch =
@@ -242,7 +201,7 @@ export default function Dashboard() {
         const parsed = JSON.parse(saved);
         if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
       }
-    } catch {}
+    } catch { }
     return '/avatars/avatar-1.svg';
   })();
 
@@ -261,7 +220,7 @@ export default function Dashboard() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         promptCount={prompts.length}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
+        onOpenAddModal={() => navigate('/vault?add=true')}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
@@ -400,18 +359,9 @@ export default function Dashboard() {
           {/* Header with Filter Pills */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-vault-dark/10">
             <div>
-              <div className="flex items-center gap-3">
-                <h2 className="font-serif text-2xl text-vault-dark font-normal">
-                  Your Vault Prompts
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => navigate('/vault')}
-                  className="font-sans text-xs font-bold text-vault-dark underline hover:text-vault-dark/70 cursor-pointer"
-                >
-                  View All in Vault &rarr;
-                </button>
-              </div>
+              <h2 className="font-serif text-2xl text-vault-dark font-normal">
+                Your Vault Prompts
+              </h2>
               <p className="font-sans text-xs text-vault-dark/55 font-medium pt-0.5">
                 Click copy to grab any prompt to clipboard instantly.
               </p>
@@ -424,11 +374,10 @@ export default function Dashboard() {
                   key={tag}
                   type="button"
                   onClick={() => setSelectedTag(tag)}
-                  className={`px-3.5 py-1.5 rounded-full font-sans text-xs font-semibold transition-all cursor-pointer ${
-                    selectedTag === tag
+                  className={`px-3.5 py-1.5 rounded-full font-sans text-xs font-semibold transition-all cursor-pointer ${selectedTag === tag
                       ? 'bg-vault-dark text-vault-cream shadow-xs'
                       : 'bg-vault-dark/5 text-vault-dark/70 hover:bg-vault-yellow/50 hover:text-vault-dark border border-vault-dark/10'
-                  }`}
+                    }`}
                 >
                   {tag}
                 </button>
@@ -441,21 +390,19 @@ export default function Dashboard() {
             {filteredPrompts.map((p) => (
               <div
                 key={p.id}
-                className={`rounded-[22px] p-5 flex flex-col justify-between space-y-4 transition-all duration-200 ${
-                  p.isFeatured
+                className={`rounded-[22px] p-5 flex flex-col justify-between space-y-4 transition-all duration-200 ${p.isFeatured
                     ? 'bg-vault-dark text-vault-cream border-2 border-vault-dark shadow-sm'
                     : 'bg-vault-cream text-vault-dark border-2 border-vault-dark/15 hover:border-vault-dark/40 hover:shadow-sm'
-                }`}
+                  }`}
               >
                 <div className="space-y-3">
                   {/* Category Tag & Star */}
                   <div className="flex items-center justify-between">
                     <span
-                      className={`font-sans text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
-                        p.isFeatured
+                      className={`font-sans text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${p.isFeatured
                           ? 'bg-vault-yellow text-vault-dark border-vault-dark'
                           : 'bg-vault-yellow/40 text-vault-dark border-vault-dark/15'
-                      }`}
+                        }`}
                     >
                       {p.category}
                     </span>
@@ -465,46 +412,41 @@ export default function Dashboard() {
                       className="cursor-pointer"
                     >
                       <Star
-                        className={`w-4 h-4 ${
-                          p.isStarred
+                        className={`w-4 h-4 ${p.isStarred
                             ? p.isFeatured
                               ? 'text-vault-yellow fill-vault-yellow'
                               : 'text-vault-dark fill-vault-dark'
                             : p.isFeatured
-                            ? 'text-vault-cream/40'
-                            : 'text-vault-dark/25'
-                        }`}
+                              ? 'text-vault-cream/40'
+                              : 'text-vault-dark/25'
+                          }`}
                       />
                     </button>
                   </div>
 
                   {/* Title */}
                   <h3
-                    className={`font-sans font-bold text-base truncate ${
-                      p.isFeatured ? 'text-vault-cream' : 'text-vault-dark'
-                    }`}
+                    className={`font-sans font-bold text-base truncate ${p.isFeatured ? 'text-vault-cream' : 'text-vault-dark'
+                      }`}
                   >
                     {p.title}
                   </h3>
 
                   {/* Snippet */}
                   <p
-                    className={`font-sans text-xs leading-relaxed line-clamp-4 ${
-                      p.isFeatured ? 'text-vault-cream/70' : 'text-vault-dark/65'
-                    }`}
+                    className={`font-sans text-xs leading-relaxed line-clamp-4 ${p.isFeatured ? 'text-vault-cream/70' : 'text-vault-dark/65'
+                      }`}
                   >
                     {p.snippet}
                   </p>
                 </div>
 
                 {/* Footer: Copy & Time */}
-                <div className={`flex items-center justify-between pt-3 border-t ${
-                  p.isFeatured ? 'border-vault-cream/15' : 'border-vault-dark/10'
-                }`}>
+                <div className={`flex items-center justify-between pt-3 border-t ${p.isFeatured ? 'border-vault-cream/15' : 'border-vault-dark/10'
+                  }`}>
                   <span
-                    className={`font-sans text-[11px] ${
-                      p.isFeatured ? 'text-vault-cream/50' : 'text-vault-dark/45'
-                    }`}
+                    className={`font-sans text-[11px] ${p.isFeatured ? 'text-vault-cream/50' : 'text-vault-dark/45'
+                      }`}
                   >
                     {p.timestamp}
                   </span>
@@ -512,11 +454,10 @@ export default function Dashboard() {
                   <button
                     type="button"
                     onClick={() => handleCopyPrompt(p.id, p.fullPrompt)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold transition-all cursor-pointer ${
-                      p.isFeatured
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold transition-all cursor-pointer ${p.isFeatured
                         ? 'bg-vault-green text-vault-dark hover:brightness-105'
                         : 'bg-vault-dark text-vault-cream hover:bg-vault-darker'
-                    }`}
+                      }`}
                   >
                     {copiedId === p.id ? (
                       <>
@@ -586,16 +527,14 @@ export default function Dashboard() {
                     </td>
                     <td className="py-3.5 px-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] border ${
-                          row.status === 'Live'
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] border ${row.status === 'Live'
                             ? 'bg-vault-green/20 text-vault-dark border-vault-green'
                             : 'bg-vault-yellow/50 text-vault-dark border-vault-dark/20'
-                        }`}
+                          }`}
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            row.status === 'Live' ? 'bg-vault-green animate-pulse' : 'bg-vault-dark/50'
-                          }`}
+                          className={`w-1.5 h-1.5 rounded-full ${row.status === 'Live' ? 'bg-vault-green animate-pulse' : 'bg-vault-dark/50'
+                            }`}
                         />
                         {row.status}
                       </span>
@@ -620,87 +559,6 @@ export default function Dashboard() {
         </section>
       </main>
 
-      {/* QUICK ADD PROMPT MODAL */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-vault-cream border-2 border-vault-dark rounded-[28px] p-6 sm:p-8 space-y-5 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
-            <button
-              type="button"
-              onClick={() => setIsAddModalOpen(false)}
-              className="absolute top-6 right-6 p-1 text-vault-dark/60 hover:text-vault-dark cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div>
-              <span className="font-sans text-xs font-bold uppercase tracking-widest text-vault-dark/60 block">
-                New Entry
-              </span>
-              <h2 className="font-serif text-3xl text-vault-dark font-normal">
-                Save Prompt to Vault
-              </h2>
-            </div>
-
-            <form onSubmit={handleAddPrompt} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  placeholder="e.g. Next.js Server Component System Rules"
-                  className="w-full bg-vault-cream text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-2.5 font-sans text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark">
-                  Category
-                </label>
-                <CustomSelect
-                  value={newCategory}
-                  onChange={setNewCategory}
-                  options={DASHBOARD_CATEGORY_OPTIONS}
-                  placeholder="Select Category..."
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark">
-                  Prompt Text / Rule Instructions
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={newSnippet}
-                  onChange={(e) => setNewSnippet(e.target.value)}
-                  placeholder="Paste your master prompt or skill.md rules here..."
-                  className="w-full bg-vault-cream text-vault-dark border-2 border-vault-dark rounded-xl p-4 font-sans text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green resize-none"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="px-5 py-2.5 rounded-full border-2 border-vault-dark text-vault-dark font-sans text-xs font-bold hover:bg-vault-yellow/40 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-full bg-vault-green text-vault-dark border-2 border-vault-dark font-sans text-xs font-bold shadow-xs hover:brightness-105 cursor-pointer"
-                >
-                  Save Prompt
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -301,11 +301,30 @@ export default function Vault() {
     } else if (tabParam === 'starred') {
       setActiveTab('starred');
     }
+
+    if (params.get('add') === 'true' || params.get('action') === 'add') {
+      setIsModalOpen(true);
+    }
   }, [location.search]);
 
   // Modal State for Add / Edit
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
+
+  // Lock background scrolling when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
+    }
+  }, [isModalOpen]);
 
   // Form Fields
   const [formType, setFormType] = useState<VaultItemType>('prompt');
@@ -832,7 +851,12 @@ export default function Vault() {
       {/* PROPER ADD / EDIT MODAL                                 */}
       {/* ======================================================== */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+        >
           <div className="bg-vault-cream border-2 border-vault-dark rounded-[24px] sm:rounded-[28px] max-w-lg w-full p-5 sm:p-7 space-y-5 shadow-2xl relative my-8">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b-2 border-vault-dark/15 pb-4">
