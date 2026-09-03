@@ -37,6 +37,20 @@ export default function CustomSelect({
   const listRef = useRef<HTMLUListElement>(null);
   const id = useId();
 
+  // Screen size detection for responsive mobile in-flow display vs desktop floating popover
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Find selected option
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -137,7 +151,16 @@ export default function CustomSelect({
         id={id}
         type="button"
         disabled={disabled}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (disabled) return;
+          const next = !isOpen;
+          setIsOpen(next);
+          if (next && isMobile) {
+            setTimeout(() => {
+              containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 80);
+          }
+        }}
         onKeyDown={handleKeyDown}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -178,15 +201,19 @@ export default function CustomSelect({
         </div>
       </button>
 
-      {/* Floating Animated Dropdown Menu */}
+      {/* Dropdown Menu: In-Flow on Mobile (Zero Nested Scroll), Floating Popover on Desktop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            initial={isMobile ? { opacity: 0, height: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
+            animate={isMobile ? { opacity: 1, height: 'auto' } : { opacity: 1, y: 0, scale: 1 }}
+            exit={isMobile ? { opacity: 0, height: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className={`absolute top-[calc(100%+6px)] left-0 right-0 z-50 bg-white border-2 border-vault-dark rounded-xl shadow-2xl overflow-hidden py-1.5 ${dropdownClassName}`}
+            className={`${
+              isMobile
+                ? 'relative mt-2 w-full bg-white border-2 border-vault-dark rounded-xl shadow-md overflow-hidden py-1.5'
+                : `absolute top-[calc(100%+6px)] left-0 right-0 z-50 bg-white border-2 border-vault-dark rounded-xl shadow-2xl overflow-hidden py-1.5 ${dropdownClassName}`
+            }`}
           >
             <ul
               ref={listRef}
@@ -195,7 +222,11 @@ export default function CustomSelect({
                 highlightedIndex >= 0 ? `${id}-opt-${highlightedIndex}` : undefined
               }
               tabIndex={-1}
-              className="max-h-60 overflow-y-auto no-scrollbar space-y-0.5 px-1 focus:outline-none"
+              className={`${
+                isMobile
+                  ? 'space-y-0.5 px-1 focus:outline-none'
+                  : 'max-h-64 overflow-y-auto no-scrollbar space-y-0.5 px-1 focus:outline-none'
+              }`}
             >
               {options.map((option, index) => {
                 const isSelected = option.value === value;
