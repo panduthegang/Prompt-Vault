@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import {
   LayoutDashboard,
   Bookmark,
@@ -32,6 +32,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const navigate = useNavigate();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const dragControls = useDragControls();
 
   // Lock background scrolling when mobile bottom sheet is open
   useEffect(() => {
@@ -333,6 +334,8 @@ export default function Sidebar({
             {/* Draggable Bottom Sheet Modal */}
             <motion.div
               drag="y"
+              dragListener={false}
+              dragControls={dragControls}
               dragConstraints={{ top: 0 }}
               dragElastic={{ top: 0.05, bottom: 0.3 }}
               onDragEnd={(_e, info) => {
@@ -345,10 +348,15 @@ export default function Sidebar({
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="relative z-10 w-full max-w-lg mx-auto bg-vault-cream border-t-2 border-vault-dark rounded-t-[32px] p-4 sm:p-5 pb-[max(2rem,env(safe-area-inset-bottom))] shadow-2xl space-y-3.5 max-h-[85dvh] overflow-y-auto overscroll-contain"
+              className="relative z-10 w-full max-w-lg mx-auto bg-vault-cream border-t-2 border-vault-dark rounded-t-[32px] p-4 sm:p-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] shadow-2xl space-y-3.5 max-h-[85dvh] overflow-y-auto overscroll-contain"
             >
               {/* Draggable Grab Handle Indicator (Pill) */}
-              <div className="w-12 h-1.5 bg-vault-dark/25 hover:bg-vault-dark/40 rounded-full mx-auto cursor-grab active:cursor-grabbing" />
+              <div
+                onPointerDown={(e) => dragControls.start(e)}
+                className="w-full pt-1 pb-2 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none -mt-1"
+              >
+                <div className="w-12 h-1.5 bg-vault-dark/25 hover:bg-vault-dark/40 rounded-full" />
+              </div>
 
               {/* Sheet Header */}
               <div className="flex items-center justify-between pt-0.5 pb-2 border-b border-vault-dark/10">
