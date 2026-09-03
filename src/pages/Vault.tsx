@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
+import CustomSelect, { SelectOption } from '../components/ui/Select';
 import { copyToClipboard } from '../utils/clipboard';
 export type VaultItemType = 'prompt' | 'skill' | 'website';
 
@@ -176,6 +177,15 @@ import {
   Link2,
   Layers,
   CheckCircle2,
+  Cpu,
+  Compass,
+  Code2,
+  Server,
+  BookOpen,
+  Wrench,
+  Brain,
+  Megaphone,
+  Database,
 } from 'lucide-react';
 
 interface ActiveToast {
@@ -195,6 +205,63 @@ const CATEGORY_PRESETS = [
   'Tools',
   'DevOps',
   'Reasoning',
+];
+
+const TOOL_OPTIONS: SelectOption[] = [
+  {
+    value: 'Cursor',
+    label: 'Cursor (.cursorrules)',
+    icon: Terminal,
+    badge: 'IDE',
+    description: 'System rules for Cursor AI editor',
+  },
+  {
+    value: 'Claude',
+    label: 'Claude 3.7 / Anthropic',
+    icon: Sparkles,
+    badge: 'LLM',
+    description: 'System prompts & reasoning guidelines',
+  },
+  {
+    value: 'Antigravity',
+    label: 'Google Antigravity (AGY)',
+    icon: Layers,
+    badge: 'Agent',
+    description: 'Autonomous multi-agent skills & protocols',
+  },
+  {
+    value: 'Windsurf',
+    label: 'Windsurf / Cascade',
+    icon: Compass,
+    badge: 'IDE',
+    description: 'Cascade workflow rules & instructions',
+  },
+  {
+    value: 'GitHub Copilot',
+    label: 'GitHub Copilot',
+    icon: Cpu,
+    badge: 'Assistant',
+    description: 'Inline code assistant instructions',
+  },
+  {
+    value: 'General IDE',
+    label: 'General IDE Instructions',
+    icon: FileCode,
+    badge: 'Config',
+    description: 'Editor-agnostic development instructions',
+  },
+];
+
+const CATEGORY_OPTIONS: SelectOption[] = [
+  { value: 'Agent Skills', label: 'Agent Skills', icon: Layers, description: 'Autonomous agent protocols & workflows' },
+  { value: 'Frontend', label: 'Frontend', icon: Code2, description: 'UI/UX, React, Tailwind & styling' },
+  { value: 'Backend', label: 'Backend', icon: Server, description: 'APIs, database queries & microservices' },
+  { value: 'IDE Rules', label: 'IDE Rules', icon: Terminal, description: 'Editor system prompts & config files' },
+  { value: 'AI Docs', label: 'AI Docs', icon: BookOpen, description: 'Model guides, prompting docs & whitepapers' },
+  { value: 'Tools', label: 'Tools', icon: Wrench, description: 'CLI utilities, linters & dev toolchains' },
+  { value: 'DevOps', label: 'DevOps', icon: Database, description: 'CI/CD pipelines, Docker & cloud deployment' },
+  { value: 'Reasoning', label: 'Reasoning', icon: Brain, description: 'Chain-of-thought & multi-step logic' },
+  { value: 'Marketing', label: 'Marketing', icon: Megaphone, description: 'Copywriting, launch posts & positioning' },
 ];
 
 export default function Vault() {
@@ -881,18 +948,12 @@ export default function Vault() {
                   <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
                     Target Tool / Environment
                   </label>
-                  <select
+                  <CustomSelect
                     value={formTool}
-                    onChange={(e) => setFormTool(e.target.value)}
-                    className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-2.5 font-sans text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-vault-green cursor-pointer"
-                  >
-                    <option value="Cursor">Cursor (.cursorrules)</option>
-                    <option value="Claude">Claude 3.7 / Anthropic</option>
-                    <option value="Antigravity">Google Antigravity (AGY)</option>
-                    <option value="Windsurf">Windsurf / Cascade</option>
-                    <option value="GitHub Copilot">GitHub Copilot</option>
-                    <option value="General IDE">General IDE Instructions</option>
-                  </select>
+                    onChange={setFormTool}
+                    options={TOOL_OPTIONS}
+                    placeholder="Select Target Tool..."
+                  />
                 </div>
               )}
 
@@ -901,23 +962,12 @@ export default function Vault() {
                 <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
                   Category
                 </label>
-                <div className="flex gap-2">
-                  <select
-                    value={formCategory}
-                    onChange={(e) => setFormCategory(e.target.value)}
-                    className="flex-1 bg-white text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-2.5 font-sans text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-vault-green cursor-pointer"
-                  >
-                    <option value="Agent Skills">Agent Skills</option>
-                    <option value="Frontend">Frontend</option>
-                    <option value="Backend">Backend</option>
-                    <option value="IDE Rules">IDE Rules</option>
-                    <option value="AI Docs">AI Docs</option>
-                    <option value="Tools">Tools</option>
-                    <option value="DevOps">DevOps</option>
-                    <option value="Reasoning">Reasoning</option>
-                    <option value="Marketing">Marketing</option>
-                  </select>
-                </div>
+                <CustomSelect
+                  value={formCategory}
+                  onChange={setFormCategory}
+                  options={CATEGORY_OPTIONS}
+                  placeholder="Select Category..."
+                />
               </div>
 
               {/* Content / Prompt Text / Description */}

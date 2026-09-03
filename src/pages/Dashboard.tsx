@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import CustomSelect, { SelectOption } from '../components/ui/Select';
 import { copyToClipboard } from '../utils/clipboard';
 import {
   Sparkles,
@@ -15,7 +16,19 @@ import {
   X,
   TrendingUp,
   Layers,
+  Code2,
+  Server,
+  Megaphone,
+  Palette,
 } from 'lucide-react';
+
+const DASHBOARD_CATEGORY_OPTIONS: SelectOption[] = [
+  { value: 'Agent Skills', label: 'Agent Skills', icon: Layers, description: 'Autonomous agent protocols & workflows' },
+  { value: 'Frontend', label: 'Frontend', icon: Code2, description: 'UI/UX, React, Tailwind & styling' },
+  { value: 'Backend', label: 'Backend', icon: Server, description: 'APIs, database queries & microservices' },
+  { value: 'Marketing', label: 'Marketing', icon: Megaphone, description: 'Copywriting, launch posts & positioning' },
+  { value: 'Design Systems', label: 'Design Systems', icon: Palette, description: 'Design tokens, layout & component patterns' },
+];
 
 // ==========================================
 // TYPES & MOCK DATA
@@ -647,17 +660,12 @@ export default function Dashboard() {
                 <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark">
                   Category
                 </label>
-                <select
+                <CustomSelect
                   value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                  className="w-full bg-vault-cream text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-2.5 font-sans text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-vault-green"
-                >
-                  <option value="Agent Skills">Agent Skills</option>
-                  <option value="Frontend">Frontend</option>
-                  <option value="Backend">Backend</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Design Systems">Design Systems</option>
-                </select>
+                  onChange={setNewCategory}
+                  options={DASHBOARD_CATEGORY_OPTIONS}
+                  placeholder="Select Category..."
+                />
               </div>
 
               <div className="space-y-1.5">
