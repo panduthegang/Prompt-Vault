@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, Check, ArrowUpRight, Zap, ShieldCheck, Clock, Layers } from 'lucide-react';
+import { X, Check, ArrowUpRight, Zap, ShieldCheck, Clock } from 'lucide-react';
 
 export interface ComparisonProps {
   className?: string;

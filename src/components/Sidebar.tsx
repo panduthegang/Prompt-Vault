@@ -28,10 +28,36 @@ export default function Sidebar({
   onTabChange,
   promptCount,
   onOpenAddModal,
-  isCollapsed = true,
-  onToggleCollapse,
+  isCollapsed: controlledIsCollapsed,
+  onToggleCollapse: controlledOnToggleCollapse,
 }: SidebarProps) {
   const navigate = useNavigate();
+  const [internalIsCollapsed, setInternalIsCollapsed] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('prompt_vault_sidebar_collapsed');
+      if (saved !== null) {
+        return saved === 'true';
+      }
+    } catch {}
+    return true; // Default to collapsed per design specs
+  });
+
+  const isCollapsed = controlledIsCollapsed !== undefined ? controlledIsCollapsed : internalIsCollapsed;
+
+  const handleToggleCollapse = () => {
+    if (controlledOnToggleCollapse) {
+      controlledOnToggleCollapse();
+    } else {
+      setInternalIsCollapsed((prev) => {
+        const next = !prev;
+        try {
+          localStorage.setItem('prompt_vault_sidebar_collapsed', String(next));
+        } catch {}
+        return next;
+      });
+    }
+  };
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const dragControls = useDragControls();
 
@@ -119,14 +145,13 @@ export default function Sidebar({
             )}
 
             {/* Collapse Toggle Button with Tooltip */}
-            {onToggleCollapse && (
-              <div className="relative group/toggle flex items-center justify-center">
-                <button
-                  type="button"
-                  onClick={onToggleCollapse}
-                  className="w-8 h-8 rounded-full bg-vault-cream/10 hover:bg-vault-cream/20 text-vault-cream border border-vault-cream/20 flex items-center justify-center transition-colors cursor-pointer shrink-0"
-                  aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-                >
+            <div className="relative group/toggle flex items-center justify-center">
+              <button
+                type="button"
+                onClick={handleToggleCollapse}
+                className="w-8 h-8 rounded-full bg-vault-cream/10 hover:bg-vault-cream/20 text-vault-cream border border-vault-cream/20 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+              >
                   {isCollapsed ? (
                     <PanelLeftOpen className="w-4 h-4 text-vault-green" />
                   ) : (
@@ -142,7 +167,7 @@ export default function Sidebar({
                   </div>
                 )}
               </div>
-            )}
+            
           </div>
 
           {/* Navigation Icon Rail with Hover Tooltips */}

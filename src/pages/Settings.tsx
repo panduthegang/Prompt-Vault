@@ -10,9 +10,7 @@ import {
   X,
   Eye,
   EyeOff,
-  Sparkles,
   Lock,
-  Camera,
   RefreshCw,
 } from 'lucide-react';
 
@@ -50,7 +48,6 @@ const PRESET_AVATARS = [
 export default function Settings() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
   const [activeToast, setActiveToast] = useState<ActiveToast | null>(null);
 
   // Profile State
@@ -182,14 +179,14 @@ export default function Settings() {
         onTabChange={(tab) => {
           if (tab === 'dashboard') {
             navigate('/dashboard');
+          } else if (tab === 'vault' || tab === 'prompts') {
+            navigate('/vault');
           } else {
             navigate('/dashboard');
           }
         }}
         promptCount={18}
-        onOpenAddModal={() => navigate('/dashboard')}
-        isCollapsed={isSidebarCollapsed}
-        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        onOpenAddModal={() => navigate('/vault?add=true')}
       />
 
       {/* Main Settings Content */}

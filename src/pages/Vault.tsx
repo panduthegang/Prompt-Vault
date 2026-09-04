@@ -5,6 +5,8 @@ import Sidebar from '../components/Sidebar';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import CustomSelect, { SelectOption } from '../components/ui/Select';
 import { copyToClipboard } from '../utils/clipboard';
+import { Bookmark, FileCode, Globe, Star, Plus, Search, Copy, Check, ExternalLink, Pencil, Trash2, X, Sparkles, Terminal, Link2, Layers, CheckCircle2, Cpu, Compass, Code2, Server, BookOpen, Wrench, Brain, Megaphone, Database } from 'lucide-react';
+
 export type VaultItemType = 'prompt' | 'skill' | 'website';
 
 export interface VaultItem {
@@ -159,35 +161,6 @@ function saveStoredVaultItems(items: VaultItem[]) {
     console.error('Failed to save vault items to localStorage', err);
   }
 }
-import {
-  Bookmark,
-  FileCode,
-  Globe,
-  Star,
-  Plus,
-  Search,
-  Copy,
-  Check,
-  ExternalLink,
-  Pencil,
-  Trash2,
-  X,
-  Filter,
-  Sparkles,
-  Terminal,
-  Link2,
-  Layers,
-  CheckCircle2,
-  Cpu,
-  Compass,
-  Code2,
-  Server,
-  BookOpen,
-  Wrench,
-  Brain,
-  Megaphone,
-  Database,
-} from 'lucide-react';
 
 interface ActiveToast {
   id: string;
@@ -270,7 +243,6 @@ export default function Vault() {
   const location = useLocation();
 
   // Navigation & Layout State
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
   const [items, setItems] = useState<VaultItem[]>(getStoredVaultItems);
   const [activeTab, setActiveTab] = useState<'all' | 'prompt' | 'skill' | 'website' | 'starred'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -711,8 +683,6 @@ export default function Vault() {
         }}
         promptCount={counts.all}
         onOpenAddModal={() => handleOpenAddModal()}
-        isCollapsed={isSidebarCollapsed}
-        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
 
       {/* Main Vault Content */}

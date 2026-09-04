@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { copyToClipboard } from '../utils/clipboard';
@@ -155,9 +155,8 @@ const COMMUNITY_PROMPTS: CommunityItem[] = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
   const [prompts, setPrompts] = useState<PromptItem[]>(INITIAL_PROMPTS);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('All');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -221,8 +220,6 @@ export default function Dashboard() {
         onTabChange={setActiveTab}
         promptCount={prompts.length}
         onOpenAddModal={() => navigate('/vault?add=true')}
-        isCollapsed={isSidebarCollapsed}
-        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
 
       {/* RIGHT MAIN CONTENT AREA */}
