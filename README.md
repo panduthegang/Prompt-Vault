@@ -2,12 +2,13 @@
 
 # 🗄️ Prompt Vault
 
-### *Save What Inspires You — The Ultimate Sanctuary for AI Prompts, Workflows & Skills*
+### *Save What Inspires You — The Ultimate Neo-Brutalist Sanctuary for AI Prompts, Workflows & Skills*
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-1ECC62?style=for-the-badge&logo=vercel&logoColor=002D0F)](https://prompt-vault-by-harsh.vercel.app/)
 [![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-black?style=for-the-badge&logo=framer&logoColor=blue)](https://www.framer.com/motion/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
 
 <br />
@@ -19,7 +20,7 @@
 </p>
 
 <p align="center">
-  <strong>Prompt Vault</strong> is an editorial neo-brutalist web application crafted for developers, creators, and AI practitioners. It provides a seamless, unified sanctuary to save, organize, search, and export high-impact AI prompts, web discovery bookmarks, and custom <code>skill.md</code> workflows.
+  <strong>Prompt Vault</strong> is an editorial Neo-Brutalist web application crafted for developers, creators, and AI practitioners. It provides a seamless, unified sanctuary to curate, search, organize, copy, and export high-impact AI prompts, web bookmarks, and agentic <code>skill.md</code> workflows.
 </p>
 
 [**Explore Live Demo ↗**](https://prompt-vault-by-harsh.vercel.app/) • [**Report Bug**](https://github.com/panduthegang/Prompt-Vault/issues) • [**Request Feature**](https://github.com/panduthegang/Prompt-Vault/issues)
@@ -28,16 +29,29 @@
 
 ---
 
-## ✨ Key Features
+## ✨ Core Highlights & Features
 
-- 🏛️ **Editorial Neo-Brutalist Aesthetic**: Built with a luxury editorial aesthetic, pairing high-contrast 2px solid borders, curated color palettes (`#F1F78C` Vault Yellow, `#F8F9E9` Vault Cream, `#1ECC62` Vault Green, `#002D0F` Forest Dark), and typography.
-- ✒️ **Impactful Typography**: Featuring **Instrument Serif** for dramatic, editorial display headings and **Manrope** for crisp, modern body readability.
-- ⚡ **Interactive Hero Viewport**: Center-aligned typography with dynamic spring-eased expanding two-tone CTA buttons and verified creator social proof.
-- 📊 **Real-time Statistics Bar**: 4-column metric showcase with highlighted key figures.
-- 🔄 **3-Column Process Workflow**: Interactive feature grid showcasing instant 1-click prompt capture, personal vault organization, full-text search, and multi-format exports.
-- 👁️ **Interactive FAQ Accordion**: Custom interactive status indicators featuring stylized closed eyelids when collapsed and glowing green open eyes when active.
-- 📱 **Fully Responsive Layout**: Mobile-first architecture with collapsible drawer navigation and responsive typography across phones, tablets, and ultra-wide displays.
-- 🎛️ **Custom Vault Green Scrollbars**: Bespoke webkit and Firefox scrollbar styling integrated directly into the brand identity.
+### 🗃️ Vault Library (`/vault`)
+- **Multi-Type Artifact Management**: Organize items across **AI Prompts**, **Agent Skill Rules** (`skill.md`), and **Website Documentation Bookmarks**.
+- **Real-time Search & Multi-Tag Filtering**: Instant debounced full-text search across titles, instructions, categories, and target tools. Filter seamlessly by category (Agent Skills, Frontend, Backend, IDE Rules, AI Docs, DevOps, Reasoning, Marketing).
+- **Favorites & Star System**: Quick-toggle star markers to curate and isolate your most vital system prompts.
+- **1-Click Copy with Dynamic Toast Feedback**: Copy prompts or website URLs instantly with animated top-center toast notifications featuring hover-to-pause and timeout indicators.
+
+### 📱 Responsive Mobile Gestures & Draggable Sheets
+- **Instagram / YouTube-Style Draggable Bottom Sheets**: On mobile viewports (`< 768px`), modal dialogs automatically adapt into smooth, gesture-driven bottom sheets with dedicated grab handle pills, spring physics (`damping: 28, stiffness: 300`), and swipe-down dismissal.
+- **Dedicated Drag Controls (`useDragControls`)**: Dragging is bound strictly to the top grab handle thumb, allowing fluid, unlocked momentum scrolling through long forms, code snippets, and action buttons without accidental sheet closures.
+- **Zero Double-Scroll Mobile Dropdowns**: Replaced nested scrollbars with in-flow option expansion on mobile screens so all 9 categories and target tool selections are fully visible without scroll collisions.
+- **Contextual Mobile Floating Dock**: When browsing `/vault`, the mobile bottom navigation bar dynamically rearranges to: `Dashboard` | `Vault` | `More` | **Wide `+ Add to Vault` Button** (uniform `h-11` height), empowering users to capture new prompts without scrolling back to the top of the page.
+
+### 🎨 Neo-Brutalist Design System
+- **Signature Aesthetics**: Defined by 2px high-contrast solid borders (`border-vault-dark`), bold drop shadows, rounded pill containers (`rounded-full`, `rounded-[28px]`), and curated color palettes (`#F1F78C` Vault Yellow, `#F8F9E9` Vault Cream, `#1ECC62` Vault Green, `#002D0F` Forest Dark).
+- **Impactful Typography**: Expressive pairings of Google Fonts **Instrument Serif** for dramatic, editorial display headlines and **Manrope** for clean body readability and code-like precision.
+- **Bespoke UI Components**: Custom Neo-Brutalist `CustomSelect` dropdown with tool badges (Cursor, Claude 3.7, Antigravity, Windsurf, Copilot) and a custom Neo-Brutalist delete confirmation dialog replacing generic browser alerts.
+- **Background Scroll Locking**: Automatic body and document scroll locking during active modal and sheet states, preserving layout stability and hiding exposed scrollbars.
+
+### 📊 Dashboard & Workspace Navigation
+- **Workspace Metric Cards**: Instant high-level metrics for total saved prompts, active workflows, curated collections, and community saves.
+- **Collapsible Desktop Sidebar & Floating Mobile Dock**: Desktop sidebar supports smooth collapsed icon mode with elevated, non-clipped hover tooltips (`z-50`), expanding drawer sheet for mobile screens, and quick navigation.
 
 ---
 
@@ -45,7 +59,7 @@
 
 | Token | Hex Code | Role & Usage |
 | :--- | :--- | :--- |
-| `--color-vault-yellow` | `#F1F78C` | Hero left column background, Process & FAQ sections, warm energetic accents |
+| `--color-vault-yellow` | `#F1F78C` | Hero highlights, active tab badges, tooltip tags, accent buttons |
 | `--color-vault-cream` | `#F8F9E9` | Global canvas background, card body surfaces, navigation background |
 | `--color-vault-green` | `#1ECC62` | Primary brand CTA buttons, active state indicators, scrollbar thumb, stat highlights |
 | `--color-vault-dark` | `#002D0F` | Deep forest green for borders, primary text, wordmark, and footer surface |
@@ -56,11 +70,13 @@
 ## 🛠️ Technology Stack
 
 - **Framework**: [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Bundler & Dev Server**: [Vite](https://vitejs.dev/)
+- **Routing**: [React Router DOM v7](https://reactrouter.com/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with `@tailwindcss/vite`
+- **Animations & Gestures**: [Framer Motion](https://www.framer.com/motion/) (Spring physics, draggable controls, bottom sheets)
+- **Bundler & Dev Server**: [Vite](https://vitejs.dev/)
 - **Iconography**: [Lucide React](https://lucide.dev/)
-- **Typography**: Google Fonts ([Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif) & [Manrope](https://fonts.google.com/specimen/Manrope))
-- **Deployment & Hosting**: [Vercel](https://vercel.com/) with SPA rewrites (`vercel.json`)
+- **Typography**: [Google Fonts](https://fonts.google.com/) (*Instrument Serif* & *Manrope*)
+- **Analytics & Hosting**: [Vercel](https://vercel.com/) with SPA rewrite configuration (`vercel.json`)
 
 ---
 
@@ -69,6 +85,7 @@
 ```
 Prompt-Vault/
 ├── public/
+│   ├── avatars/                  # Default user profile avatar SVGs
 │   ├── Hero.png                  # Visual artwork panel used in Hero section
 │   ├── Thumbnail.png             # Full-resolution OpenGraph social preview banner
 │   └── Thumbnail.jpg             # Compressed OpenGraph thumbnail
@@ -76,20 +93,31 @@ Prompt-Vault/
 │   ├── components/
 │   │   ├── Landing-Page/
 │   │   │   ├── Hero.tsx          # Centered editorial hero section with CTAs
-│   │   │   ├── Stats.tsx         # 4-column metric statistics bar
-│   │   │   ├── Process.tsx       # 3-column process & feature container
+│   │   │   ├── Stats.tsx         # 4-column metric statistics showcase
+│   │   │   ├── Process.tsx       # 3-column process & interactive feature grid
 │   │   │   └── FAQ.tsx           # Accordion FAQ section with interactive eye indicators
+│   │   ├── ui/
+│   │   │   ├── Select.tsx        # Bespoke Neo-Brutalist select dropdown with in-flow mobile expansion
+│   │   │   └── Toast.tsx         # Floating dynamic toast notification system
 │   │   ├── Navbar.tsx            # Sticky top navigation with mobile drawer
+│   │   ├── Sidebar.tsx           # Collapsible desktop sidebar + contextual mobile bottom dock & sheet
 │   │   └── Footer.tsx            # Footer with link grids, watermark & attribution
 │   ├── pages/
-│   │   └── LandingPage.tsx       # Page orchestrator assembling all sections
-│   ├── App.tsx                   # App shell mounting Navbar and LandingPage
+│   │   ├── LandingPage.tsx       # Marketing landing page orchestrator
+│   │   ├── Vault.tsx             # Main Vault library with search, filter, CRUD & bottom sheets
+│   │   ├── Dashboard.tsx         # User workspace overview, prompt stats & community feed
+│   │   ├── Settings.tsx          # Profile management, password reset & workspace options
+│   │   ├── Signin.tsx            # Neo-Brutalist authentication sign-in view
+│   │   └── Signup.tsx            # Account registration view
+│   ├── utils/
+│   │   └── clipboard.ts          # Async clipboard copy helper with fallbacks
+│   ├── App.tsx                   # Top-level client router and route definitions
 │   ├── main.tsx                  # React DOM entry point
-│   └── index.css                 # Tailwind theme variables & custom scrollbar
-├── index.html                    # HTML entry with preconnected Google Fonts & meta tags
-├── vercel.json                   # Vercel SPA build & routing configuration
-├── package.json                  # Dependencies and scripts
-└── vite.config.ts                # Vite build configuration
+│   └── index.css                 # Tailwind v4 theme variables, custom scrollbars & utilities
+├── index.html                    # HTML5 entry with preconnected Google Fonts & meta tags
+├── vercel.json                   # Vercel SPA routing rewrites
+├── package.json                  # Dependencies, scripts, and build configuration
+└── vite.config.ts                # Vite build pipeline and plugin configuration
 ```
 
 ---
@@ -98,10 +126,10 @@ Prompt-Vault/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (version `18.0` or higher recommended)
-- `npm` or `yarn` / `pnpm` / `bun`
+- [Node.js](https://nodejs.org/) (`v18.0` or higher recommended)
+- `npm`, `pnpm`, `yarn`, or `bun`
 
-### Installation
+### Installation & Local Setup
 
 1. **Clone the repository:**
    ```bash
@@ -114,25 +142,20 @@ Prompt-Vault/
    npm install
    ```
 
-3. **Start the local development server:**
+3. **Start the development server:**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser:**
-   Navigate to `http://localhost:5173` to view the application.
+4. **Access the application:**
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Building for Production
+### Production Build
 
-To create an optimized production build:
+To test or generate the production bundle:
 
 ```bash
 npm run build
-```
-
-Preview the production build locally:
-
-```bash
 npm run preview
 ```
 
@@ -140,11 +163,11 @@ npm run preview
 
 ## 🚢 Deployment
 
-This project is configured for one-click deployment on [Vercel](https://vercel.com/):
+The project is configured for continuous zero-config deployment on [Vercel](https://vercel.com/):
 
-1. Push your code to your GitHub repository.
-2. Import the project in Vercel.
-3. The included [`vercel.json`](file:///c:/Users/Lenovo/Documents/Prompt-Vault/vercel.json) will automatically handle the build commands (`npm run build`), output directory (`dist`), and single-page application (SPA) rewrites.
+1. Connect your repository to Vercel.
+2. The included [`vercel.json`](file:///c:/Users/Lenovo/Documents/Prompt-Vault/vercel.json) automatically directs all SPA routes to `index.html`.
+3. Production builds run `vite build` and serve from the `dist/` directory.
 
 ---
 
@@ -153,7 +176,8 @@ This project is configured for one-click deployment on [Vercel](https://vercel.c
 Crafted with care by **Harsh Rathod**
 
 - **Portfolio**: [harshrathod-portfolio.vercel.app](https://harshrathod-portfolio.vercel.app/)
-- **Project Link**: [prompt-vault-by-harsh.vercel.app](https://prompt-vault-by-harsh.vercel.app/)
+- **Live Demo**: [prompt-vault-by-harsh.vercel.app](https://prompt-vault-by-harsh.vercel.app/)
+- **GitHub**: [@panduthegang](https://github.com/panduthegang)
 
 ---
 
