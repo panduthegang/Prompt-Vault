@@ -1,0 +1,1670 @@
+/* ========================================================================== */
+/* PROMPT VAULT — LANDING PAGE MODULAR CSS                                    */
+/* Pure vanilla CSS rules with CSS custom properties and zero @apply         */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/* 0. SHARED BUTTONS & MICRO-INTERACTIONS                                     */
+/* ========================================================================== */
+
+/* Two-Tone Expanding Primary Pill Button */
+.expandingBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition: transform 200ms ease;
+}
+
+.expandingBtn:active {
+  transform: scale(0.97);
+}
+
+/* Front Green Pill */
+.btnFront {
+  position: relative;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-vault-green);
+  color: var(--color-vault-dark);
+  border: 1px solid var(--color-vault-dark);
+  border-radius: 9999px;
+  padding: 8px 14px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: filter 300ms ease, background-color 300ms ease;
+  white-space: nowrap;
+}
+
+@media (min-width: 400px) {
+  .btnFront {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 640px) {
+  .btnFront {
+    padding: 11px 24px;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .btnFront {
+    font-size: 14.5px;
+  }
+}
+
+.expandingBtn:hover .btnFront {
+  filter: brightness(1.03);
+}
+
+/* Back Darker Green Capsule - Tucks under curved pill cap */
+.btnBack {
+  position: relative;
+  z-index: 0;
+  margin-left: -24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-vault-darker);
+  color: var(--color-vault-green);
+  border: 1px solid var(--color-vault-dark);
+  border-radius: 0 9999px 9999px 0;
+  padding-left: 28px;
+  padding-right: 14px;
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-16px);
+  overflow: hidden;
+  transition: all 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .btnBack {
+    margin-left: -28px;
+    padding-left: 32px;
+    padding-right: 16px;
+  }
+}
+
+.expandingBtn:hover .btnBack {
+  max-width: 68px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (min-width: 640px) {
+  .expandingBtn:hover .btnBack {
+    max-width: 74px;
+  }
+}
+
+/* Arrow Icon inside expanding capsule */
+.btnBackIcon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+  flex-shrink: 0;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 640px) {
+  .btnBackIcon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.expandingBtn:hover .btnBackIcon {
+  transform: translate(2px, -2px) scale(1.05);
+}
+
+/* Outlined Pill Secondary Button */
+.outlineBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 2px solid var(--color-vault-dark);
+  color: var(--color-vault-dark);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 300ms ease;
+  white-space: nowrap;
+}
+
+@media (min-width: 400px) {
+  .outlineBtn {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 640px) {
+  .outlineBtn {
+    padding: 11px 28px;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .outlineBtn {
+    padding: 12px 32px;
+    font-size: 14.5px;
+  }
+}
+
+.outlineBtn:hover {
+  background-color: var(--color-vault-dark);
+  color: var(--color-vault-cream);
+}
+
+.outlineBtn:active {
+  transform: scale(0.97);
+}
+
+
+/* ========================================================================== */
+/* 1. HERO SECTION                                                            */
+/* ========================================================================== */
+
+.heroSection {
+  width: 100%;
+  flex: 1 1 0%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid var(--color-vault-dark);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Hero Left Solid Yellow Panel */
+.heroLeft {
+  background-color: var(--color-vault-yellow);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .heroLeft {
+    padding: 32px 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroLeft {
+    padding: 40px 32px;
+    border-right: 2px solid var(--color-vault-dark);
+    gap: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .heroLeft {
+    padding: 48px 48px;
+  }
+}
+
+/* Rating and Avatars */
+.heroRatingGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.heroAvatars {
+  display: flex;
+  overflow: hidden;
+}
+
+.heroAvatarImg {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px var(--color-vault-yellow);
+  object-fit: cover;
+  margin-left: -10px;
+}
+
+.heroAvatarImg:first-child {
+  margin-left: 0;
+}
+
+@media (min-width: 640px) {
+  .heroAvatarImg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.heroRatingMeta {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.heroStars {
+  color: var(--color-vault-dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+@media (min-width: 640px) {
+  .heroStars {
+    font-size: 12px;
+  }
+}
+
+.heroRatingLabel {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.85);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .heroRatingLabel {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroRatingLabel {
+    font-size: 14px;
+  }
+}
+
+/* Center Editorial Headline */
+.heroCenter {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 8px 0;
+  width: 100%;
+  max-width: 672px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .heroCenter {
+    padding: 12px 0;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .heroCenter {
+    max-width: 768px;
+  }
+}
+
+.heroHeadline {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 0.93;
+  letter-spacing: -0.02em;
+  color: var(--color-vault-dark);
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .heroHeadline {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 768px) {
+  .heroHeadline {
+    font-size: 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroHeadline {
+    font-size: 56px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .heroHeadline {
+    font-size: 72px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .heroHeadline {
+    font-size: 84px;
+  }
+}
+
+.heroHeadlineSpan {
+  display: block;
+}
+
+.heroHeadlineItalic {
+  display: block;
+  font-style: italic;
+}
+
+.heroSubtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.85);
+  max-width: 576px;
+  line-height: 1.6;
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
+  padding-top: 4px;
+}
+
+@media (min-width: 640px) {
+  .heroSubtitle {
+    font-size: 14px;
+    padding-top: 8px;
+  }
+}
+
+@media (min-width: 768px) {
+  .heroSubtitle {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .heroSubtitle {
+    font-size: 16.5px;
+    max-width: 672px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .heroSubtitle {
+    font-size: 18px;
+  }
+}
+
+/* Hero Actions */
+.heroActions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .heroActions {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 640px) {
+  .heroActions {
+    gap: 16px;
+  }
+}
+
+/* Hero Right Visual Photo Panel */
+.heroRight {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  background-color: #E8EFE8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-top: 2px solid var(--color-vault-dark);
+}
+
+@media (min-width: 1024px) {
+  .heroRight {
+    min-height: 0;
+    border-top: 0;
+  }
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* ========================================================================== */
+/* 2. STATS SECTION                                                           */
+/* ========================================================================== */
+
+.statsSection {
+  width: 100%;
+  background-color: var(--color-vault-cream);
+  flex-shrink: 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.statCard {
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: background-color 150ms ease;
+  cursor: default;
+}
+
+@media (min-width: 640px) {
+  .statCard {
+    padding: 16px 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .statCard {
+    padding: 20px 16px;
+  }
+}
+
+.statCard:hover {
+  background-color: rgba(241, 247, 140, 0.2);
+}
+
+/* Responsive Grid Dividers */
+.statBorderBottom {
+  border-bottom: 2px solid var(--color-vault-dark);
+}
+
+@media (min-width: 1024px) {
+  .statBorderBottom {
+    border-bottom: 0;
+  }
+}
+
+.statBorderRight {
+  border-right: 2px solid var(--color-vault-dark);
+}
+
+@media (min-width: 1024px) {
+  .statBorderRightLg {
+    border-right: 2px solid var(--color-vault-dark);
+  }
+}
+
+.statValue {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  color: var(--color-vault-dark);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: transform 150ms ease;
+}
+
+@media (min-width: 640px) {
+  .statValue {
+    font-size: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .statValue {
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .statValue {
+    font-size: 36px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .statValue {
+    font-size: 48px;
+  }
+}
+
+.statCard:hover .statValue {
+  transform: scale(1.02);
+}
+
+.statLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(0, 45, 15, 0.8);
+  margin-top: 4px;
+}
+
+@media (min-width: 640px) {
+  .statLabel {
+    font-size: 12px;
+    margin-top: 6px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .statLabel {
+    font-size: 14px;
+  }
+}
+
+
+/* ========================================================================== */
+/* 3. PROCESS ("HOW IT WORKS") SECTION                                        */
+/* ========================================================================== */
+
+.processSection {
+  width: 100%;
+  background-color: var(--color-vault-yellow);
+  color: var(--color-vault-dark);
+  padding: 64px 16px;
+  border-top: 2px solid var(--color-vault-dark);
+  scroll-margin-top: 80px;
+}
+
+@media (min-width: 640px) {
+  .processSection {
+    padding: 80px 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .processSection {
+    padding: 96px 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .processSection {
+    padding: 96px 64px;
+  }
+}
+
+.processContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+@media (min-width: 640px) {
+  .processContainer {
+    gap: 64px;
+  }
+}
+
+.processHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  max-width: 672px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .processHeader {
+    gap: 16px;
+  }
+}
+
+.processEyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(0, 45, 15, 0.7);
+}
+
+@media (min-width: 640px) {
+  .processEyebrow {
+    font-size: 14px;
+  }
+}
+
+.processTitle {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  color: var(--color-vault-dark);
+  letter-spacing: -0.02em;
+  line-height: 0.94;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .processTitle {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 768px) {
+  .processTitle {
+    font-size: 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .processTitle {
+    font-size: 68px;
+  }
+}
+
+.processTitleSpan {
+  display: block;
+}
+
+.processTitleItalic {
+  display: block;
+  font-style: italic;
+}
+
+.processSubtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.8);
+  max-width: 576px;
+  line-height: 1.6;
+  margin: 0;
+  padding-top: 4px;
+}
+
+@media (min-width: 640px) {
+  .processSubtitle {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .processSubtitle {
+    font-size: 16px;
+  }
+}
+
+/* 12-Column Process Container Box */
+.processBox {
+  width: 100%;
+  border: 2px solid var(--color-vault-dark);
+  border-radius: 24px;
+  overflow: hidden;
+  background-color: var(--color-vault-cream);
+  display: grid;
+  grid-template-columns: 1fr;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 640px) {
+  .processBox {
+    border-radius: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .processBox {
+    grid-template-columns: 4fr 8fr;
+  }
+}
+
+/* Left Panel - Folder Lock Graphic */
+.processLeftPanel {
+  background-color: var(--color-vault-green);
+  border-bottom: 2px solid var(--color-vault-dark);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+}
+
+@media (min-width: 640px) {
+  .processLeftPanel {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .processLeftPanel {
+    border-bottom: 0;
+    border-right: 2px solid var(--color-vault-dark);
+    min-height: 100%;
+  }
+}
+
+.processRing1 {
+  position: absolute;
+  top: -48px;
+  right: -48px;
+  width: 192px;
+  height: 192px;
+  border-radius: 9999px;
+  border: 2px solid rgba(0, 45, 15, 0.15);
+  pointer-events: none;
+}
+
+.processRing2 {
+  position: absolute;
+  bottom: -48px;
+  left: -48px;
+  width: 192px;
+  height: 192px;
+  border-radius: 9999px;
+  border: 2px solid rgba(0, 45, 15, 0.15);
+  pointer-events: none;
+}
+
+.processFolderCard {
+  position: relative;
+  z-index: 10;
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  background-color: var(--color-vault-cream);
+  border: 2px solid var(--color-vault-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: rotate(-4deg);
+  transition: transform 300ms ease;
+}
+
+@media (min-width: 640px) {
+  .processFolderCard {
+    width: 112px;
+    height: 112px;
+  }
+}
+
+.processFolderCard:hover {
+  transform: rotate(0deg);
+}
+
+.processFolderIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-vault-dark);
+  stroke-width: 1.8;
+  transition: transform 300ms ease;
+}
+
+.processFolderCard:hover .processFolderIcon {
+  transform: scale(1.05);
+}
+
+.processFolderBadge {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-vault-dark);
+  color: var(--color-vault-cream);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Right Area - 2x2 Step Grid */
+.processStepsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: var(--color-vault-cream);
+}
+
+@media (min-width: 640px) {
+  .processStepsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.stepCard {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  transition: background-color 150ms ease;
+}
+
+@media (min-width: 640px) {
+  .stepCard {
+    padding: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stepCard {
+    padding: 40px;
+  }
+}
+
+.stepCard:hover {
+  background-color: rgba(241, 247, 140, 0.2);
+}
+
+.stepBorderBottom {
+  border-bottom: 2px solid var(--color-vault-dark);
+}
+
+.stepBorderRightSm {
+  border-right: 0;
+}
+
+@media (min-width: 640px) {
+  .stepBorderRightSm {
+    border-right: 2px solid var(--color-vault-dark);
+  }
+}
+
+.stepBorderBottomMobile {
+  border-bottom: 2px solid var(--color-vault-dark);
+}
+
+@media (min-width: 640px) {
+  .stepBorderBottomMobile {
+    border-bottom: 0;
+  }
+}
+
+.stepNumber {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 36px;
+  color: var(--color-vault-green);
+  font-weight: 400;
+  line-height: 1;
+  user-select: none;
+}
+
+@media (min-width: 640px) {
+  .stepNumber {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stepNumber {
+    font-size: 60px;
+  }
+}
+
+.stepHeading {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--color-vault-dark);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .stepHeading {
+    font-size: 24px;
+  }
+}
+
+.stepDesc {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.8);
+  line-height: 1.6;
+  margin: 8px 0 0 0;
+}
+
+@media (min-width: 640px) {
+  .stepDesc {
+    font-size: 14px;
+  }
+}
+
+/* Process Bottom CTAs */
+.processActions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .processActions {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 640px) {
+  .processActions {
+    gap: 16px;
+  }
+}
+
+
+/* ========================================================================== */
+/* 4. COMPARISON ("WHY PROMPT VAULT") SECTION                                 */
+/* ========================================================================== */
+
+.comparisonSection {
+  width: 100%;
+  background-color: var(--color-vault-cream);
+  color: var(--color-vault-dark);
+  padding: 64px 16px;
+  border-top: 2px solid var(--color-vault-dark);
+  scroll-margin-top: 80px;
+}
+
+@media (min-width: 640px) {
+  .comparisonSection {
+    padding: 80px 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comparisonSection {
+    padding: 96px 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .comparisonSection {
+    padding: 96px 64px;
+  }
+}
+
+.comparisonContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+@media (min-width: 640px) {
+  .comparisonContainer {
+    gap: 64px;
+  }
+}
+
+.comparisonHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .comparisonHeader {
+    gap: 16px;
+  }
+}
+
+.comparisonBox {
+  width: 100%;
+  border: 2px solid var(--color-vault-dark);
+  border-radius: 24px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 640px) {
+  .comparisonBox {
+    border-radius: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comparisonBox {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Left Column: The Old Way */
+.comparisonOldWay {
+  background-color: rgba(241, 247, 140, 0.3);
+  border-bottom: 2px solid var(--color-vault-dark);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+@media (min-width: 640px) {
+  .comparisonOldWay {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comparisonOldWay {
+    border-bottom: 0;
+    border-right: 2px solid var(--color-vault-dark);
+  }
+}
+
+.comparisonTagOld {
+  padding: 4px 14px;
+  border-radius: 9999px;
+  background-color: rgba(0, 45, 15, 0.1);
+  border: 1px solid rgba(0, 45, 15, 0.2);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-vault-dark);
+}
+
+.comparisonColumnTitle {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--color-vault-dark);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 16px 0 0 0;
+}
+
+@media (min-width: 640px) {
+  .comparisonColumnTitle {
+    font-size: 30px;
+  }
+}
+
+.comparisonList {
+  list-style: none;
+  padding: 8px 0 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comparisonItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.8);
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .comparisonItem {
+    font-size: 14px;
+  }
+}
+
+.comparisonIconCircleOld {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: rgba(0, 45, 15, 0.1);
+  border: 1px solid rgba(0, 45, 15, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-vault-dark);
+}
+
+.comparisonSummaryOld {
+  padding: 16px;
+  border-radius: 16px;
+  background-color: rgba(0, 45, 15, 0.05);
+  border: 1px solid rgba(0, 45, 15, 0.15);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: rgba(0, 45, 15, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Right Column: The Vault Standard */
+.comparisonVaultWay {
+  background-color: var(--color-vault-dark);
+  color: var(--color-vault-cream);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .comparisonVaultWay {
+    padding: 40px;
+  }
+}
+
+.comparisonGlow {
+  position: absolute;
+  top: -96px;
+  right: -96px;
+  width: 288px;
+  height: 288px;
+  border-radius: 9999px;
+  background-color: rgba(30, 204, 98, 0.1);
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+.comparisonTagVault {
+  padding: 4px 14px;
+  border-radius: 9999px;
+  background-color: var(--color-vault-green);
+  color: var(--color-vault-dark);
+  border: 1px solid var(--color-vault-green);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.comparisonTitleVault {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--color-vault-cream);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 16px 0 0 0;
+}
+
+@media (min-width: 640px) {
+  .comparisonTitleVault {
+    font-size: 30px;
+  }
+}
+
+.comparisonItemVault {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 12px;
+  color: rgba(248, 249, 233, 0.9);
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .comparisonItemVault {
+    font-size: 14px;
+  }
+}
+
+.comparisonIconCircleVault {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: var(--color-vault-green);
+  color: var(--color-vault-dark);
+  border: 1px solid var(--color-vault-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.comparisonSummaryVault {
+  position: relative;
+  z-index: 10;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: rgba(30, 204, 98, 0.1);
+  border: 1px solid rgba(30, 204, 98, 0.3);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: rgba(248, 249, 233, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Comparison Bottom CTAs — Stacked one below another on mobile, row on desktop */
+.comparisonActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 8px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .comparisonActions {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+
+/* ========================================================================== */
+/* 5. FAQ SECTION                                                             */
+/* ========================================================================== */
+
+.faqSection {
+  width: 100%;
+  background-color: var(--color-vault-yellow);
+  color: var(--color-vault-dark);
+  padding: 56px 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  scroll-margin-top: 80px;
+}
+
+@media (min-width: 640px) {
+  .faqSection {
+    padding: 72px 24px;
+    border-radius: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .faqSection {
+    padding: 80px 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .faqSection {
+    padding: 80px 64px;
+  }
+}
+
+.faqContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .faqGrid {
+    grid-template-columns: 5fr 7fr;
+    gap: 56px;
+  }
+}
+
+/* FAQ Left Sticky Header Column */
+.faqLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .faqLeft {
+    position: sticky;
+    top: 96px;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.faqEyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(0, 45, 15, 0.7);
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .faqEyebrow {
+    font-size: 14px;
+  }
+}
+
+.faqTitle {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--color-vault-dark);
+  font-weight: 400;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .faqTitle {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 768px) {
+  .faqTitle {
+    font-size: 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .faqTitle {
+    font-size: 60px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .faqTitle {
+    font-size: 68px;
+  }
+}
+
+.faqSubtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.8);
+  max-width: 448px;
+  line-height: 1.6;
+  margin: 0;
+  padding-top: 4px;
+}
+
+@media (min-width: 640px) {
+  .faqSubtitle {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .faqSubtitle {
+    font-size: 16px;
+  }
+}
+
+.faqActions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .faqActions {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .faqActions {
+    justify-content: flex-start;
+  }
+}
+
+/* FAQ Right Stack of Accordion Cards */
+.faqAccordionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .faqAccordionList {
+    gap: 14px;
+  }
+}
+
+.faqCard {
+  width: 100%;
+  background-color: var(--color-vault-cream);
+  border: 2px solid var(--color-vault-dark);
+  border-radius: 20px;
+  transition: all 300ms ease;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .faqCard {
+    border-radius: 24px;
+  }
+}
+
+.faqCardClosed:hover {
+  border-color: rgba(0, 45, 15, 0.8);
+  background-color: rgba(248, 249, 233, 0.95);
+}
+
+.faqCardOpen {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  outline: 2px solid rgba(0, 45, 15, 0.1);
+}
+
+.faqHeaderBtn {
+  width: 100%;
+  text-align: left;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  border: none;
+}
+
+@media (min-width: 640px) {
+  .faqHeaderBtn {
+    padding: 20px 24px;
+  }
+}
+
+.faqQuestion {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--color-vault-dark);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  transition: color 200ms ease;
+}
+
+@media (min-width: 640px) {
+  .faqQuestion {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .faqQuestion {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .faqQuestion {
+    font-size: 23px;
+  }
+}
+
+.faqHeaderBtn:hover .faqQuestion {
+  color: var(--color-vault-darker);
+}
+
+/* Eye Icon Circle */
+.faqEyeIndicator {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-vault-dark);
+  transition: all 300ms ease;
+}
+
+@media (min-width: 640px) {
+  .faqEyeIndicator {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.faqEyeOpen {
+  background-color: var(--color-vault-green);
+  color: var(--color-vault-dark);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transform: scale(1.05);
+}
+
+.faqEyeClosed {
+  background-color: var(--color-vault-dark);
+  color: var(--color-vault-green);
+}
+
+.faqHeaderBtn:hover .faqEyeClosed {
+  transform: scale(1.05);
+}
+
+/* Smooth Accordion Drawer */
+.faqDrawer {
+  display: grid;
+  transition: all 300ms ease-in-out;
+}
+
+.faqDrawerOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.faqDrawerClosed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.faqDrawerInner {
+  overflow: hidden;
+}
+
+.faqAnswerBox {
+  padding: 4px 20px 20px 20px;
+}
+
+@media (min-width: 640px) {
+  .faqAnswerBox {
+    padding: 4px 24px 24px 24px;
+  }
+}
+
+.faqAnswerText {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(0, 45, 15, 0.8);
+  line-height: 1.6;
+  max-width: 672px;
+  border-top: 1px solid rgba(0, 45, 15, 0.15);
+  padding-top: 12px;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .faqAnswerText {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .faqAnswerText {
+    font-size: 14.5px;
+  }
+}

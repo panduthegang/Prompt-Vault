@@ -98,7 +98,9 @@ Prompt-Vault/
 │   └── Thumbnail.jpg                     # Compressed OpenGraph thumbnail
 ├── src/
 │   ├── components/
-│   │   ├── Landing-Page/                 # Marketing landing page domain components
+│   │   ├── Landing-Page/                 # Marketing landing page domain components & CSS
+│   │   │   ├── landingData.ts            # Centralized TypeScript models, constants & datasets
+│   │   │   ├── Landing.module.css        # Vanilla CSS module with clear section headers
 │   │   │   ├── Hero.tsx                  # Centered editorial hero section with CTAs
 │   │   │   ├── Stats.tsx                 # 4-column metric statistics showcase
 │   │   │   ├── Process.tsx               # 12-column process & feature step grid
