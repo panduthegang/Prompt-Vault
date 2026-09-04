@@ -110,6 +110,13 @@ Prompt-Vault/
 │   │   │   ├── DashboardStats.tsx        # 4 KPI metric summary cards
 │   │   │   ├── DashboardPrompts.tsx      # Saved prompts gallery with category filters
 │   │   │   └── DashboardCommunityTable.tsx # Community published snapshots table
+│   │   ├── Vault-Page/                   # Vault Library modular components
+│   │   │   ├── vaultData.ts              # VaultItem, VaultItemType models, presets & localStorage helpers
+│   │   │   ├── VaultHeader.tsx           # Title, count badge & "+ Add to Vault" button
+│   │   │   ├── VaultFilters.tsx          # 5 filter tabs (all, prompt, skill, website, starred), search & pills
+│   │   │   ├── VaultCard.tsx             # Responsive card with header badges, code preview, action tray & menu
+│   │   │   ├── VaultModalSheet.tsx       # Desktop modal + mobile draggable bottom sheet (useDragControls)
+│   │   │   └── VaultDeleteDialog.tsx     # Neo-Brutalist confirmation modal for item deletion
 │   │   ├── Settings-Page/                # Settings domain components
 │   │   │   ├── settingsData.ts           # UserProfile, PresetAvatar types & defaults
 │   │   │   ├── SettingsHeader.tsx        # Title, @username live badge & section tabs
