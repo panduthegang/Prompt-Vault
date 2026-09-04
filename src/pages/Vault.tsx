@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import CustomSelect, { SelectOption } from '../components/ui/Select';
 import { copyToClipboard } from '../utils/clipboard';
-import { Bookmark, FileCode, Globe, Star, Plus, Search, Copy, Check, ExternalLink, Pencil, Trash2, X, Sparkles, Terminal, Link2, Layers, CheckCircle2, Cpu, Compass, Code2, Server, BookOpen, Wrench, Brain, Megaphone, Database } from 'lucide-react';
+import { Bookmark, FileCode, Globe, Star, Plus, Search, Copy, Check, ExternalLink, Pencil, Trash2, X, Sparkles, Terminal, Link2, Layers, CheckCircle2, Cpu, Compass, Code2, Server, BookOpen, Wrench, Brain, Megaphone, Database, Download, Share2, MoreHorizontal } from 'lucide-react';
 
 export type VaultItemType = 'prompt' | 'skill' | 'website';
 
@@ -19,6 +19,7 @@ export interface VaultItem {
   tool?: string;
   timestamp: string;
   isStarred: boolean;
+  isPublished?: boolean;
 }
 
 const STORAGE_KEY = 'prompt_vault_user_saved_items';
@@ -34,6 +35,7 @@ const INITIAL_VAULT_ITEMS: VaultItem[] = [
       'Always inspect existing code structures and imports before writing new utilities. Preserve existing API signatures, prevent regressions, and run automated test verification before completion.',
     timestamp: 'Saved 2h ago',
     isStarred: true,
+    isPublished: true,
   },
   {
     id: 'vault-p2',
@@ -67,6 +69,7 @@ const INITIAL_VAULT_ITEMS: VaultItem[] = [
       '# Next.js 14 App Router Rules\n- Use Server Components by default; opt-in to Client Components only for stateful interactivity.\n- Co-locate route handlers inside /api subdirectories.\n- Enforce strict typing with Zod schemas on all server actions.',
     timestamp: 'Saved 4d ago',
     isStarred: true,
+    isPublished: true,
   },
   {
     id: 'vault-s2',
@@ -102,6 +105,7 @@ const INITIAL_VAULT_ITEMS: VaultItem[] = [
       'Official documentation on prompting Claude with chain-of-thought, XML tags, role-playing, and few-shot examples.',
     timestamp: 'Saved 2d ago',
     isStarred: true,
+    isPublished: true,
   },
   {
     id: 'vault-w2',
@@ -248,8 +252,29 @@ export default function Vault() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
-  // Responsive Screen Detection (Mobile Bottom Sheet vs Desktop Modal)
+  // Close card action menu when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.vault-card-menu-container')) {
+        setOpenMenuId(null);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenMenuId(null);
+    };
+
+    if (openMenuId) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handleOutsideClick);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [openMenuId]);
   const [isMobile, setIsMobile] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth < 768;
@@ -328,6 +353,7 @@ export default function Vault() {
   const [formContent, setFormContent] = useState('');
   const [formUrl, setFormUrl] = useState('');
   const [formTool, setFormTool] = useState('Cursor');
+  const [formIsPublished, setFormIsPublished] = useState(false);
 
   // Sync to LocalStorage whenever items change
   const updateItems = (newItems: VaultItem[]) => {
@@ -344,6 +370,7 @@ export default function Vault() {
     setFormContent('');
     setFormUrl('');
     setFormTool('Cursor');
+    setFormIsPublished(false);
     setIsModalOpen(true);
   };
 
@@ -356,6 +383,7 @@ export default function Vault() {
     setFormContent(item.content);
     setFormUrl(item.url || '');
     setFormTool(item.tool || 'Cursor');
+    setFormIsPublished(!!item.isPublished);
     setIsModalOpen(true);
   };
 
@@ -398,6 +426,7 @@ export default function Vault() {
             content: formContent.trim(),
             url: formType === 'website' ? formattedUrl : undefined,
             tool: formType === 'skill' ? formTool.trim() : undefined,
+            isPublished: formIsPublished,
           };
         }
         return item;
@@ -416,6 +445,7 @@ export default function Vault() {
         tool: formType === 'skill' ? formTool.trim() : undefined,
         timestamp: 'Just now',
         isStarred: false,
+        isPublished: formIsPublished,
       };
       updateItems([newItem, ...items]);
       showToast(`New ${formType.toUpperCase()} added to your Vault!`, 'success', 'Item Saved');
@@ -444,6 +474,47 @@ export default function Vault() {
       item.id === id ? { ...item, isStarred: !item.isStarred } : item
     );
     updateItems(updated);
+  };
+
+  // Download Skill as .md File
+  const handleDownloadSkill = (item: VaultItem) => {
+    try {
+      const blob = new Blob([item.content], { type: 'text/markdown;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const cleanName = item.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '') || 'skill';
+      link.download = `${cleanName}.md`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded "${cleanName}.md" successfully!`, 'success', 'Downloaded');
+    } catch (err) {
+      console.error('Failed to download skill markdown file', err);
+      showToast('Could not download markdown file', 'error', 'Download Failed');
+    }
+  };
+
+  // Toggle Publish Status for any Item Type
+  const handleTogglePublish = (id: string) => {
+    const updated = items.map((item) => {
+      if (item.id === id) {
+        return { ...item, isPublished: !item.isPublished };
+      }
+      return item;
+    });
+    updateItems(updated);
+
+    const target = updated.find((i) => i.id === id);
+    if (target?.isPublished) {
+      showToast(`"${target.title}" published to Community!`, 'success', 'Published');
+    } else {
+      showToast(`"${target?.title}" unpublished from Community`, 'info', 'Unpublished');
+    }
   };
 
   // Copy Item Text/URL
@@ -635,6 +706,38 @@ export default function Vault() {
           }
           className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl p-3 font-mono text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green resize-none"
         />
+      </div>
+
+      {/* Publish to Community Option */}
+      <div className="flex items-center justify-between p-3 bg-white/70 border-2 border-vault-dark/20 rounded-xl gap-3">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <div className="w-8 h-8 rounded-lg bg-vault-green/20 border border-vault-dark/20 flex items-center justify-center text-vault-dark shrink-0">
+            <Share2 className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <span className="font-sans text-xs font-bold text-vault-dark block truncate">
+              Publish to Community
+            </span>
+            <span className="font-sans text-[11px] text-vault-dark/60 block leading-tight">
+              Make this item visible to the Prompt Vault community
+            </span>
+          </div>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={formIsPublished}
+          onClick={() => setFormIsPublished(!formIsPublished)}
+          className={`w-11 h-6 rounded-full border-2 border-vault-dark transition-colors relative cursor-pointer shrink-0 focus:outline-none ${
+            formIsPublished ? 'bg-vault-green' : 'bg-vault-cream'
+          }`}
+        >
+          <span
+            className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-vault-dark transition-transform duration-200 ease-in-out shrink-0 ${
+              formIsPublished ? 'translate-x-5' : 'translate-x-0'
+            }`}
+          />
+        </button>
       </div>
 
       {/* Modal Actions */}
@@ -866,7 +969,7 @@ export default function Vault() {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-vault-cream border-2 border-vault-dark rounded-[22px] p-5 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md transition-shadow relative group"
+                className="bg-vault-cream border-2 border-vault-dark rounded-[20px] sm:rounded-[22px] p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md transition-shadow relative group"
               >
                 <div className="space-y-3">
                   {/* Top Meta Header: Type Badge, Category & Star */}
@@ -892,6 +995,13 @@ export default function Vault() {
                       <span className="font-sans text-[11px] font-semibold text-vault-dark/60 bg-white/70 border border-vault-dark/15 px-2 py-0.2 rounded-full">
                         {item.category}
                       </span>
+
+                      {/* Live / Published Badge */}
+                      {item.isPublished && (
+                        <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-vault-green text-vault-dark border border-vault-dark/40 px-2 py-0.2 rounded-full flex items-center gap-1 shadow-2xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-vault-dark animate-pulse" /> Live
+                        </span>
+                      )}
                     </div>
 
                     {/* Star Button */}
@@ -941,62 +1051,146 @@ export default function Vault() {
                 </div>
 
                 {/* Bottom Card Actions */}
-                <div className="pt-3 border-t border-vault-dark/10 flex items-center justify-between gap-2">
-                  <span className="font-sans text-[10px] text-vault-dark/50 font-medium">
+                <div className="pt-3 border-t border-vault-dark/10 flex items-center justify-between gap-1.5 sm:gap-2">
+                  <span className="font-sans text-[10px] text-vault-dark/50 font-medium whitespace-nowrap shrink-0">
                     {item.timestamp}
                   </span>
 
-                  <div className="flex items-center gap-1.5">
-                    {/* Copy Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleCopyItem(item)}
-                      className="p-1.5 rounded-lg border border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 transition-colors text-vault-dark cursor-pointer flex items-center gap-1"
-                      title={item.type === 'website' ? 'Copy Link URL' : 'Copy Content'}
-                    >
-                      {copiedId === item.id ? (
-                        <Check className="w-3.5 h-3.5 text-vault-green stroke-[3]" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5 text-vault-dark/70" />
-                      )}
-                      <span className="font-sans text-[11px] font-bold">
-                        {copiedId === item.id ? 'Copied' : 'Copy'}
-                      </span>
-                    </button>
-
-                    {/* Open Link Button (Websites only) */}
-                    {item.type === 'website' && item.url && (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 rounded-lg border border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 transition-colors text-vault-dark cursor-pointer flex items-center gap-1"
-                        title="Open Website in new tab"
+                  <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+                    {/* Primary Action: Download as .md Button (Skills only) */}
+                    {item.type === 'skill' && (
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadSkill(item)}
+                        className="p-1.5 px-2 sm:px-2.5 rounded-lg border border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 transition-colors text-vault-dark cursor-pointer flex items-center gap-1 sm:gap-1.5 whitespace-nowrap shrink-0"
+                        title="Download as .md file"
                       >
-                        <ExternalLink className="w-3.5 h-3.5 text-vault-dark/70" />
-                        <span className="font-sans text-[11px] font-bold">Visit</span>
-                      </a>
+                        <Download className="w-3.5 h-3.5 text-vault-dark/70 shrink-0" />
+                        <span className="font-sans text-[11px] font-bold whitespace-nowrap">Download .md</span>
+                      </button>
                     )}
 
-                    {/* Edit Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEditModal(item)}
-                      className="p-1.5 rounded-lg border border-vault-dark/15 hover:border-vault-dark hover:bg-white transition-colors text-vault-dark/70 hover:text-vault-dark cursor-pointer"
-                      title="Edit Item"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
+                    {/* Copy Button (Prompts & Skills) */}
+                    {item.type !== 'website' && (
+                      <button
+                        type="button"
+                        onClick={() => handleCopyItem(item)}
+                        className="p-1.5 px-2 sm:px-2.5 rounded-lg border border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 transition-colors text-vault-dark cursor-pointer flex items-center gap-1 sm:gap-1.5 whitespace-nowrap shrink-0"
+                        title="Copy content to clipboard"
+                      >
+                        {copiedId === item.id ? (
+                          <Check className="w-3.5 h-3.5 text-vault-green stroke-[3] shrink-0" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5 text-vault-dark/70 shrink-0" />
+                        )}
+                        <span className="font-sans text-[11px] font-bold whitespace-nowrap">
+                          {copiedId === item.id ? 'Copied' : 'Copy'}
+                        </span>
+                      </button>
+                    )}
 
-                    {/* Delete Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteItem(item.id, item.title)}
-                      className="p-1.5 rounded-lg border border-vault-dark/15 hover:border-red-500 hover:bg-red-50 text-vault-dark/60 hover:text-red-600 transition-colors cursor-pointer"
-                      title="Delete Item"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {/* Websites: Copy Link & Visit */}
+                    {item.type === 'website' && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => handleCopyItem(item)}
+                          className="p-1.5 px-2 rounded-lg border border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 transition-colors text-vault-dark cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0"
+                          title="Copy Link URL"
+                        >
+                          {copiedId === item.id ? (
+                            <Check className="w-3.5 h-3.5 text-vault-green stroke-[3] shrink-0" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5 text-vault-dark/70 shrink-0" />
+                          )}
+                          <span className="font-sans text-[11px] font-bold whitespace-nowrap">
+                            {copiedId === item.id ? 'Copied' : 'Copy Link'}
+                          </span>
+                        </button>
+
+                        {item.url && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 px-2 sm:px-2.5 rounded-lg border border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 transition-colors text-vault-dark cursor-pointer flex items-center gap-1 sm:gap-1.5 whitespace-nowrap shrink-0"
+                            title="Open Website in new tab"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5 text-vault-dark/70 shrink-0" />
+                            <span className="font-sans text-[11px] font-bold whitespace-nowrap">Visit</span>
+                          </a>
+                        )}
+                      </>
+                    )}
+
+                    {/* 3-Dots Dropdown Menu (Publish, Edit, Delete) */}
+                    <div className="relative vault-card-menu-container shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setOpenMenuId(openMenuId === item.id ? null : item.id)}
+                        className={`p-1.5 rounded-lg border transition-colors cursor-pointer flex items-center justify-center shrink-0 ${
+                          openMenuId === item.id
+                            ? 'bg-vault-dark text-vault-cream border-vault-dark'
+                            : 'border-vault-dark/20 hover:border-vault-dark hover:bg-vault-yellow/50 text-vault-dark/80 hover:text-vault-dark'
+                        }`}
+                        title="More actions"
+                      >
+                        <MoreHorizontal className="w-3.5 h-3.5" />
+                      </button>
+
+                      {/* Dropdown Menu Popover */}
+                      {openMenuId === item.id && (
+                        <div className="absolute right-0 bottom-full mb-1.5 w-44 bg-vault-cream border-2 border-vault-dark rounded-xl shadow-md z-30 py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                          {/* Publish / Unpublish Toggle */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleTogglePublish(item.id);
+                              setOpenMenuId(null);
+                            }}
+                            className="w-full px-3 py-2 text-left font-sans text-xs font-semibold flex items-center justify-between hover:bg-vault-yellow/60 transition-colors text-vault-dark cursor-pointer"
+                          >
+                            <span className="flex items-center gap-2">
+                              <Share2 className="w-3.5 h-3.5 text-vault-dark/70" />
+                              <span>{item.isPublished ? 'Unpublish' : 'Publish'}</span>
+                            </span>
+                            {item.isPublished && (
+                              <span className="font-mono text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-vault-green text-vault-dark border border-vault-dark/30">
+                                Live
+                              </span>
+                            )}
+                          </button>
+
+                          {/* Edit Item */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleOpenEditModal(item);
+                              setOpenMenuId(null);
+                            }}
+                            className="w-full px-3 py-2 text-left font-sans text-xs font-semibold flex items-center gap-2 hover:bg-vault-yellow/60 transition-colors text-vault-dark cursor-pointer"
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-vault-dark/70" />
+                            <span>Edit details</span>
+                          </button>
+
+                          <div className="h-px bg-vault-dark/10 my-0.5" />
+
+                          {/* Delete Item */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleDeleteItem(item.id, item.title);
+                              setOpenMenuId(null);
+                            }}
+                            className="w-full px-3 py-2 text-left font-sans text-xs font-semibold flex items-center gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
