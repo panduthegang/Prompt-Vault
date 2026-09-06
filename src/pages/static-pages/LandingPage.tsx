@@ -5,14 +5,15 @@ import Process from '../../components/Landing-Page/Process';
 import Comparison from '../../components/Landing-Page/Comparison';
 import FAQ from '../../components/Landing-Page/FAQ';
 import Footer from '../../components/Footer';
+import styles from '../../components/Landing-Page/Landing.module.css';
 
 export default function LandingPage() {
   return (
-    <div className="w-full min-h-screen bg-vault-cream flex flex-col overflow-x-hidden selection:bg-vault-green selection:text-vault-dark">
+    <div className={styles.landingPage}>
       <Navbar />
-      <main className="flex-1 flex flex-col">
+      <main className={styles.landingMain}>
         {/* First Viewport Section: Hero + Stats */}
-        <div className="w-full min-h-screen lg:min-h-0 lg:h-[calc(100vh-65px)] lg:max-h-[calc(100vh-65px)] flex flex-col justify-between">
+        <div className={styles.firstViewportWrap}>
           <Hero />
           <Stats />
         </div>

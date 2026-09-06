@@ -180,6 +180,48 @@
 
 
 /* ========================================================================== */
+/* 0.1 PAGE LAYOUT                                                            */
+/* ========================================================================== */
+
+.landingPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-vault-cream);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.landingPage::selection {
+  background-color: var(--color-vault-green);
+  color: var(--color-vault-dark);
+}
+
+.landingMain {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* First Viewport Section: Hero + Stats (Desktop constrained to one screen) */
+.firstViewportWrap {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (min-width: 1024px) {
+  .firstViewportWrap {
+    min-height: 0;
+    height: calc(100vh - 65px);
+    max-height: calc(100vh - 65px);
+  }
+}
+
+
+/* ========================================================================== */
 /* 1. HERO SECTION                                                            */
 /* ========================================================================== */
 
