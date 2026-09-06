@@ -51,8 +51,8 @@
   - `Dashboard-Page/`: KPI metrics, saved prompts gallery, and community snapshots table.
   - `Settings-Page/`: User profile management, preset avatar selectors, and security password reset forms.
   - `Prompts-Page/`: Public curated catalog, terminal prompt cards, and locked teaser states.
-  - `Privacy-Page/` & `Terms-Page/`: Structured pillars, sticky quick-index sidebars, and interactive clause drawers.
-- **Database-Ready Data Models**: Centralized data modules (`dashboardData.ts`, `settingsData.ts`, `promptsData.ts`) ready for immediate plug-and-play Supabase or PostgreSQL integration.
+  - `Legal/`: Shared presentational legal components (`LegalSubHeader`, `LegalHero`, `LegalPillars`, `LegalContent`, `LegalSectionCard`, `LegalSidebar`, `LegalCTA`) with vanilla CSS module styling, rendering both `/privacy` and `/terms` with 100% exact design and interactive parity.
+- **Database-Ready Data Models**: Centralized data modules (`dashboardData.ts`, `settingsData.ts`, `promptsData.ts`, `privacyData.ts`, `termsData.ts`) ready for immediate plug-and-play Supabase or PostgreSQL integration.
 - **Ultra-Clean Page Orchestrators**: Page files (`Dashboard.tsx`, `Settings.tsx`, `Terms.tsx`, `Privacy.tsx`) act as lightweight orchestrators (~40–190 lines).
 
 ### 🎨 Neo-Brutalist Design System
@@ -124,30 +124,24 @@ Prompt-Vault/
 │   │   │   ├── SettingsHeader.tsx        # Title, @username live badge & section tabs
 │   │   │   ├── SettingsProfileSection.tsx # Profile display card & interactive edit form
 │   │   │   └── SettingsSecuritySection.tsx # Password reset form with eye toggles & validation
-│   │   ├── Prompts-Page/                 # Public Prompts gallery domain components
+│   │   ├── Prompts-Page/                 # Public Prompts gallery domain components & CSS
 │   │   │   ├── promptsData.ts            # Prompts catalog, model badge styles & metrics
+│   │   │   ├── Prompts.module.css        # Vanilla CSS module with zero @apply
 │   │   │   ├── PromptHero.tsx            # Header & catalog introduction
 │   │   │   ├── PromptsGrid.tsx           # Responsive prompts cards grid layout
 │   │   │   ├── PromptCard.tsx            # Terminal-style code card with 1-click copy
 │   │   │   └── PromptsCurveLock.tsx      # Locked vault blur teaser with unlock CTA
-│   │   ├── Privacy-Page/                 # Privacy Policy domain components
-│   │   │   ├── privacyData.ts            # PrivacySection data models & principles
-│   │   │   ├── PrivacySubHeader.tsx      # Breadcrumbs & document switcher
-│   │   │   ├── PrivacyHero.tsx           # Title, lead narrative & creator meta card
-│   │   │   ├── PrivacyPillars.tsx        # 4 Core Privacy Pillars matrix
-│   │   │   ├── PrivacyContent.tsx        # 2-column sidebar navigation & accordions
-│   │   │   ├── PrivacySectionCard.tsx    # Interactive expandable policy drawer
-│   │   │   ├── PrivacySidebar.tsx        # Quick Index table of contents & creator card
-│   │   │   └── PrivacyCTA.tsx            # Community banner with expanding pill buttons
-│   │   ├── Terms-Page/                   # Terms & Conditions domain components
-│   │   │   ├── termsData.ts              # TermsClause data models & metrics
-│   │   │   ├── TermsSubHeader.tsx        # Breadcrumbs & document switcher
-│   │   │   ├── TermsHero.tsx             # Title, lead narrative & agreement meta card
-│   │   │   ├── TermsPillars.tsx          # 4 Pillars of Fair Use matrix
-│   │   │   ├── TermsContent.tsx          # 2-column sidebar navigation & accordions
-│   │   │   ├── TermsClauseCard.tsx       # Interactive expandable clause drawer
-│   │   │   ├── TermsSidebar.tsx          # Quick Index table of contents & creator card
-│   │   │   └── TermsCTA.tsx              # Community banner with expanding pill buttons
+│   │   ├── Legal/                        # Shared presentational legal components & CSS
+│   │   │   ├── privacyData.ts            # PrivacyPolicy clause data models & principles
+│   │   │   ├── termsData.ts              # Terms & Conditions clause data models & metrics
+│   │   │   ├── Legal.module.css          # Shared vanilla CSS module with zero @apply
+│   │   │   ├── LegalSubHeader.tsx        # Breadcrumbs & document switcher
+│   │   │   ├── LegalHero.tsx             # Title, lead narrative & creator meta card
+│   │   │   ├── LegalPillars.tsx          # 4 Core Pillars / Guarantees matrix
+│   │   │   ├── LegalContent.tsx          # 2-column sidebar navigation & section accordions
+│   │   │   ├── LegalSectionCard.tsx      # Interactive expandable policy drawer with animated eye
+│   │   │   ├── LegalSidebar.tsx          # Quick Index table of contents & creator card
+│   │   │   └── LegalCTA.tsx              # Bottom community banner with expanding pill buttons
 │   │   ├── ui/                           # Reusable design system primitives
 │   │   │   ├── Select.tsx                # Bespoke Neo-Brutalist select with mobile expansion
 │   │   │   └── Toast.tsx                 # Floating dynamic toast notification system
