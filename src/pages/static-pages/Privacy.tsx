@@ -1,11 +1,20 @@
 import { motion } from 'framer-motion';
+import { ShieldCheck } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import PrivacySubHeader from '../../components/Privacy-Page/PrivacySubHeader';
-import PrivacyHero from '../../components/Privacy-Page/PrivacyHero';
-import PrivacyGuarantees from '../../components/Privacy-Page/PrivacyGuarantees';
-import PrivacyContent from '../../components/Privacy-Page/PrivacyContent';
-import PrivacyCTA from '../../components/Privacy-Page/PrivacyCTA';
+import LegalSubHeader from '../../components/Legal/LegalSubHeader';
+import LegalHero from '../../components/Legal/LegalHero';
+import LegalPillars from '../../components/Legal/LegalPillars';
+import LegalContent from '../../components/Legal/LegalContent';
+import LegalCTA from '../../components/Legal/LegalCTA';
+import { PRIVACY_CLAUSES, GUARANTEE_CARDS } from '../../components/Legal/privacyData';
+
+const PRIVACY_META_ITEMS = [
+  { label: 'Project', value: 'Prompt Vault' },
+  { label: 'Created By', value: 'Harsh Rathod' },
+  { label: 'Database', value: 'Supabase (Upcoming)' },
+  { label: 'Data Policy', value: '100% User Owned' },
+];
 
 export default function Privacy() {
   return (
@@ -20,19 +29,43 @@ export default function Privacy() {
 
       <main className="flex-1 w-full">
         {/* Top Sticky Sub-Header / Segmented Switcher */}
-        <PrivacySubHeader />
+        <LegalSubHeader
+          activePage="privacy"
+          parentLabel="Legal & Privacy"
+          currentLabel="Privacy Policy"
+        />
 
         {/* Hero Section */}
-        <PrivacyHero />
+        <LegalHero
+          badgeIcon={ShieldCheck}
+          badgeText="HONEST & SHORT PRIVACY"
+          titleLine1="SAVE WHAT INSPIRES YOU."
+          titleLine2="NO TRACKING. NO NONSENSE."
+          description="Prompt Vault was built by a creator for creators — to easily save, organize, and find the prompts and underrated tools we discover daily. Here is our simple privacy policy with zero legalese."
+          summaryTitle="Quick Summary"
+          summaryBadgeText="SIMPLE & CLEAR"
+          metaItems={PRIVACY_META_ITEMS}
+        />
 
         {/* 4 Guarantees Matrix */}
-        <PrivacyGuarantees />
+        <LegalPillars pillars={GUARANTEE_CARDS} />
 
         {/* Main Content: Clean 2-Column Layout */}
-        <PrivacyContent />
+        <LegalContent
+          clauses={PRIVACY_CLAUSES}
+          creatorSubtext="Have questions, suggestions, or want to say hi? Connect directly with the creator."
+        />
 
         {/* Bottom Callout Section */}
-        <PrivacyCTA />
+        <LegalCTA
+          tagline="Prompt Vault Philosophy"
+          titleLead="BUILT FOR CREATORS WHO REFUSE TO"
+          titleItalic="LOSE INSPIRATION."
+          description="Never dig through lost chat logs or messy notepad files again. Save your favorite prompts and tools in one clean, beautiful home."
+          primaryBtnText="Start Saving Prompts"
+          secondaryBtnText="Read Terms & Conditions"
+          secondaryBtnTo="/terms"
+        />
       </main>
 
       <Footer />

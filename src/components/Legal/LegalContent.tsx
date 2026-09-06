@@ -1,14 +1,20 @@
 import { useState } from 'react';
-import { TERMS_CLAUSES } from './termsData';
-import TermsSidebar from './TermsSidebar';
-import TermsClauseCard from './TermsClauseCard';
+import LegalSidebar from './LegalSidebar';
+import LegalSectionCard, { LegalClause } from './LegalSectionCard';
+import styles from './Legal.module.css';
 
-export default function TermsContent() {
-  const [openClauses, setOpenClauses] = useState<Record<string, boolean>>({
-    'platform-purpose': true,
-    'you-own-everything': true,
-    'common-sense-rules': false,
-    'future-updates-supabase': false,
+export interface LegalContentProps {
+  clauses: LegalClause[];
+  creatorSubtext: string;
+}
+
+export default function LegalContent({ clauses, creatorSubtext }: LegalContentProps) {
+  const [openClauses, setOpenClauses] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    clauses.forEach((c, idx) => {
+      initial[c.id] = idx < 2;
+    });
+    return initial;
   });
 
   const toggleClause = (id: string) => {
@@ -20,7 +26,7 @@ export default function TermsContent() {
 
   const expandAll = () => {
     const allOpen: Record<string, boolean> = {};
-    TERMS_CLAUSES.forEach((c) => {
+    clauses.forEach((c) => {
       allOpen[c.id] = true;
     });
     setOpenClauses(allOpen);
@@ -37,21 +43,23 @@ export default function TermsContent() {
   };
 
   return (
-    <section className="w-full bg-vault-cream px-4 sm:px-6 md:px-10 lg:px-14 py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+    <section className={styles.contentSection}>
+      <div className={styles.contentContainer}>
+        <div className={styles.contentGrid}>
           {/* Left Column: Sticky Table of Contents & Creator Card */}
-          <TermsSidebar
+          <LegalSidebar
+            clauses={clauses}
             openClauses={openClauses}
             onSelectClause={handleSelectClause}
             onExpandAll={expandAll}
             onCollapseAll={collapseAll}
+            creatorSubtext={creatorSubtext}
           />
 
           {/* Right Column: Stacked Interactive Clauses */}
-          <div className="lg:col-span-8 space-y-5">
-            {TERMS_CLAUSES.map((clause) => (
-              <TermsClauseCard
+          <div className={styles.clausesCol}>
+            {clauses.map((clause) => (
+              <LegalSectionCard
                 key={clause.id}
                 clause={clause}
                 isOpen={!!openClauses[clause.id]}
