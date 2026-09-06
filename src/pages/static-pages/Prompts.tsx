@@ -3,14 +3,15 @@ import Footer from '../../components/Footer';
 import PromptHero from '../../components/Prompts-Page/PromptHero';
 import PromptsGrid from '../../components/Prompts-Page/PromptsGrid';
 import PromptsCurveLock from '../../components/Prompts-Page/PromptsCurveLock';
+import styles from '../../components/Prompts-Page/Prompts.module.css';
 
 export default function Prompts() {
   return (
-    <div className="w-full min-h-screen bg-vault-cream flex flex-col selection:bg-vault-green selection:text-vault-dark overflow-x-hidden">
+    <div className={styles.promptsPage}>
       {/* Smart Reveal Navbar */}
       <Navbar />
 
-      <main className="flex-1 w-full flex flex-col">
+      <main className={styles.promptsMain}>
         {/* Compact, Focused Hero Section */}
         <PromptHero />
 
