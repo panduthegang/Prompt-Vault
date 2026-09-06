@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import {
@@ -109,6 +109,9 @@ export default function Sidebar({
     } else if (tabId === 'vault' || tabId === 'prompts') {
       navigate('/vault');
       onTabChange?.('vault');
+    } else if (tabId === 'community') {
+      navigate('/community');
+      onTabChange?.('community');
     } else {
       if (window.location.pathname !== '/dashboard') {
         navigate('/dashboard');
@@ -385,7 +388,7 @@ export default function Sidebar({
               type="button"
               onClick={() => setIsBottomSheetOpen(true)}
               className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${
-                isBottomSheetOpen || ['skills', 'community', 'settings'].includes(activeTab)
+                isBottomSheetOpen || ['skills', 'settings'].includes(activeTab)
                   ? 'bg-vault-yellow/20 text-vault-yellow font-bold'
                   : 'text-vault-cream/75 hover:text-vault-cream'
               }`}

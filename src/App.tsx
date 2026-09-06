@@ -12,6 +12,7 @@ import Signup from './pages/Auth-Pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Vault from './pages/Vault';
+import Community from './pages/Community';
 
 function AppRoutes() {
   const location = useLocation();
@@ -42,6 +43,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/vault" element={<Vault />} />
         <Route path="/saved" element={<Navigate to="/vault" replace />} />
+        <Route path="/community" element={<Community />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
