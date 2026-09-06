@@ -423,7 +423,7 @@ export default function Community() {
     try {
       const saved = localStorage.getItem('prompt_vault_liked_community_items');
       if (saved) return new Set(JSON.parse(saved));
-    } catch {}
+    } catch { }
     return new Set(['comm-1', 'comm-2']);
   });
 
@@ -447,6 +447,22 @@ export default function Community() {
   // Intersection sentinel for infinite scrolling
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+  // Responsive device state for mobile bottom sheet vs desktop modal
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Interactive feedback state
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [inspectItem, setInspectItem] = useState<CommunityItem | null>(null);
@@ -462,6 +478,20 @@ export default function Community() {
   };
 
   const inspectDragControls = useDragControls();
+
+  // Background scroll locking when modal / bottom sheet is open (prevents dragging conflicts)
+  useEffect(() => {
+    if (inspectItem) {
+      const originalOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
+    }
+  }, [inspectItem]);
 
   // Load User Published items dynamically from personal Vault
   const userPublishedItems = useMemo(() => {
@@ -607,7 +637,7 @@ export default function Community() {
     setLikedIds(newLikes);
     try {
       localStorage.setItem('prompt_vault_liked_community_items', JSON.stringify(Array.from(newLikes)));
-    } catch {}
+    } catch { }
 
     setItems((prev) =>
       prev.map((i) => {
@@ -781,18 +811,16 @@ export default function Community() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl font-sans text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
-                      isActive
+                    className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl font-sans text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${isActive
                         ? 'bg-vault-dark text-vault-cream shadow-sm font-bold'
                         : 'text-vault-dark/70 hover:text-vault-dark hover:bg-vault-cream/80'
-                    }`}
+                      }`}
                   >
                     <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-vault-yellow' : 'text-vault-dark/60'}`} />
                     <span>{tab.label}</span>
                     <span
-                      className={`text-[11px] px-1.5 py-0.2 rounded-full font-mono ${
-                        isActive ? 'bg-vault-yellow text-vault-dark font-bold' : 'bg-vault-dark/10 text-vault-dark/60'
-                      }`}
+                      className={`text-[11px] px-1.5 py-0.2 rounded-full font-mono ${isActive ? 'bg-vault-yellow text-vault-dark font-bold' : 'bg-vault-dark/10 text-vault-dark/60'
+                        }`}
                     >
                       {tab.count}
                     </span>
@@ -935,13 +963,12 @@ export default function Community() {
 
                         {/* Item Type Badge */}
                         <span
-                          className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border shrink-0 ${
-                            isSkill
+                          className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border shrink-0 ${isSkill
                               ? 'bg-vault-green text-vault-dark border-vault-dark'
                               : isWebsite
-                              ? 'bg-sky-200 text-vault-dark border-vault-dark'
-                              : 'bg-vault-yellow text-vault-dark border-vault-dark'
-                          }`}
+                                ? 'bg-sky-200 text-vault-dark border-vault-dark'
+                                : 'bg-vault-yellow text-vault-dark border-vault-dark'
+                            }`}
                         >
                           {isSkill ? 'skill.md' : isWebsite ? 'link' : 'prompt'}
                         </span>
@@ -996,17 +1023,15 @@ export default function Community() {
                       <button
                         type="button"
                         onClick={(e) => handleToggleLike(e, item)}
-                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border font-sans text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
-                          isLiked
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border font-sans text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${isLiked
                             ? 'bg-rose-100 text-rose-700 border-rose-400 shadow-2xs'
                             : 'bg-vault-cream text-vault-dark/70 border-vault-dark/20 hover:border-vault-dark hover:text-vault-dark'
-                        }`}
+                          }`}
                         title={isLiked ? 'Unlike' : 'Like'}
                       >
                         <Heart
-                          className={`w-3.5 h-3.5 transition-transform active:scale-125 ${
-                            isLiked ? 'fill-rose-500 text-rose-500' : 'text-vault-dark/60'
-                          }`}
+                          className={`w-3.5 h-3.5 transition-transform active:scale-125 ${isLiked ? 'fill-rose-500 text-rose-500' : 'text-vault-dark/60'
+                            }`}
                         />
                         <span>{item.metrics.likes}</span>
                       </button>
@@ -1017,11 +1042,10 @@ export default function Community() {
                         <button
                           type="button"
                           onClick={(e) => handleCopyContent(e, item)}
-                          className={`flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border-2 font-sans text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap ${
-                            copiedId === item.id
+                          className={`flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border-2 font-sans text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap ${copiedId === item.id
                               ? 'bg-vault-green text-vault-dark border-vault-dark'
                               : 'bg-vault-cream text-vault-dark border-vault-dark hover:bg-vault-dark hover:text-vault-cream'
-                          }`}
+                            }`}
                           title="Copy prompt"
                         >
                           {copiedId === item.id ? (
@@ -1041,11 +1065,10 @@ export default function Community() {
                         <button
                           type="button"
                           onClick={(e) => handleSaveToVault(e, item)}
-                          className={`flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border-2 font-sans text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
-                            isSavedInVault
+                          className={`flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border-2 font-sans text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${isSavedInVault
                               ? 'bg-vault-yellow text-vault-dark border-vault-dark shadow-2xs'
                               : 'bg-vault-green text-vault-dark border-vault-dark hover:bg-[#19b657]'
-                          }`}
+                            }`}
                           title={isSavedInVault ? 'Saved in Vault' : 'Save to Vault'}
                         >
                           {isSavedInVault ? (
@@ -1130,191 +1153,357 @@ export default function Community() {
       {/* =================================================================== */}
       <AnimatePresence>
         {inspectItem && (
-          <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setInspectItem(null)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs"
-            />
+          isMobile ? (
+            /* MOBILE INSTAGRAM / YOUTUBE STYLE DRAGGABLE BOTTOM SHEET (VAULT CONSISTENCY) */
+            <div className="fixed inset-0 z-50 flex flex-col justify-end">
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => setInspectItem(null)}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+              />
 
-            {/* Modal Card / Bottom Sheet with FIXED header/footer and INNER SCROLL */}
-            <motion.div
-              drag="y"
-              dragListener={false}
-              dragControls={inspectDragControls}
-              dragConstraints={{ top: 0 }}
-              dragElastic={0.2}
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 100 || info.velocity.y > 500) {
-                  setInspectItem(null);
-                }
-              }}
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="relative z-10 w-full md:max-w-2xl bg-vault-cream border-t-2 md:border-2 border-vault-dark rounded-t-[32px] md:rounded-[28px] p-5 sm:p-6 flex flex-col max-h-[88dvh] sm:max-h-[85dvh] shadow-2xl pb-[max(1.25rem,env(safe-area-inset-bottom))]"
-            >
-              {/* Mobile Drag Handle Thumb */}
-              <div
-                onPointerDown={(e) => inspectDragControls.start(e)}
-                className="shrink-0 md:hidden flex justify-center -mt-2 pb-2.5 cursor-grab active:cursor-grabbing touch-none"
+              {/* Draggable Bottom Sheet Modal */}
+              <motion.div
+                drag="y"
+                dragListener={false}
+                dragControls={inspectDragControls}
+                dragConstraints={{ top: 0 }}
+                dragElastic={{ top: 0.05, bottom: 0.3 }}
+                dragMomentum={false}
+                onDragEnd={(_e, info) => {
+                  if (info.offset.y > 80 || info.velocity.y > 300) {
+                    setInspectItem(null);
+                  }
+                }}
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+                style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                className="relative z-10 w-full max-w-lg mx-auto bg-vault-cream border-t-2 border-vault-dark rounded-t-[32px] p-5 pb-[max(3rem,env(safe-area-inset-bottom))] shadow-2xl flex flex-col max-h-[88dvh]"
               >
-                <div className="w-12 h-1.5 rounded-full bg-vault-dark/25" />
-              </div>
-
-              {/* 1. FIXED MODAL HEADER */}
-              <div className="shrink-0 flex items-start justify-between gap-3 pb-3 border-b-2 border-vault-dark/15">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                        inspectItem.type === 'skill'
-                          ? 'bg-vault-green text-vault-dark border-vault-dark'
-                          : inspectItem.type === 'website'
-                          ? 'bg-sky-200 text-vault-dark border-vault-dark'
-                          : 'bg-vault-yellow text-vault-dark border-vault-dark'
-                      }`}
-                    >
-                      {inspectItem.type}
-                    </span>
-                    <span className="font-sans text-xs font-semibold text-vault-dark/60">
-                      {inspectItem.category}
-                    </span>
-                  </div>
-                  <h2 className="font-serif italic text-2xl sm:text-3xl text-vault-dark font-normal tracking-tight">
-                    {inspectItem.title}
-                  </h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setInspectItem(null)}
-                  className="w-8 h-8 rounded-full border-2 border-vault-dark bg-vault-cream flex items-center justify-center hover:bg-vault-yellow transition-colors cursor-pointer shrink-0"
+                {/* Draggable Grab Handle Indicator (Pill Thumb) */}
+                <div
+                  onPointerDown={(e) => inspectDragControls.start(e)}
+                  className="w-full pt-1 pb-3 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none -mt-1 shrink-0"
                 >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+                  <div className="w-12 h-1.5 bg-vault-dark/25 hover:bg-vault-dark/40 rounded-full transition-colors" />
+                </div>
 
-              {/* 2. INNER SCROLLABLE BODY */}
-              <div className="flex-1 overflow-y-auto overscroll-contain py-4 space-y-4 pr-1 sm:pr-2">
-                {/* Author & Metrics Card */}
-                <div className="flex items-center justify-between p-3.5 bg-vault-dark/5 rounded-2xl border border-vault-dark/15">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={inspectItem.author.avatar}
-                      alt={inspectItem.author.name}
-                      className="w-10 h-10 rounded-full border border-vault-dark bg-vault-yellow/40 object-cover"
-                    />
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-sans text-sm font-bold text-vault-dark">
-                          {inspectItem.author.name}
+                {/* 1. FIXED MODAL HEADER */}
+                <div
+                  onPointerDown={(e) => {
+                    if ((e.target as HTMLElement).closest('button')) return;
+                    inspectDragControls.start(e);
+                  }}
+                  className="shrink-0 flex items-start justify-between gap-3 pb-3 border-b-2 border-vault-dark/15 touch-none cursor-grab active:cursor-grabbing select-none"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${inspectItem.type === 'skill'
+                            ? 'bg-vault-green text-vault-dark border-vault-dark'
+                            : inspectItem.type === 'website'
+                              ? 'bg-sky-200 text-vault-dark border-vault-dark'
+                              : 'bg-vault-yellow text-vault-dark border-vault-dark'
+                          }`}
+                      >
+                        {inspectItem.type}
+                      </span>
+                      <span className="font-sans text-xs font-semibold text-vault-dark/60">
+                        {inspectItem.category}
+                      </span>
+                    </div>
+                    <h2 className="font-serif italic text-2xl text-vault-dark font-normal tracking-tight">
+                      {inspectItem.title}
+                    </h2>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setInspectItem(null)}
+                    className="w-8 h-8 rounded-full border border-vault-dark/20 flex items-center justify-center hover:bg-vault-dark/10 transition-colors cursor-pointer shrink-0"
+                  >
+                    <X className="w-4 h-4 text-vault-dark" />
+                  </button>
+                </div>
+
+                {/* 2. INNER SCROLLABLE BODY */}
+                <div
+                  className="flex-1 overflow-y-auto overscroll-contain py-4 space-y-4 pr-1 [scrollbar-width:thin]"
+                  style={{ contain: 'content', WebkitOverflowScrolling: 'touch' }}
+                >
+                  {/* Author & Metrics Card */}
+                  <div className="flex items-center justify-between p-3.5 bg-vault-dark/5 rounded-2xl border border-vault-dark/15">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={inspectItem.author.avatar}
+                        alt={inspectItem.author.name}
+                        className="w-10 h-10 rounded-full border border-vault-dark bg-vault-yellow/40 object-cover"
+                      />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-sans text-sm font-bold text-vault-dark">
+                            {inspectItem.author.name}
+                          </span>
+                          {inspectItem.author.isVerified && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-vault-green fill-vault-dark stroke-vault-cream" />
+                          )}
+                        </div>
+                        <span className="font-sans text-xs text-vault-dark/60">
+                          {inspectItem.author.handle} • Published {inspectItem.publishedAt}
                         </span>
-                        {inspectItem.author.isVerified && (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-vault-green fill-vault-dark stroke-vault-cream" />
-                        )}
                       </div>
-                      <span className="font-sans text-xs text-vault-dark/60">
-                        {inspectItem.author.handle} • Published {inspectItem.publishedAt}
+                    </div>
+
+                    <div className="flex items-center gap-3 font-sans text-xs font-semibold text-vault-dark/70">
+                      <span className="flex items-center gap-1">
+                        <Heart className="w-3.5 h-3.5 text-rose-500" /> {inspectItem.metrics.likes}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 font-sans text-xs font-semibold text-vault-dark/70">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-3.5 h-3.5 text-rose-500" /> {inspectItem.metrics.likes}
-                    </span>
+                  {/* Description */}
+                  <p className="font-sans text-xs sm:text-sm text-vault-dark/80 leading-relaxed">
+                    {inspectItem.description}
+                  </p>
+
+                  {/* Full Content / Code Box with Inner Scroll */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between font-sans text-xs font-bold text-vault-dark/70">
+                      <span>Prompt / Skill Rule Code</span>
+                      {inspectItem.tool && (
+                        <span className="bg-vault-yellow px-2 py-0.5 rounded border border-vault-dark font-mono text-[10px]">
+                          Target: {inspectItem.tool}
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className="bg-vault-dark text-vault-cream rounded-2xl p-4 font-mono text-xs border-2 border-vault-dark relative overflow-hidden"
+                      style={{ contain: 'paint' }}
+                    >
+                      <pre className="whitespace-pre-wrap break-words leading-relaxed font-mono max-h-56 overflow-y-auto pr-2">
+                        {inspectItem.content}
+                      </pre>
+                    </div>
                   </div>
                 </div>
 
-                {/* Description */}
-                <p className="font-sans text-xs sm:text-sm text-vault-dark/80 leading-relaxed">
-                  {inspectItem.description}
-                </p>
-
-                {/* Full Content / Code Box with Inner Scroll */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between font-sans text-xs font-bold text-vault-dark/70">
-                    <span>Prompt / Skill Rule Code</span>
-                    {inspectItem.tool && (
-                      <span className="bg-vault-yellow px-2 py-0.5 rounded border border-vault-dark font-mono text-[10px]">
-                        Target: {inspectItem.tool}
-                      </span>
-                    )}
-                  </div>
-                  <div className="bg-vault-dark text-vault-cream rounded-2xl p-4 sm:p-5 font-mono text-xs sm:text-sm border-2 border-vault-dark relative overflow-hidden">
-                    <pre className="whitespace-pre-wrap break-words leading-relaxed font-mono max-h-64 overflow-y-auto pr-2">
-                      {inspectItem.content}
-                    </pre>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. FIXED MODAL FOOTER - SINGLE CLEAN UNWRAPPED ROW */}
-              <div className="shrink-0 pt-3 border-t-2 border-vault-dark/15 flex items-center gap-1.5 sm:gap-2 w-full bg-vault-cream">
-                {/* Like Button */}
-                <button
-                  type="button"
-                  onClick={(e) => handleToggleLike(e, inspectItem)}
-                  className={`flex items-center justify-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border-2 font-sans text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
-                    likedIds.has(inspectItem.id)
-                      ? 'bg-rose-100 text-rose-700 border-rose-400 shadow-2xs'
-                      : 'bg-vault-cream text-vault-dark border-vault-dark hover:bg-vault-yellow'
-                  }`}
-                  title={likedIds.has(inspectItem.id) ? 'Unlike' : 'Like'}
-                >
-                  <Heart
-                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
-                      likedIds.has(inspectItem.id) ? 'fill-rose-500 text-rose-500' : ''
-                    }`}
-                  />
-                  <span>{likedIds.has(inspectItem.id) ? 'Liked' : 'Like'}</span>
-                </button>
-
-                {/* Copy Button */}
-                <button
-                  type="button"
-                  onClick={(e) => handleCopyContent(e, inspectItem)}
-                  className="flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border-2 border-vault-dark bg-vault-cream text-vault-dark hover:bg-vault-dark hover:text-vault-cream font-sans text-xs sm:text-sm font-bold transition-colors cursor-pointer whitespace-nowrap"
-                >
-                  <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span className="truncate">Copy</span>
-                </button>
-
-                {/* Clone / Saved Button */}
-                <button
-                  type="button"
-                  onClick={(e) => handleSaveToVault(e, inspectItem)}
-                  className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border-2 border-vault-dark font-sans text-xs sm:text-sm font-bold transition-colors cursor-pointer whitespace-nowrap ${
-                    isItemSavedInVault(inspectItem.title)
-                      ? 'bg-vault-yellow text-vault-dark shadow-2xs'
-                      : 'bg-vault-green text-vault-dark hover:bg-[#19b657]'
-                  }`}
-                >
-                  <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span className="truncate">
-                    {isItemSavedInVault(inspectItem.title) ? 'Saved' : 'Clone'}
-                  </span>
-                </button>
-
-                {/* Download .md for Skills */}
-                {inspectItem.type === 'skill' && (
+                {/* 3. FIXED MODAL FOOTER */}
+                <div className="shrink-0 pt-3 border-t-2 border-vault-dark/15 flex items-center gap-1.5 w-full bg-vault-cream">
                   <button
                     type="button"
-                    onClick={(e) => handleDownloadSkill(e, inspectItem)}
-                    className="flex items-center justify-center gap-1 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl border-2 border-vault-dark bg-vault-yellow text-vault-dark hover:bg-[#e7ee7b] font-sans text-xs sm:text-sm font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-                    title="Download .md file"
+                    onClick={(e) => handleToggleLike(e, inspectItem)}
+                    className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border-2 font-sans text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${likedIds.has(inspectItem.id)
+                        ? 'bg-rose-100 text-rose-700 border-rose-400 shadow-2xs'
+                        : 'bg-vault-cream text-vault-dark border-vault-dark hover:bg-vault-yellow'
+                      }`}
+                    title={likedIds.has(inspectItem.id) ? 'Unlike' : 'Like'}
                   >
-                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                    <span>.md</span>
+                    <Heart
+                      className={`w-3.5 h-3.5 ${likedIds.has(inspectItem.id) ? 'fill-rose-500 text-rose-500' : ''
+                        }`}
+                    />
+                    <span>{likedIds.has(inspectItem.id) ? 'Liked' : 'Like'}</span>
                   </button>
-                )}
-              </div>
-            </motion.div>
-          </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => handleCopyContent(e, inspectItem)}
+                    className="flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border-2 border-vault-dark bg-vault-cream text-vault-dark hover:bg-vault-dark hover:text-vault-cream font-sans text-xs font-bold transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    <Copy className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Copy</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => handleSaveToVault(e, inspectItem)}
+                    className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border-2 border-vault-dark font-sans text-xs font-bold transition-colors cursor-pointer whitespace-nowrap ${isItemSavedInVault(inspectItem.title)
+                        ? 'bg-vault-yellow text-vault-dark shadow-2xs'
+                        : 'bg-vault-green text-vault-dark hover:bg-[#19b657]'
+                      }`}
+                  >
+                    <Bookmark className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">
+                      {isItemSavedInVault(inspectItem.title) ? 'Saved' : 'Clone'}
+                    </span>
+                  </button>
+
+                  {inspectItem.type === 'skill' && (
+                    <button
+                      type="button"
+                      onClick={(e) => handleDownloadSkill(e, inspectItem)}
+                      className="flex items-center justify-center gap-1 px-2.5 py-2 rounded-xl border-2 border-vault-dark bg-vault-yellow text-vault-dark hover:bg-[#e7ee7b] font-sans text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+                      title="Download .md file"
+                    >
+                      <Download className="w-3.5 h-3.5 shrink-0" />
+                      <span>.md</span>
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          ) : (
+            /* DESKTOP CENTERED FLOATING MODAL */
+            <div
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setInspectItem(null);
+              }}
+              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 14 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 14 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
+                className="bg-vault-cream border-2 border-vault-dark rounded-[24px] sm:rounded-[28px] max-w-2xl w-full p-5 sm:p-7 space-y-4 shadow-2xl relative my-8 flex flex-col max-h-[85vh]"
+              >
+                {/* Header */}
+                <div className="shrink-0 flex items-start justify-between gap-3 pb-3 border-b-2 border-vault-dark/15">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${inspectItem.type === 'skill'
+                            ? 'bg-vault-green text-vault-dark border-vault-dark'
+                            : inspectItem.type === 'website'
+                              ? 'bg-sky-200 text-vault-dark border-vault-dark'
+                              : 'bg-vault-yellow text-vault-dark border-vault-dark'
+                          }`}
+                      >
+                        {inspectItem.type}
+                      </span>
+                      <span className="font-sans text-xs font-semibold text-vault-dark/60">
+                        {inspectItem.category}
+                      </span>
+                    </div>
+                    <h2 className="font-serif italic text-3xl text-vault-dark font-normal tracking-tight">
+                      {inspectItem.title}
+                    </h2>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setInspectItem(null)}
+                    className="w-8 h-8 rounded-full border border-vault-dark/20 flex items-center justify-center hover:bg-vault-dark/10 transition-colors cursor-pointer shrink-0"
+                  >
+                    <X className="w-4 h-4 text-vault-dark" />
+                  </button>
+                </div>
+
+                {/* Inner Scroll Body */}
+                <div className="flex-1 overflow-y-auto overscroll-contain py-3 space-y-4 pr-2">
+                  <div className="flex items-center justify-between p-3.5 bg-vault-dark/5 rounded-2xl border border-vault-dark/15">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={inspectItem.author.avatar}
+                        alt={inspectItem.author.name}
+                        className="w-10 h-10 rounded-full border border-vault-dark bg-vault-yellow/40 object-cover"
+                      />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-sans text-sm font-bold text-vault-dark">
+                            {inspectItem.author.name}
+                          </span>
+                          {inspectItem.author.isVerified && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-vault-green fill-vault-dark stroke-vault-cream" />
+                          )}
+                        </div>
+                        <span className="font-sans text-xs text-vault-dark/60">
+                          {inspectItem.author.handle} • Published {inspectItem.publishedAt}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 font-sans text-xs font-semibold text-vault-dark/70">
+                      <span className="flex items-center gap-1">
+                        <Heart className="w-3.5 h-3.5 text-rose-500" /> {inspectItem.metrics.likes}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="font-sans text-sm text-vault-dark/80 leading-relaxed">
+                    {inspectItem.description}
+                  </p>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between font-sans text-xs font-bold text-vault-dark/70">
+                      <span>Prompt / Skill Rule Code</span>
+                      {inspectItem.tool && (
+                        <span className="bg-vault-yellow px-2 py-0.5 rounded border border-vault-dark font-mono text-[10px]">
+                          Target: {inspectItem.tool}
+                        </span>
+                      )}
+                    </div>
+                    <div className="bg-vault-dark text-vault-cream rounded-2xl p-5 font-mono text-xs sm:text-sm border-2 border-vault-dark relative overflow-hidden">
+                      <pre className="whitespace-pre-wrap break-words leading-relaxed font-mono max-h-64 overflow-y-auto pr-2">
+                        {inspectItem.content}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="shrink-0 pt-3 border-t-2 border-vault-dark/15 flex items-center justify-between gap-2 bg-vault-cream">
+                  <button
+                    type="button"
+                    onClick={(e) => handleToggleLike(e, inspectItem)}
+                    className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border-2 font-sans text-sm font-bold transition-all cursor-pointer ${likedIds.has(inspectItem.id)
+                        ? 'bg-rose-100 text-rose-700 border-rose-400 shadow-2xs'
+                        : 'bg-vault-cream text-vault-dark border-vault-dark hover:bg-vault-yellow'
+                      }`}
+                    title={likedIds.has(inspectItem.id) ? 'Unlike' : 'Like'}
+                  >
+                    <Heart
+                      className={`w-4 h-4 ${likedIds.has(inspectItem.id) ? 'fill-rose-500 text-rose-500' : ''
+                        }`}
+                    />
+                    <span>{likedIds.has(inspectItem.id) ? 'Liked' : 'Like'}</span>
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyContent(e, inspectItem)}
+                      className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border-2 border-vault-dark bg-vault-cream text-vault-dark hover:bg-vault-dark hover:text-vault-cream font-sans text-sm font-bold transition-colors cursor-pointer"
+                    >
+                      <Copy className="w-4 h-4" />
+                      <span>Copy</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => handleSaveToVault(e, inspectItem)}
+                      className={`flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl border-2 border-vault-dark font-sans text-sm font-bold transition-colors cursor-pointer ${isItemSavedInVault(inspectItem.title)
+                          ? 'bg-vault-yellow text-vault-dark shadow-2xs'
+                          : 'bg-vault-green text-vault-dark hover:bg-[#19b657]'
+                        }`}
+                    >
+                      <Bookmark className="w-4 h-4" />
+                      <span>
+                        {isItemSavedInVault(inspectItem.title) ? 'Saved in Vault' : 'Clone to Vault'}
+                      </span>
+                    </button>
+
+                    {inspectItem.type === 'skill' && (
+                      <button
+                        type="button"
+                        onClick={(e) => handleDownloadSkill(e, inspectItem)}
+                        className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border-2 border-vault-dark bg-vault-yellow text-vault-dark hover:bg-[#e7ee7b] font-sans text-sm font-bold transition-colors cursor-pointer"
+                        title="Download .md file"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>.md</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )
         )}
       </AnimatePresence>
     </div>
