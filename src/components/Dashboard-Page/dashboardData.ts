@@ -23,6 +23,58 @@ export interface CommunityItem {
   likes: number;
 }
 
+export interface NotificationItem {
+  id: string;
+  type: 'like' | 'clone' | 'trend' | 'system';
+  title: string;
+  description: string;
+  timestamp: string;
+  isRead: boolean;
+  targetLink?: string;
+  metaCount?: number;
+}
+
+export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
+  {
+    id: 'notif-1',
+    type: 'like',
+    title: 'New Community Likes',
+    description: '16 creators liked your published template "Master Prompt — Signin ⇄ Signup Morphing Transition".',
+    timestamp: '12m ago',
+    isRead: false,
+    metaCount: 16,
+    targetLink: '/community',
+  },
+  {
+    id: 'notif-2',
+    type: 'clone',
+    title: 'Skill Rules Cloned',
+    description: '9 developers saved "Autonomous Refactoring Skill Rule" directly into their private Vault.',
+    timestamp: '2h ago',
+    isRead: false,
+    metaCount: 9,
+    targetLink: '/vault',
+  },
+  {
+    id: 'notif-3',
+    type: 'trend',
+    title: 'Trending on Community',
+    description: 'Your prompt "React 18 + Tailwind v4 Design Architect" hit the Top 5 trending AI prompts this week.',
+    timestamp: '1d ago',
+    isRead: false,
+    targetLink: '/community',
+  },
+  {
+    id: 'notif-4',
+    type: 'system',
+    title: 'Vault Core Update v2.1',
+    description: 'Client-side Markdown .md export is now live for all agent skill rules.',
+    timestamp: '2d ago',
+    isRead: true,
+    targetLink: '/vault',
+  },
+];
+
 export const DASHBOARD_CATEGORY_TAGS = [
   'All',
   'Agent Skills',

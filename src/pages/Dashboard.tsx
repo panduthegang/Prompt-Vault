@@ -76,7 +76,6 @@ export default function Dashboard() {
         <DashboardHeader
           userName="Harsh"
           userAvatar={userAvatar}
-          onNotificationClick={() => showToast('No unread notifications')}
           onAvatarClick={() => navigate('/settings')}
         />
 
