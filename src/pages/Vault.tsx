@@ -16,6 +16,7 @@ import {
 import VaultHeader from '../components/Vault-Page/VaultHeader';
 import VaultFilters, { VaultTabType } from '../components/Vault-Page/VaultFilters';
 import VaultCard from '../components/Vault-Page/VaultCard';
+import VaultSkeletonCard from '../components/Vault-Page/VaultSkeletonCard';
 import VaultModalSheet from '../components/Vault-Page/VaultModalSheet';
 import { VaultDeleteDialog } from '../components/Vault-Page/VaultDeleteDialog';
 
@@ -39,6 +40,16 @@ export default function Vault() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Initial and tab switch shimmer loading
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   // Close card action menu when clicking outside or pressing Escape
   useEffect(() => {
@@ -404,7 +415,13 @@ export default function Vault() {
         />
 
         {/* Cards Grid */}
-        {filteredItems.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <VaultSkeletonCard key={`vault-skel-${idx}`} />
+            ))}
+          </div>
+        ) : filteredItems.length === 0 ? (
           <div className="bg-vault-cream border-2 border-vault-dark/20 border-dashed rounded-[24px] p-8 sm:p-12 text-center space-y-3">
             <div className="w-12 h-12 rounded-full bg-vault-yellow/40 border-2 border-vault-dark/30 flex items-center justify-center mx-auto">
               <Search className="w-5 h-5 text-vault-dark/60" />

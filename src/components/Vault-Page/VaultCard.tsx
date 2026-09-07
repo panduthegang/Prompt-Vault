@@ -43,7 +43,7 @@ export default function VaultCard({
   onDeleteItem,
 }: VaultCardProps) {
   return (
-    <div className="bg-vault-cream border-2 border-vault-dark rounded-[20px] sm:rounded-[22px] p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md transition-shadow relative group">
+    <div className="bg-vault-cream border-2 border-vault-dark rounded-[20px] sm:rounded-[22px] p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-xs hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#002D0F] transition-all duration-200 relative group">
       <div className="space-y-3">
         {/* Top Meta Header: Type Badge, Category & Star */}
         <div className="flex items-center justify-between gap-2">

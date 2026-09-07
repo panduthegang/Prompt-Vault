@@ -57,178 +57,184 @@ export default function VaultModalSheet({
   onSaveItem,
 }: VaultModalSheetProps) {
   const renderForm = () => (
-    <form onSubmit={onSaveItem} className="space-y-4">
-      {/* Type Switcher Segmented Control */}
-      <div className="space-y-1.5">
-        <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
-          Item Type
-        </label>
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            type="button"
-            onClick={() => setFormType('prompt')}
-            className={`py-2 px-3 rounded-xl border-2 font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-              formType === 'prompt'
-                ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs'
-                : 'bg-white/60 text-vault-dark border-vault-dark/20 hover:border-vault-dark'
-            }`}
-          >
-            <Bookmark className="w-3.5 h-3.5" />
-            <span>Prompt</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setFormType('skill')}
-            className={`py-2 px-3 rounded-xl border-2 font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-              formType === 'skill'
-                ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs'
-                : 'bg-white/60 text-vault-dark border-vault-dark/20 hover:border-vault-dark'
-            }`}
-          >
-            <FileCode className="w-3.5 h-3.5" />
-            <span>Skill Rule</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setFormType('website')}
-            className={`py-2 px-3 rounded-xl border-2 font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-              formType === 'website'
-                ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs'
-                : 'bg-white/60 text-vault-dark border-vault-dark/20 hover:border-vault-dark'
-            }`}
-          >
-            <Globe className="w-3.5 h-3.5" />
-            <span>Website Link</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Title Field */}
-      <div className="space-y-1.5">
-        <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
-          Title
-        </label>
-        <input
-          type="text"
-          required
-          value={formTitle}
-          onChange={(e) => setFormTitle(e.target.value)}
-          placeholder={
-            formType === 'prompt'
-              ? 'e.g. Next.js 14 System Architect Prompt'
-              : formType === 'skill'
-              ? 'e.g. Cursor Next.js App Router Rules'
-              : 'e.g. Anthropic Prompt Engineering Docs'
-          }
-          className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-2.5 font-sans text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green"
-        />
-      </div>
-
-      {/* Website URL Field (Only for Websites) */}
-      {formType === 'website' && (
+    <form onSubmit={onSaveItem} className="flex-1 flex flex-col min-h-0">
+      {/* Scrollable Middle Body */}
+      <div
+        className="flex-1 overflow-y-auto overscroll-contain py-3.5 space-y-4 pr-1 [scrollbar-width:thin]"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
+        {/* Type Switcher Segmented Control */}
         <div className="space-y-1.5">
           <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
-            Website URL
+            Item Type
           </label>
-          <div className="relative">
-            <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-vault-dark/50" />
-            <input
-              type="text"
-              required
-              value={formUrl}
-              onChange={(e) => setFormUrl(e.target.value)}
-              placeholder="https://docs.anthropic.com/..."
-              className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl pl-10 pr-4 py-2.5 font-mono text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green"
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => setFormType('prompt')}
+              className={`py-2 px-3 rounded-xl border-2 font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                formType === 'prompt'
+                  ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs'
+                  : 'bg-white/60 text-vault-dark border-vault-dark/20 hover:border-vault-dark'
+              }`}
+            >
+              <Bookmark className="w-3.5 h-3.5" />
+              <span>Prompt</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFormType('skill')}
+              className={`py-2 px-3 rounded-xl border-2 font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                formType === 'skill'
+                  ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs'
+                  : 'bg-white/60 text-vault-dark border-vault-dark/20 hover:border-vault-dark'
+              }`}
+            >
+              <FileCode className="w-3.5 h-3.5" />
+              <span>Skill Rule</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFormType('website')}
+              className={`py-2 px-3 rounded-xl border-2 font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                formType === 'website'
+                  ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs'
+                  : 'bg-white/60 text-vault-dark border-vault-dark/20 hover:border-vault-dark'
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Website Link</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Title Field */}
+        <div className="space-y-1.5">
+          <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
+            Title
+          </label>
+          <input
+            type="text"
+            required
+            value={formTitle}
+            onChange={(e) => setFormTitle(e.target.value)}
+            placeholder={
+              formType === 'prompt'
+                ? 'e.g. Next.js 14 System Architect Prompt'
+                : formType === 'skill'
+                ? 'e.g. Cursor Next.js App Router Rules'
+                : 'e.g. Anthropic Prompt Engineering Docs'
+            }
+            className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-2.5 font-sans text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green"
+          />
+        </div>
+
+        {/* Website URL Field (Only for Websites) */}
+        {formType === 'website' && (
+          <div className="space-y-1.5">
+            <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
+              Website URL
+            </label>
+            <div className="relative">
+              <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-vault-dark/50" />
+              <input
+                type="text"
+                required
+                value={formUrl}
+                onChange={(e) => setFormUrl(e.target.value)}
+                placeholder="https://docs.anthropic.com/..."
+                className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl pl-10 pr-4 py-2.5 font-mono text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Target Tool (Only for Skills) */}
+        {formType === 'skill' && (
+          <div className="space-y-1.5">
+            <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
+              Target Tool / Environment
+            </label>
+            <CustomSelect
+              value={formTool}
+              onChange={setFormTool}
+              options={TOOL_OPTIONS}
+              placeholder="Select Target Tool..."
             />
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Target Tool (Only for Skills) */}
-      {formType === 'skill' && (
+        {/* Category Field */}
         <div className="space-y-1.5">
           <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
-            Target Tool / Environment
+            Category
           </label>
           <CustomSelect
-            value={formTool}
-            onChange={setFormTool}
-            options={TOOL_OPTIONS}
-            placeholder="Select Target Tool..."
+            value={formCategory}
+            onChange={setFormCategory}
+            options={CATEGORY_OPTIONS}
+            placeholder="Select Category..."
           />
         </div>
-      )}
 
-      {/* Category Field */}
-      <div className="space-y-1.5">
-        <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
-          Category
-        </label>
-        <CustomSelect
-          value={formCategory}
-          onChange={setFormCategory}
-          options={CATEGORY_OPTIONS}
-          placeholder="Select Category..."
-        />
-      </div>
-
-      {/* Content / Prompt Text / Description */}
-      <div className="space-y-1.5">
-        <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
-          {formType === 'website' ? 'Description & Notes' : 'Prompt / Rule Content'}
-        </label>
-        <textarea
-          rows={formType === 'website' ? 3 : 4}
-          required={formType !== 'website'}
-          value={formContent}
-          onChange={(e) => setFormContent(e.target.value)}
-          placeholder={
-            formType === 'prompt'
-              ? 'Paste your master prompt or system instructions here...'
-              : formType === 'skill'
-              ? 'Paste your markdown rules (e.g. - Always enforce strict TypeScript...)'
-              : 'Add notes, keywords, or summary of this website link...'
-          }
-          className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl p-3 font-mono text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green resize-none"
-        />
-      </div>
-
-      {/* Publish to Community Option */}
-      <div className="flex items-center justify-between p-3 bg-white/70 border-2 border-vault-dark/20 rounded-xl gap-3">
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          <div className="w-8 h-8 rounded-lg bg-vault-green/20 border border-vault-dark/20 flex items-center justify-center text-vault-dark shrink-0">
-            <Share2 className="w-4 h-4" />
-          </div>
-          <div className="min-w-0">
-            <span className="font-sans text-xs font-bold text-vault-dark block truncate">
-              Publish to Community
-            </span>
-            <span className="font-sans text-[11px] text-vault-dark/60 block leading-tight">
-              Make this item visible to the Prompt Vault community
-            </span>
-          </div>
+        {/* Content / Prompt Text / Description */}
+        <div className="space-y-1.5">
+          <label className="block font-sans text-xs font-bold uppercase tracking-wider text-vault-dark/70">
+            {formType === 'website' ? 'Description & Notes' : 'Prompt / Rule Content'}
+          </label>
+          <textarea
+            rows={formType === 'website' ? 3 : 4}
+            required={formType !== 'website'}
+            value={formContent}
+            onChange={(e) => setFormContent(e.target.value)}
+            placeholder={
+              formType === 'prompt'
+                ? 'Paste your master prompt or system instructions here...'
+                : formType === 'skill'
+                ? 'Paste your markdown rules (e.g. - Always enforce strict TypeScript...)'
+                : 'Add notes, keywords, or summary of this website link...'
+            }
+            className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl p-3 font-mono text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green resize-none"
+          />
         </div>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={formIsPublished}
-          onClick={() => setFormIsPublished(!formIsPublished)}
-          className={`w-11 h-6 rounded-full border-2 border-vault-dark transition-colors relative cursor-pointer shrink-0 focus:outline-none ${
-            formIsPublished ? 'bg-vault-green' : 'bg-vault-cream'
-          }`}
-        >
-          <span
-            className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-vault-dark transition-transform duration-200 ease-in-out shrink-0 ${
-              formIsPublished ? 'translate-x-5' : 'translate-x-0'
+
+        {/* Publish to Community Option */}
+        <div className="flex items-center justify-between p-3 bg-white/70 border-2 border-vault-dark/20 rounded-xl gap-3">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-vault-green/20 border border-vault-dark/20 flex items-center justify-center text-vault-dark shrink-0">
+              <Share2 className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <span className="font-sans text-xs font-bold text-vault-dark block truncate">
+                Publish to Community
+              </span>
+              <span className="font-sans text-[11px] text-vault-dark/60 block leading-tight">
+                Make this item visible to the Prompt Vault community
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={formIsPublished}
+            onClick={() => setFormIsPublished(!formIsPublished)}
+            className={`w-11 h-6 rounded-full border-2 border-vault-dark transition-colors relative cursor-pointer shrink-0 focus:outline-none ${
+              formIsPublished ? 'bg-vault-green' : 'bg-vault-cream'
             }`}
-          />
-        </button>
+          >
+            <span
+              className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-vault-dark transition-transform duration-200 ease-in-out shrink-0 ${
+                formIsPublished ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Modal Actions */}
-      <div className="pt-3 pb-1 flex items-center justify-center gap-3 sm:gap-4">
+      {/* Sticky Bottom Actions */}
+      <div className="shrink-0 pt-3.5 border-t-2 border-vault-dark/15 flex items-center justify-center gap-3 sm:gap-4">
         <button
           type="button"
           onClick={onClose}
@@ -279,18 +285,25 @@ export default function VaultModalSheet({
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="relative z-10 w-full max-w-lg mx-auto bg-vault-cream border-t-2 border-vault-dark rounded-t-[32px] p-5 pb-[max(3.5rem,env(safe-area-inset-bottom))] shadow-2xl space-y-4 max-h-[90dvh] overflow-y-auto overscroll-contain"
+              style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+              className="relative z-10 w-full max-w-lg mx-auto bg-vault-cream border-t-2 border-vault-dark rounded-t-[32px] p-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] shadow-2xl flex flex-col max-h-[88dvh]"
             >
               {/* Draggable Grab Handle Indicator (Pill Thumb) */}
               <div
                 onPointerDown={(e) => dragControls.start(e)}
-                className="w-full pt-1 pb-3 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none -mt-1"
+                className="w-full pt-1 pb-3 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none -mt-1 shrink-0"
               >
-                <div className="w-12 h-1.5 bg-vault-dark/25 hover:bg-vault-dark/40 rounded-full" />
+                <div className="w-12 h-1.5 bg-vault-dark/25 hover:bg-vault-dark/40 rounded-full transition-colors" />
               </div>
 
-              {/* Sheet Header */}
-              <div className="flex items-center justify-between border-b-2 border-vault-dark/15 pb-3">
+              {/* Sticky Sheet Header */}
+              <div
+                onPointerDown={(e) => {
+                  if ((e.target as HTMLElement).closest('button')) return;
+                  dragControls.start(e);
+                }}
+                className="shrink-0 flex items-start justify-between gap-3 pb-3 border-b-2 border-vault-dark/15 touch-none cursor-grab active:cursor-grabbing select-none"
+              >
                 <div>
                   <h2 className="font-serif text-2xl text-vault-dark font-normal">
                     {editingItemId ? 'Edit Vault Item' : 'Add to Vault'}
@@ -324,10 +337,11 @@ export default function VaultModalSheet({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 14 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-vault-cream border-2 border-vault-dark rounded-[24px] sm:rounded-[28px] max-w-lg w-full p-5 sm:p-7 space-y-5 shadow-2xl relative my-8"
+              style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
+              className="bg-vault-cream border-2 border-vault-dark rounded-[24px] sm:rounded-[28px] max-w-lg w-full p-5 sm:p-7 shadow-2xl relative my-8 flex flex-col max-h-[85vh]"
             >
-              {/* Modal Header */}
-              <div className="flex items-center justify-between border-b-2 border-vault-dark/15 pb-4">
+              {/* Sticky Modal Header */}
+              <div className="shrink-0 flex items-center justify-between border-b-2 border-vault-dark/15 pb-4">
                 <div>
                   <h2 className="font-serif text-2xl text-vault-dark font-normal">
                     {editingItemId ? 'Edit Vault Item' : 'Add to Vault'}
