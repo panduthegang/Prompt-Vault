@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useDragControls } from 'framer-motion';
 
-import Sidebar from '../components/Sidebar';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import { copyToClipboard } from '../utils/clipboard';
 import {
@@ -334,7 +333,7 @@ export default function Community() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
+    <>
       {/* Toast Feedback */}
       <ToastContainer>
         {activeToast && (
@@ -348,19 +347,6 @@ export default function Community() {
           />
         )}
       </ToastContainer>
-
-      {/* Desktop Sidebar & Mobile Bottom Navigation */}
-      <Sidebar
-        activeTab="community"
-        onTabChange={(tab) => {
-          if (tab === 'vault') navigate('/vault');
-          else if (tab === 'dashboard') navigate('/dashboard');
-          else if (tab === 'prompts') navigate('/prompts');
-          else if (tab === 'settings') navigate('/settings');
-          else if (tab === 'community') navigate('/community');
-        }}
-        promptCount={vaultItems.length}
-      />
 
       {/* Main Community Workspace Area */}
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-28 lg:pb-8">
@@ -440,6 +426,6 @@ export default function Community() {
         isSavedInVault={inspectItem ? isItemSavedInVault(inspectItem.title) : false}
         onDownloadSkill={handleDownloadSkill}
       />
-    </div>
+    </>
   );
 }

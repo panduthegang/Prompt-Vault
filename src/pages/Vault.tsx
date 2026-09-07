@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDragControls } from 'framer-motion';
-import Sidebar from '../components/Sidebar';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import { copyToClipboard } from '../utils/clipboard';
 import { Plus, Search } from 'lucide-react';
@@ -327,7 +326,7 @@ export default function Vault() {
         'success',
         'Copied'
       );
-      setTimeout(() => setCopiedId(null), 2000);
+      setTimeout(() => setCopiedId(null), 1500);
     }
   };
 
@@ -368,7 +367,7 @@ export default function Vault() {
   }, [items, activeTab, selectedCategory, searchQuery]);
 
   return (
-    <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
+    <>
       {/* Dynamic Toast Notifications */}
       <ToastContainer>
         {activeToast && (
@@ -382,18 +381,6 @@ export default function Vault() {
           />
         )}
       </ToastContainer>
-
-      {/* Dark Sidebar */}
-      <Sidebar
-        activeTab="vault"
-        onTabChange={(tab) => {
-          if (tab === 'dashboard') navigate('/dashboard');
-          else if (tab === 'settings') navigate('/settings');
-          else if (tab === 'vault') setActiveTab('all');
-        }}
-        promptCount={counts.all}
-        onOpenAddModal={() => handleOpenAddModal()}
-      />
 
       {/* Main Vault Content */}
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-24 lg:pb-8">
@@ -493,6 +480,6 @@ export default function Vault() {
         onClose={() => setDeleteConfirmItem(null)}
         onConfirm={confirmDelete}
       />
-    </div>
+    </>
   );
 }

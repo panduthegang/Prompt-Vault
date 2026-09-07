@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 import { copyToClipboard } from '../utils/clipboard';
 import { Sparkles } from 'lucide-react';
 import {
@@ -62,7 +61,7 @@ export default function Dashboard() {
   })();
 
   return (
-    <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
+    <>
       {/* Toast Notification Floating Pill */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-vault-dark text-vault-cream border-2 border-vault-green px-5 py-3 rounded-full shadow-lg flex items-center gap-3 animate-bounce">
@@ -70,14 +69,6 @@ export default function Dashboard() {
           <span className="font-sans text-xs sm:text-sm font-semibold">{toastMessage}</span>
         </div>
       )}
-
-      {/* Dark Sidebar */}
-      <Sidebar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        promptCount={prompts.length}
-        onOpenAddModal={() => navigate('/vault?add=true')}
-      />
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-24 lg:pb-0">
@@ -116,6 +107,6 @@ export default function Dashboard() {
           onFilterClick={() => showToast('Filter options coming soon')}
         />
       </main>
-    </div>
+    </>
   );
 }

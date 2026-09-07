@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import {
   UserProfile,
@@ -124,7 +123,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
+    <>
       {/* Dynamic Toast Notifications */}
       <ToastContainer>
         {activeToast && (
@@ -138,22 +137,6 @@ export default function Settings() {
           />
         )}
       </ToastContainer>
-
-      {/* Dark Sidebar */}
-      <Sidebar
-        activeTab="settings"
-        onTabChange={(tab) => {
-          if (tab === 'dashboard') {
-            navigate('/dashboard');
-          } else if (tab === 'vault' || tab === 'prompts') {
-            navigate('/vault');
-          } else {
-            navigate('/dashboard');
-          }
-        }}
-        promptCount={18}
-        onOpenAddModal={() => navigate('/vault?add=true')}
-      />
 
       {/* Main Settings Content */}
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-24 lg:pb-8">
@@ -185,6 +168,6 @@ export default function Settings() {
           />
         )}
       </main>
-    </div>
+    </>
   );
 }

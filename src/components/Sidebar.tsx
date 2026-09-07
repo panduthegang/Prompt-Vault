@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import {
   LayoutDashboard,
   Bookmark,
@@ -8,10 +7,7 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
-  MoreHorizontal,
   LogOut,
-  X,
-  Plus,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -27,7 +23,7 @@ export default function Sidebar({
   activeTab,
   onTabChange,
   promptCount,
-  onOpenAddModal,
+  onOpenAddModal: _onOpenAddModal,
   isCollapsed: controlledIsCollapsed,
   onToggleCollapse: controlledOnToggleCollapse,
 }: SidebarProps) {
@@ -58,24 +54,6 @@ export default function Sidebar({
     }
   };
 
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const dragControls = useDragControls();
-
-  // Lock background scrolling when mobile bottom sheet is open
-  useEffect(() => {
-    if (isBottomSheetOpen) {
-      const originalBodyOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-
-      return () => {
-        document.body.style.overflow = originalBodyOverflow;
-        document.documentElement.style.overflow = originalHtmlOverflow;
-      };
-    }
-  }, [isBottomSheetOpen]);
-
   const userAvatar = (() => {
     try {
       const saved = localStorage.getItem('prompt_vault_user_profile');
@@ -98,9 +76,6 @@ export default function Sidebar({
     navigate('/');
   };
 
-  // First 3 items for mobile quick bottom bar
-  const mobileQuickItems = navItems.slice(0, 3);
-
   const handleSelectTab = (tabId: string) => {
     if (tabId === 'settings') {
       navigate('/settings');
@@ -111,22 +86,16 @@ export default function Sidebar({
       onTabChange?.('vault');
     } else if (tabId === 'community') {
       navigate('/community');
-      onTabChange?.('community');
     } else {
       if (window.location.pathname !== '/dashboard') {
         navigate('/dashboard');
       }
       onTabChange?.(tabId);
     }
-    setIsBottomSheetOpen(false);
   };
 
   return (
-    <>
-      {/* ========================================== */}
-      {/* 1. DESKTOP SIDEBAR (Visible only on lg+)  */}
-      {/* ========================================== */}
-      <aside
+    <aside
         className={`hidden lg:flex bg-vault-dark text-vault-cream rounded-[28px] p-4 sm:p-5 flex-col justify-between shrink-0 border-2 border-vault-dark shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] lg:sticky lg:top-6 lg:h-[calc(100vh-48px)] z-40 ${isCollapsed ? 'w-[84px]' : 'w-[280px] xl:w-[300px]'
           }`}
       >
@@ -300,251 +269,7 @@ export default function Sidebar({
               </div>
             </div>
           )}
-        </div>
+         </div> 
       </aside>
-
-      {/* ========================================================= */}
-      {/* 2. MOBILE FLOATING BOTTOM BAR (Floating dock on < lg)      */}
-      {/* ========================================================= */}
-      <div className="lg:hidden fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-40 max-w-md mx-auto bg-vault-dark border-2 border-vault-dark rounded-2xl p-1.5 shadow-2xl flex items-center justify-between gap-1">
-        {activeTab === 'vault' ? (
-          /* VAULT DEDICATED BOTTOM BAR: Dashboard | Vault | More | + Add to Vault */
-          <>
-            <button
-              type="button"
-              onClick={() => handleSelectTab('dashboard')}
-              className="h-11 flex flex-col items-center justify-center gap-0.5 px-2.5 rounded-xl transition-all cursor-pointer text-vault-cream/75 hover:text-vault-cream shrink-0"
-            >
-              <LayoutDashboard className="w-4.5 h-4.5 stroke-[2.2]" />
-              <span className="font-sans text-[10px] font-semibold tracking-tight">
-                Dashboard
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleSelectTab('vault')}
-              className="h-11 flex flex-col items-center justify-center gap-0.5 px-2.5 rounded-xl transition-all cursor-pointer bg-vault-yellow text-vault-dark font-bold shadow-xs shrink-0"
-            >
-              <Bookmark className="w-4.5 h-4.5 stroke-[2.2]" />
-              <span className="font-sans text-[10px] font-semibold tracking-tight">
-                Vault
-              </span>
-            </button>
-
-            {/* 3rd "More" Trigger Button */}
-            <button
-              type="button"
-              onClick={() => setIsBottomSheetOpen(true)}
-              className={`h-11 flex flex-col items-center justify-center gap-0.5 px-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
-                isBottomSheetOpen || ['skills', 'community', 'settings'].includes(activeTab)
-                  ? 'bg-vault-yellow/20 text-vault-yellow font-bold'
-                  : 'text-vault-cream/75 hover:text-vault-cream'
-              }`}
-            >
-              <MoreHorizontal className="w-4.5 h-4.5 stroke-[2.2]" />
-              <span className="font-sans text-[10px] font-semibold tracking-tight">
-                More
-              </span>
-            </button>
-
-            {/* Wide + Add to Vault Action Button (Height matched to icon buttons) */}
-            <button
-              type="button"
-              onClick={() => onOpenAddModal?.()}
-              className="h-11 flex-1 px-3.5 rounded-xl bg-vault-green text-vault-dark border-2 border-vault-dark font-sans text-xs font-bold shadow-xs hover:brightness-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap min-w-0 ml-1"
-            >
-              <Plus className="w-4 h-4 stroke-[2.8]" />
-              <span className="truncate">Add to Vault</span>
-            </button>
-          </>
-        ) : (
-          /* STANDARD BOTTOM BAR: Dashboard | Vault | Community | More */
-          <>
-            {mobileQuickItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleSelectTab(item.id)}
-                  className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-vault-yellow text-vault-dark font-bold shadow-xs'
-                      : 'text-vault-cream/75 hover:text-vault-cream'
-                  }`}
-                >
-                  <Icon className="w-4.5 h-4.5 stroke-[2.2]" />
-                  <span className="font-sans text-[10px] font-semibold tracking-tight">
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-
-            {/* 4th "More" Trigger Button for Draggable Bottom Sheet */}
-            <button
-              type="button"
-              onClick={() => setIsBottomSheetOpen(true)}
-              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all cursor-pointer ${
-                isBottomSheetOpen || ['skills', 'settings'].includes(activeTab)
-                  ? 'bg-vault-yellow/20 text-vault-yellow font-bold'
-                  : 'text-vault-cream/75 hover:text-vault-cream'
-              }`}
-            >
-              <MoreHorizontal className="w-4.5 h-4.5 stroke-[2.2]" />
-              <span className="font-sans text-[10px] font-semibold tracking-tight">
-                More
-              </span>
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* ====================================================================== */}
-      {/* 3. INSTAGRAM / YOUTUBE STYLE DRAGGABLE BOTTOM SHEET (Framer Motion)     */}
-      {/* ====================================================================== */}
-      <AnimatePresence>
-        {isBottomSheetOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden flex flex-col justify-end">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsBottomSheetOpen(false)}
-              className="fixed inset-0 bg-black/60"
-            />
-
-            {/* Draggable Bottom Sheet Modal */}
-            <motion.div
-              drag="y"
-              dragListener={false}
-              dragControls={dragControls}
-              dragConstraints={{ top: 0 }}
-              dragElastic={{ top: 0.05, bottom: 0.3 }}
-              onDragEnd={(_e, info) => {
-                // Drag down threshold like mobile native sheets
-                if (info.offset.y > 80 || info.velocity.y > 300) {
-                  setIsBottomSheetOpen(false);
-                }
-              }}
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="relative z-10 w-full max-w-lg mx-auto bg-vault-cream border-t-2 border-vault-dark rounded-t-[32px] p-4 sm:p-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] shadow-2xl space-y-3.5 max-h-[85dvh] overflow-y-auto overscroll-contain"
-            >
-              {/* Draggable Grab Handle Indicator (Pill) */}
-              <div
-                onPointerDown={(e) => dragControls.start(e)}
-                className="w-full pt-1 pb-2 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none -mt-1"
-              >
-                <div className="w-12 h-1.5 bg-vault-dark/25 hover:bg-vault-dark/40 rounded-full" />
-              </div>
-
-              {/* Sheet Header */}
-              <div className="flex items-center justify-between pt-0.5 pb-2 border-b border-vault-dark/10">
-                <div>
-                  <h3 className="font-serif italic text-xl sm:text-2xl text-vault-dark font-normal">
-                    Workspace Navigation
-                  </h3>
-                  <p className="font-sans text-[11px] sm:text-xs text-vault-dark/60">
-                    Switch views, rules, and repository settings.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsBottomSheetOpen(false)}
-                  className="w-8 h-8 rounded-full bg-vault-dark/5 hover:bg-vault-dark/10 flex items-center justify-center text-vault-dark cursor-pointer"
-                  aria-label="Close bottom sheet"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* All Navigation Options List — Responsive 2-Column Grid */}
-              <div className="grid grid-cols-2 gap-2 pt-0.5">
-                {navItems.map((nav) => {
-                  const Icon = nav.icon;
-                  const isActive = activeTab === nav.id;
-                  return (
-                    <button
-                      key={nav.id}
-                      type="button"
-                      onClick={() => handleSelectTab(nav.id)}
-                      className={`w-full flex items-center justify-between p-2.5 sm:p-3 rounded-2xl font-sans text-xs sm:text-sm font-semibold transition-all cursor-pointer ${isActive
-                          ? 'bg-vault-dark text-vault-cream border-2 border-vault-dark shadow-xs font-bold'
-                          : 'bg-white/70 text-vault-dark border border-vault-dark/10 hover:bg-vault-yellow/40'
-                        }`}
-                    >
-                      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                        <div
-                          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 ${isActive
-                              ? 'bg-vault-yellow text-vault-dark'
-                              : 'bg-vault-dark/5 text-vault-dark'
-                            }`}
-                        >
-                          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
-                        </div>
-                        <span className="truncate">{nav.label}</span>
-                      </div>
-
-                      {nav.count !== undefined && (
-                        <span
-                          className={`text-[10px] sm:text-xs px-2 py-0.2 rounded-full font-bold shrink-0 ${isActive
-                              ? 'bg-vault-yellow text-vault-dark'
-                              : 'bg-vault-dark/10 text-vault-dark/70'
-                            }`}
-                        >
-                          {nav.count}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Bottom Sheet User Profile Card & Logout */}
-              <div className="pt-2.5 border-t border-vault-dark/10 flex items-center justify-between bg-white/60 p-3 rounded-2xl border border-vault-dark/10">
-                <div
-                  onClick={() => {
-                    navigate('/settings');
-                    setIsBottomSheetOpen(false);
-                  }}
-                  className="flex items-center gap-2.5 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
-                  title="Account Settings"
-                >
-                  <img
-                    src={userAvatar}
-                    alt="User Avatar"
-                    className="w-9 h-9 rounded-full border-2 border-vault-dark object-cover shrink-0 bg-vault-cream"
-                  />
-                  <div className="min-w-0">
-                    <span className="font-sans text-xs font-bold text-vault-dark block truncate">
-                      Harsh Rathod
-                    </span>
-                    <span className="font-sans text-[10px] text-vault-dark/60 block truncate">
-                      harsh@vault.ai
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-700 border border-red-500/30 text-xs font-bold cursor-pointer transition-colors shrink-0"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>Log Out</span>
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </>
   );
 }
