@@ -53,7 +53,7 @@ export default function DashboardHeader({
 
   // Close on outside click or Escape key
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
@@ -64,9 +64,11 @@ export default function DashboardHeader({
 
     if (isOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('touchstart', handleOutsideClick, { passive: true });
       document.addEventListener('keydown', handleKeyDown);
       return () => {
         document.removeEventListener('mousedown', handleOutsideClick);
+        document.removeEventListener('touchstart', handleOutsideClick);
         document.removeEventListener('keydown', handleKeyDown);
       };
     }
@@ -137,18 +139,33 @@ export default function DashboardHeader({
           <AnimatePresence>
             {isOpen && (
               <>
-                {/* Mobile Backdrop to prevent off-screen taps */}
-                <div
+                {/* Mobile Backdrop to prevent off-screen taps with instant fade exit */}
+                <motion.div
+                  key="notification-backdrop"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
                   className="fixed inset-0 z-40 sm:hidden bg-black/25 backdrop-blur-xs"
                   onClick={() => setIsOpen(false)}
                 />
 
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-                  className="fixed inset-x-3 sm:inset-x-auto top-24 sm:top-full sm:right-0 sm:mt-3 w-auto sm:w-96 max-w-sm sm:max-w-none mx-auto sm:mx-0 bg-vault-cream border-2 border-vault-dark rounded-[24px] shadow-2xl z-50 overflow-hidden flex flex-col"
+                  key="notification-popover"
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: { type: 'spring', damping: 25, stiffness: 350 },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 6,
+                    scale: 0.96,
+                    transition: { duration: 0.15, ease: 'easeOut' },
+                  }}
+                  className="fixed inset-x-3 top-24 mx-auto max-w-sm sm:absolute sm:inset-x-auto sm:top-full sm:right-0 sm:mt-3 sm:w-96 sm:max-w-none sm:mx-0 sm:top-auto bg-vault-cream border-2 border-vault-dark rounded-[24px] shadow-2xl z-50 overflow-hidden flex flex-col"
                 >
                 {/* 1. Header */}
                 <div className="p-3.5 sm:p-4 border-b-2 border-vault-dark/15 flex items-center justify-between bg-vault-cream">
