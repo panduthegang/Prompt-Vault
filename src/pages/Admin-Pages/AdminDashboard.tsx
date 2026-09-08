@@ -11,6 +11,7 @@ import {
   Check,
   Flame,
   Bookmark,
+  Users,
 } from 'lucide-react';
 import Toast, { ToastContainer, ToastType } from '../../components/ui/Toast';
 import { copyToClipboard } from '../../utils/clipboard';
@@ -280,10 +281,6 @@ export default function AdminDashboard() {
               <h1 className="font-serif italic text-2xl sm:text-3xl lg:text-4xl text-vault-dark font-normal tracking-tight">
                 Admin Oversight
               </h1>
-              <span className="font-mono text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-vault-dark text-vault-yellow border border-vault-dark hidden sm:inline-flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-vault-green" />
-                Root Control
-              </span>
             </div>
             <p className="font-sans text-xs sm:text-sm text-vault-dark/70 font-medium pt-0.5">
               Platform velocity, community clipboard clones, and creator permissions.

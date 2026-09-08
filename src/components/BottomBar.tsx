@@ -10,6 +10,8 @@ import {
   LogOut,
   X,
   Plus,
+  ShieldCheck,
+  UserCheck,
 } from 'lucide-react';
 
 export interface BottomBarProps {
@@ -308,6 +310,61 @@ export default function BottomBar({
                       </motion.button>
                     );
                   })}
+                </div>
+
+                {/* Admin Navigation Options for Mobile Sheet */}
+                <div className="pt-2 border-t border-vault-dark/15 space-y-1.5">
+                  <div className="flex items-center justify-between px-1 text-[10px] font-mono uppercase tracking-widest text-vault-dark/50 font-bold">
+                    <span>Admin Controls</span>
+                    <span className="text-vault-dark bg-vault-yellow px-1.5 py-0.2 rounded font-extrabold text-[9px]">ROOT</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <motion.button
+                      type="button"
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        navigate('/admin');
+                        setIsBottomSheetOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-2xl font-sans text-xs font-semibold border-2 transition-all cursor-pointer ${
+                        activeTab === 'admin'
+                          ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs font-bold'
+                          : 'bg-white/70 text-vault-dark border-vault-dark/15 hover:bg-vault-yellow/40 hover:border-vault-dark'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                          activeTab === 'admin' ? 'bg-vault-yellow text-vault-dark' : 'bg-vault-dark/5 text-vault-dark'
+                        }`}>
+                          <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
+                        </div>
+                        <span className="truncate">Overview</span>
+                      </div>
+                    </motion.button>
+
+                    <motion.button
+                      type="button"
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        navigate('/admin/users');
+                        setIsBottomSheetOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-2xl font-sans text-xs font-semibold border-2 transition-all cursor-pointer ${
+                        activeTab === 'admin-users'
+                          ? 'bg-vault-dark text-vault-cream border-vault-dark shadow-xs font-bold'
+                          : 'bg-white/70 text-vault-dark border-vault-dark/15 hover:bg-vault-yellow/40 hover:border-vault-dark'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                          activeTab === 'admin-users' ? 'bg-vault-yellow text-vault-dark' : 'bg-vault-dark/5 text-vault-dark'
+                        }`}>
+                          <UserCheck className="w-3.5 h-3.5 stroke-[2.5]" />
+                        </div>
+                        <span className="truncate">User Directory</span>
+                      </div>
+                    </motion.button>
+                  </div>
                 </div>
               </div>
 
