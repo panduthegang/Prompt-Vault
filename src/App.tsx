@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Vault from './pages/Vault';
 import Community from './pages/Community';
+import AdminDashboard from './pages/Admin-Pages/AdminDashboard';
 
 function AppRoutes() {
   const location = useLocation();
@@ -52,6 +53,8 @@ function AppRoutes() {
           <Route path="/saved" element={<Navigate to="/vault" replace />} />
           <Route path="/community" element={<Community />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

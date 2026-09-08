@@ -35,6 +35,7 @@ export default function WorkspaceLayout() {
     if (location.pathname.startsWith('/vault')) return 'vault';
     if (location.pathname.startsWith('/community')) return 'community';
     if (location.pathname.startsWith('/settings')) return 'settings';
+    if (location.pathname.startsWith('/admin')) return 'admin';
     return 'dashboard';
   }, [location.pathname]);
 
@@ -43,6 +44,7 @@ export default function WorkspaceLayout() {
     else if (tab === 'vault') navigate('/vault');
     else if (tab === 'community') navigate('/community');
     else if (tab === 'settings') navigate('/settings');
+    else if (tab === 'admin') navigate('/admin');
   };
 
   return (

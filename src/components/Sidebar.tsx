@@ -8,6 +8,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   LogOut,
+  ShieldCheck,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -202,8 +203,30 @@ export default function Sidebar({
           </nav>
         </div>
 
+        {/* Admin Terminal Access Link */}
+        <div className="pt-3 pb-2 border-t border-vault-cream/15">
+          <button
+            type="button"
+            onClick={() => navigate('/admin')}
+            className={`w-full flex items-center ${
+              isCollapsed ? 'justify-center p-2' : 'justify-between px-3 py-2'
+            } rounded-xl bg-vault-cream/10 hover:bg-vault-yellow hover:text-vault-dark text-vault-cream border border-vault-cream/20 text-xs font-bold transition-all cursor-pointer group`}
+            title="Open Admin Terminal"
+          >
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-vault-green group-hover:text-vault-dark" />
+              {!isCollapsed && <span className="font-mono text-xs">Admin Terminal</span>}
+            </div>
+            {!isCollapsed && (
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-vault-green/20 text-vault-green group-hover:bg-vault-dark group-hover:text-vault-cream">
+                ROOT
+              </span>
+            )}
+          </button>
+        </div>
+
         {/* Bottom User Profile & Logout */}
-        <div className="pt-4 border-t border-vault-cream/15">
+        <div className="pt-3 border-t border-vault-cream/15">
           {!isCollapsed ? (
             <div className="flex items-center justify-between gap-2">
               <div
