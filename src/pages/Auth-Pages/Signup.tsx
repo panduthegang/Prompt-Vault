@@ -52,7 +52,7 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
     try {
       // Role is managed strictly server-side by DB trigger.
       // Never send role in signUp payload.
-      const { data: _data, error } = await signUp(email, password);
+      const { data: _data, error } = await signUp(email, password, username);
 
       if (error) {
         setIsLoading(false);

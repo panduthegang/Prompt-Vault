@@ -9,7 +9,7 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ data: AuthResponse['data'] | null; error: AuthError | null }>;
-  signUp: (email: string, password: string) => Promise<{ data: AuthResponse['data'] | null; error: AuthError | null }>;
+  signUp: (email: string, password: string, username?: string) => Promise<{ data: AuthResponse['data'] | null; error: AuthError | null }>;
   signOut: () => Promise<{ error: AuthError | null }>;
 }
 
@@ -84,12 +84,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { data: response.data, error: response.error };
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, username?: string) => {
     // Role assignment is strictly locked and handled by the database trigger.
     // Never send options.data.role or any role parameters.
+    const trimmedUsername = username?.trim() || '';
     const response = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          display_name: trimmedUsername,
+          full_name: trimmedUsername,
+          user_name: trimmedUsername,
+          username: trimmedUsername,
+        },
+      },
     });
     return { data: response.data, error: response.error };
   };

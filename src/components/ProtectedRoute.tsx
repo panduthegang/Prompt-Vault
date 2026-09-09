@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { Role } from '../types/auth';
+import NotFound from '../pages/Static-Pages/NotFound';
 
 interface ProtectedRouteProps {
   children?: React.ReactNode;
@@ -31,15 +32,20 @@ export default function ProtectedRoute({
     );
   }
 
-  // If unauthenticated, redirect to Sign In with return location state
+  // Extra protection for role-restricted endpoints (e.g. /admin):
+  // If a role is required and user does not have it, render 404 directly to obscure existence of admin route
+  if (requireRole && profile?.role !== requireRole) {
+    if (redirectTo) {
+      return <Navigate to={redirectTo} replace />;
+    }
+    return <NotFound />;
+  }
+
+  // If unauthenticated on regular protected user routes, redirect to Sign In
   if (!session) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
-  // If a specific role is required (e.g. 'admin') and profile.role doesn't match, redirect to dashboard or fallback
-  if (requireRole && profile?.role !== requireRole) {
-    return <Navigate to={redirectTo || '/dashboard'} replace />;
-  }
-
   return children ? <>{children}</> : <Outlet />;
 }
+

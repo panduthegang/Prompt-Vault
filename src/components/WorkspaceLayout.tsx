@@ -3,10 +3,13 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import BottomBar from './BottomBar';
 import { getStoredVaultItems } from './Vault-Page/vaultData';
+import { useAuth } from '../context/AuthContext';
+import NotFound from '../pages/Static-Pages/NotFound';
 
 export default function WorkspaceLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { profile, loading } = useAuth();
 
   const [promptCount, setPromptCount] = useState<number>(() => {
     try {
@@ -48,6 +51,11 @@ export default function WorkspaceLayout() {
     else if (tab === 'admin') navigate('/admin');
     else if (tab === 'admin-users') navigate('/admin/users');
   };
+
+  // If a non-admin attempts to access any /admin routes, render full-screen 404 with NO sidebar or dock
+  if (!loading && location.pathname.startsWith('/admin') && profile?.role !== 'admin') {
+    return <NotFound />;
+  }
 
   return (
     <div className="w-full min-h-screen bg-vault-cream text-vault-dark flex flex-col lg:flex-row p-3 sm:p-4 md:p-6 gap-4 sm:gap-6 selection:bg-vault-green selection:text-vault-dark relative items-start">
