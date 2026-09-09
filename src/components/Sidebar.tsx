@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   UserCheck,
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export interface SidebarProps {
   activeTab: string;
@@ -30,6 +31,7 @@ export default function Sidebar({
   onToggleCollapse: controlledOnToggleCollapse,
 }: SidebarProps) {
   const navigate = useNavigate();
+  const { signOut, user, profile } = useAuth();
   const [internalIsCollapsed, setInternalIsCollapsed] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('prompt_vault_sidebar_collapsed');
@@ -41,6 +43,18 @@ export default function Sidebar({
   });
 
   const isCollapsed = controlledIsCollapsed !== undefined ? controlledIsCollapsed : internalIsCollapsed;
+
+  // Sync with user profile avatar from localStorage
+  const userAvatar = (() => {
+    try {
+      const saved = localStorage.getItem('prompt_vault_user_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
+      }
+    } catch {}
+    return '/avatars/avatar-1.svg';
+  })();
 
   const handleToggleCollapse = () => {
     if (controlledOnToggleCollapse) {
@@ -56,17 +70,6 @@ export default function Sidebar({
     }
   };
 
-  const userAvatar = (() => {
-    try {
-      const saved = localStorage.getItem('prompt_vault_user_profile');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
-      }
-    } catch {}
-    return '/avatars/avatar-1.svg';
-  })();
-
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
@@ -74,7 +77,8 @@ export default function Sidebar({
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOut();
     navigate('/');
   };
 
@@ -326,10 +330,10 @@ export default function Sidebar({
                 />
                 <div className="min-w-0">
                   <span className="font-sans text-xs font-bold text-vault-cream block leading-snug truncate">
-                    Harsh Rathod
+                    {profile?.role === 'admin' ? 'Admin' : 'Vault User'}
                   </span>
                   <span className="font-sans text-[11px] text-vault-cream/60 block truncate">
-                    harsh@vault.ai
+                    {profile?.email || user?.email || 'user@vault.ai'}
                   </span>
                 </div>
               </div>
@@ -354,7 +358,7 @@ export default function Sidebar({
                 />
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/user:opacity-100 group-hover/user:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
                   <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-lg font-sans text-xs font-bold">
-                    Harsh Rathod <span className="text-[10px] font-normal text-vault-dark/60 block">harsh@vault.ai</span>
+                    {profile?.role === 'admin' ? 'Admin' : 'Vault User'} <span className="text-[10px] font-normal text-vault-dark/60 block">{profile?.email || user?.email || 'user@vault.ai'}</span>
                   </div>
                 </div>
               </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import LoadingScreen from './components/ui/LoadingScreen';
 import LandingPage from './pages/Static-Pages/LandingPage';
 import NotFound from './pages/Static-Pages/NotFound';
@@ -47,16 +49,58 @@ function AppRoutes() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
 
-        {/* Persistent Workspace Layout (Sidebar + BottomBar) */}
+        {/* Persistent Workspace Layout (Sidebar + BottomBar) with Protected Routes */}
         <Route element={<WorkspaceLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/vault" element={<Vault />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vault"
+            element={
+              <ProtectedRoute>
+                <Vault />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/saved" element={<Navigate to="/vault" replace />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/community"
+            element={
+              <ProtectedRoute>
+                <Community />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         <Route path="*" element={<NotFound />} />
@@ -78,19 +122,21 @@ export default function App() {
   });
 
   return (
-    <BrowserRouter>
-      {isLoading && (
-        <LoadingScreen
-          duration={LOADING_SCREEN_DURATION_MS}
-          onComplete={() => {
-            try {
-              sessionStorage.setItem('prompt_vault_seen_intro', 'true');
-            } catch {}
-            setIsLoading(false);
-          }}
-        />
-      )}
-      <AppRoutes />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        {isLoading && (
+          <LoadingScreen
+            duration={LOADING_SCREEN_DURATION_MS}
+            onComplete={() => {
+              try {
+                sessionStorage.setItem('prompt_vault_seen_intro', 'true');
+              } catch {}
+              setIsLoading(false);
+            }}
+          />
+        )}
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   UserCheck,
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export interface BottomBarProps {
   activeTab: string;
@@ -28,6 +29,7 @@ export default function BottomBar({
   onOpenAddModal,
 }: BottomBarProps) {
   const navigate = useNavigate();
+  const { signOut, user, profile } = useAuth();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const dragControls = useDragControls();
 
@@ -75,8 +77,9 @@ export default function BottomBar({
     setIsBottomSheetOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsBottomSheetOpen(false);
+    await signOut();
     navigate('/');
   };
 
@@ -386,10 +389,10 @@ export default function BottomBar({
                     />
                     <div className="min-w-0">
                       <span className="font-sans text-xs font-bold text-vault-dark block truncate">
-                        Harsh Rathod
+                        {profile?.role === 'admin' ? 'Admin' : 'Vault User'}
                       </span>
                       <span className="font-sans text-[10px] text-vault-dark/60 block truncate">
-                        harsh@vault.ai
+                        {profile?.email || user?.email || 'user@vault.ai'}
                       </span>
                     </div>
                   </div>
