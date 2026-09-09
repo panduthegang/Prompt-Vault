@@ -12,12 +12,14 @@ import DashboardHeader from '../components/Dashboard-Page/DashboardHeader';
 import DashboardStats from '../components/Dashboard-Page/DashboardStats';
 import DashboardPrompts from '../components/Dashboard-Page/DashboardPrompts';
 import DashboardCommunityTable from '../components/Dashboard-Page/DashboardCommunityTable';
+import { useAuth } from '../context/AuthContext';
 
 // Re-export types for backward compatibility
 export type { PromptItem, CommunityItem };
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { profile, user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [prompts, setPrompts] = useState<PromptItem[]>(INITIAL_PROMPTS);
   const [selectedTag, setSelectedTag] = useState<string>('All');
@@ -60,6 +62,9 @@ export default function Dashboard() {
     return '/avatars/avatar-1.svg';
   })();
 
+  // Resolve display name: profile DB → auth metadata → fallback
+  const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Vault User';
+
   return (
     <>
       {/* Toast Notification Floating Pill */}
@@ -74,7 +79,7 @@ export default function Dashboard() {
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-24 lg:pb-0">
         {/* 1. Header */}
         <DashboardHeader
-          userName="Harsh"
+          userName={displayName}
           userAvatar={userAvatar}
           onAvatarClick={() => navigate('/settings')}
         />

@@ -24,7 +24,7 @@ export interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({
-  userName = 'Harsh',
+  userName = 'Vault User',
   userAvatar,
   onNotificationClick,
   onAvatarClick,
