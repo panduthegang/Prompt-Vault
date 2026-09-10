@@ -1,28 +1,13 @@
-// ==========================================
-// TYPES & DATA DEFAULTS FOR SETTINGS
-// ==========================================
-
-export interface UserProfile {
-  name: string;
-  username: string;
-  email: string;
-  bio: string;
-  avatar: string;
-}
+// ============================================================
+// PRESET AVATARS — static reference data
+// Avatars are fixed SVG files in public/avatars/; no uploads.
+// ============================================================
 
 export interface PresetAvatar {
   id: string;
   src: string;
   label: string;
 }
-
-export const DEFAULT_PROFILE: UserProfile = {
-  name: 'Harsh Rathod',
-  username: 'harshrathod',
-  email: 'harsh@vault.ai',
-  bio: 'Principal AI Engineer & Prompt Architect building next-gen agent workflows.',
-  avatar: '/avatars/avatar-1.svg',
-};
 
 export const PRESET_AVATARS: PresetAvatar[] = [
   { id: 'avatar-1', src: '/avatars/avatar-1.svg', label: 'Boy Developer (Cap & Headphones)' },
@@ -31,3 +16,6 @@ export const PRESET_AVATARS: PresetAvatar[] = [
   { id: 'avatar-4', src: '/avatars/avatar-4.svg', label: 'Girl Engineer (Cyber Headset & Bangs)' },
   { id: 'avatar-5', src: '/avatars/avatar-5.svg', label: 'Cyber Specialist (Matrix Shades & Beanie)' },
 ];
+
+/** Fallback avatar src used when profile.avatar_url is null/empty. */
+export const DEFAULT_AVATAR_SRC = '/avatars/avatar-1.svg';

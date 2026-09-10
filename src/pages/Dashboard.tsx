@@ -51,16 +51,9 @@ export default function Dashboard() {
     return selectedTag === 'All' || p.category === selectedTag;
   });
 
-  const userAvatar = (() => {
-    try {
-      const saved = localStorage.getItem('prompt_vault_user_profile');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
-      }
-    } catch {}
-    return '/avatars/avatar-1.svg';
-  })();
+  // Derive avatar from AuthContext — always reflects the latest profile save
+  const userAvatar = profile?.avatar_url || '/avatars/avatar-1.svg';
+
 
   // Resolve display name: profile DB → auth metadata → fallback
   const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Vault User';

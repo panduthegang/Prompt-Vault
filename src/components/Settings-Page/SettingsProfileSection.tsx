@@ -1,26 +1,37 @@
 import React from 'react';
-import { Pencil, Check, X } from 'lucide-react';
-import { UserProfile, PRESET_AVATARS } from './settingsData';
+import { Pencil, Check, X, RefreshCw } from 'lucide-react';
+import type { Profile } from '../../types/auth';
+import { PRESET_AVATARS, DEFAULT_AVATAR_SRC } from '../../lib/avatars';
+import type { EditProfileForm } from '../../pages/Settings';
 
 export interface SettingsProfileSectionProps {
-  profile: UserProfile;
+  profile: Profile | null;
   isEditing: boolean;
-  editForm: UserProfile;
+  isSaving: boolean;
+  editForm: EditProfileForm;
   onStartEditing: () => void;
   onCancelEditing: () => void;
-  onFormChange: (updated: UserProfile) => void;
+  onFormChange: (updated: EditProfileForm) => void;
   onSaveProfile: (e: React.FormEvent) => void;
 }
 
 export default function SettingsProfileSection({
   profile,
   isEditing,
+  isSaving,
   editForm,
   onStartEditing,
   onCancelEditing,
   onFormChange,
   onSaveProfile,
 }: SettingsProfileSectionProps) {
+  // Safe resolved values for display — DB fields are nullable
+  const avatarSrc = profile?.avatar_url || DEFAULT_AVATAR_SRC;
+  const displayName = profile?.display_name || 'Unnamed User';
+  const username = profile?.username || '—';
+  const email = profile?.email || '—';
+  const bio = profile?.bio || null;
+
   return (
     <section className="bg-vault-cream border-2 border-vault-dark rounded-[24px] sm:rounded-[28px] p-5 sm:p-7 md:p-8 space-y-6 shadow-xs">
       {/* Header with Title & Edit Button */}
@@ -54,28 +65,28 @@ export default function SettingsProfileSection({
           {/* Hero User Banner Card */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-vault-yellow/20 border-2 border-vault-dark/20">
             <img
-              src={profile.avatar}
-              alt={profile.name}
+              src={avatarSrc}
+              alt={displayName}
               className="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-vault-dark object-cover shadow-sm ring-2 ring-vault-green/40 bg-vault-cream"
             />
             <div className="space-y-1">
-              <h3 className="font-serif text-2xl text-vault-dark font-normal">{profile.name}</h3>
+              <h3 className="font-serif text-2xl text-vault-dark font-normal">{displayName}</h3>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-mono text-xs font-bold text-vault-dark bg-vault-yellow border border-vault-dark/40 px-2.5 py-0.5 rounded-full">
-                  @{profile.username}
+                  @{username}
                 </span>
-                <span className="font-sans text-xs text-vault-dark/70 font-semibold">{profile.email}</span>
+                <span className="font-sans text-xs text-vault-dark/70 font-semibold">{email}</span>
               </div>
             </div>
           </div>
 
-          {/* Information Details List */}
+          {/* Information Details Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="p-4 rounded-2xl bg-white/70 border-2 border-vault-dark/15 space-y-1">
               <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-vault-dark/60 block">
                 Full Name
               </span>
-              <span className="font-sans text-sm font-bold text-vault-dark block">{profile.name}</span>
+              <span className="font-sans text-sm font-bold text-vault-dark block">{displayName}</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/70 border-2 border-vault-dark/15 space-y-1">
@@ -87,7 +98,7 @@ export default function SettingsProfileSection({
                   Public
                 </span>
               </div>
-              <span className="font-mono text-sm font-bold text-vault-dark block">@{profile.username}</span>
+              <span className="font-mono text-sm font-bold text-vault-dark block">@{username}</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/70 border-2 border-vault-dark/15 space-y-1">
@@ -99,7 +110,7 @@ export default function SettingsProfileSection({
                   Verified
                 </span>
               </div>
-              <span className="font-sans text-sm font-bold text-vault-dark block">{profile.email}</span>
+              <span className="font-sans text-sm font-bold text-vault-dark block">{email}</span>
             </div>
 
             <div className="sm:col-span-3 p-4 rounded-2xl bg-white/70 border-2 border-vault-dark/15 space-y-1">
@@ -107,7 +118,7 @@ export default function SettingsProfileSection({
                 Bio
               </span>
               <p className="font-sans text-sm text-vault-dark/80 font-medium leading-relaxed">
-                {profile.bio || 'No bio provided.'}
+                {bio || 'No bio provided.'}
               </p>
             </div>
           </div>
@@ -122,7 +133,7 @@ export default function SettingsProfileSection({
             </label>
             <div className="flex flex-wrap items-center gap-4">
               <img
-                src={editForm.avatar}
+                src={editForm.avatar_url}
                 alt="Selected Avatar"
                 className="w-18 h-18 rounded-full border-2 border-vault-dark object-cover shadow-xs ring-4 ring-vault-yellow bg-vault-cream"
               />
@@ -136,9 +147,9 @@ export default function SettingsProfileSection({
                     <button
                       key={preset.id}
                       type="button"
-                      onClick={() => onFormChange({ ...editForm, avatar: preset.src })}
+                      onClick={() => onFormChange({ ...editForm, avatar_url: preset.src })}
                       className={`rounded-full border-2 transition-all p-0.5 cursor-pointer ${
-                        editForm.avatar === preset.src
+                        editForm.avatar_url === preset.src
                           ? 'border-vault-dark ring-2 ring-vault-green scale-110 shadow-xs'
                           : 'border-vault-dark/30 hover:border-vault-dark opacity-80 hover:opacity-100 hover:scale-105'
                       }`}
@@ -160,8 +171,8 @@ export default function SettingsProfileSection({
               </label>
               <input
                 type="text"
-                value={editForm.name}
-                onChange={(e) => onFormChange({ ...editForm, name: e.target.value })}
+                value={editForm.display_name}
+                onChange={(e) => onFormChange({ ...editForm, display_name: e.target.value })}
                 className="w-full bg-vault-cream text-vault-dark border-2 border-vault-dark rounded-xl px-4 py-3 font-sans text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-vault-green"
               />
             </div>
@@ -207,16 +218,27 @@ export default function SettingsProfileSection({
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className="px-6 py-2.5 bg-vault-green text-vault-dark border-2 border-vault-dark rounded-full font-sans font-bold text-xs sm:text-sm hover:brightness-105 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+              disabled={isSaving}
+              className="px-6 py-2.5 bg-vault-green text-vault-dark border-2 border-vault-dark rounded-full font-sans font-bold text-xs sm:text-sm hover:brightness-105 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
             >
-              <Check className="w-4 h-4 stroke-[2.5]" />
-              <span>Save Changes</span>
+              {isSaving ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Check className="w-4 h-4 stroke-[2.5]" />
+                  <span>Save Changes</span>
+                </>
+              )}
             </button>
 
             <button
               type="button"
               onClick={onCancelEditing}
-              className="px-5 py-2.5 bg-vault-cream text-vault-dark border-2 border-vault-dark/30 hover:border-vault-dark rounded-full font-sans font-bold text-xs sm:text-sm active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+              disabled={isSaving}
+              className="px-5 py-2.5 bg-vault-cream text-vault-dark border-2 border-vault-dark/30 hover:border-vault-dark rounded-full font-sans font-bold text-xs sm:text-sm active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <X className="w-4 h-4" />
               <span>Cancel</span>

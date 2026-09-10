@@ -1,38 +1,83 @@
 -- ============================================================
 -- Prompt Vault — Complete Auth & Roles Schema
 -- ============================================================
--- Run once in Supabase SQL Editor (Dashboard → SQL Editor → New query)
--- Execute top-to-bottom in a single run. Safe to re-run.
+-- CLEAN SINGLE-PASS VERSION — no ALTER TABLE chains.
+-- Run top-to-bottom in a single Supabase SQL Editor run.
+--
+-- vs old schema:
+--   + username    text (nullable, partial unique index)
+--   + bio         text (nullable)
+--   + avatar_url  text (nullable)
+--   + Trigger seeds username from signup metadata
+--   + NULLIF(..., '') so empty strings become NULL
+--   + email is NOT NULL
+--   + created_at is NOT NULL DEFAULT now()
+--   - Removed stale ALTER TABLE ADD COLUMN chains
 -- ============================================================
+
+
+-- ────────────────────────────────────────────────────────────
+-- TEARDOWN  (safe to run from any state)
+-- ────────────────────────────────────────────────────────────
+-- DROP POLICY / DROP TRIGGER require the table to exist even with IF EXISTS.
+-- Wrap them in a DO block that skips gracefully when the table is already gone.
+
+do $$ begin
+  if exists (select from pg_tables where schemaname = 'public' and tablename = 'profiles') then
+    drop policy if exists "read own profile"        on public.profiles;
+    drop policy if exists "update own profile"      on public.profiles;
+    drop policy if exists "admin read all profiles" on public.profiles;
+    drop trigger if exists enforce_role_lock        on public.profiles;
+  end if;
+end $$;
+
+drop trigger  if exists on_auth_user_created on auth.users;
+
+drop function if exists public.prevent_role_escalation();
+drop function if exists public.handle_new_user();
+drop function if exists public.is_admin();
+
+drop table if exists public.profiles;
 
 
 -- ────────────────────────────────────────────────────────────
 -- 1. PROFILES TABLE
 -- ────────────────────────────────────────────────────────────
--- Mirrors auth.users 1:1. All app-level user data lives here,
--- never directly on auth.users.
+-- Mirrors auth.users 1:1. Column set matches src/types/auth.ts exactly.
 
 create table if not exists public.profiles (
-  id           uuid        references auth.users on delete cascade primary key,
-  email        text,
+  -- Identity
+  id           uuid        not null primary key
+                           references auth.users (id) on delete cascade,
+  email        text        not null,
+
+  -- Access control (trigger-only; client never sets role)
+  role         text        not null default 'user'
+                           check (role in ('user', 'admin')),
+
+  -- User-editable fields (nullable — fresh signup will not have these yet)
   display_name text,
-  role         text        not null default 'user' check (role in ('user', 'admin')),
-  created_at   timestamptz default now()
+  username     text,
+  bio          text,
+  avatar_url   text,
+
+  -- Timestamps
+  created_at   timestamptz not null default now()
 );
 
--- If the table already existed without display_name, add it now
-alter table public.profiles add column if not exists display_name text;
+-- Unique usernames, but allow multiple NULL rows (fresh signups)
+create unique index if not exists profiles_username_key
+  on public.profiles (username)
+  where username is not null;
 
 
 -- ────────────────────────────────────────────────────────────
--- 2. AUTO-CREATE PROFILE ON SIGNUP (Trigger Function)
+-- 2. AUTO-CREATE PROFILE ON SIGNUP (Trigger)
 -- ────────────────────────────────────────────────────────────
--- Fires after every new auth.users insert.
--- • Role is HARDCODED to 'user' — ignores anything from the
---   client signup payload, so no one can self-assign 'admin'.
--- • display_name is safely pulled from signup metadata
---   (options.data.display_name or options.data.full_name).
--- • ON CONFLICT handles edge cases (e.g. re-confirmation).
+-- Fires after every new auth.users INSERT.
+-- role is HARDCODED 'user' — no client can self-assign 'admin'.
+-- AuthContext.signUp() sends: display_name, full_name, username, user_name.
+-- NULLIF converts empty strings to NULL (no empty @handles stored).
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -41,26 +86,30 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, email, role, display_name)
+  insert into public.profiles (id, email, role, display_name, username)
   values (
     new.id,
     new.email,
     'user',
-    coalesce(
+    nullif(trim(coalesce(
       new.raw_user_meta_data ->> 'display_name',
       new.raw_user_meta_data ->> 'full_name',
       ''
-    )
+    )), ''),
+    nullif(trim(coalesce(
+      new.raw_user_meta_data ->> 'username',
+      new.raw_user_meta_data ->> 'user_name',
+      ''
+    )), '')
   )
   on conflict (id) do update
-    set display_name = excluded.display_name,
-        email       = excluded.email;
+    set email        = excluded.email,
+        display_name = excluded.display_name,
+        username     = excluded.username;
 
   return new;
 end;
 $$;
-
-drop trigger if exists on_auth_user_created on auth.users;
 
 create trigger on_auth_user_created
   after insert on auth.users
@@ -68,10 +117,9 @@ create trigger on_auth_user_created
 
 
 -- ────────────────────────────────────────────────────────────
--- 3. HELPER: Admin Check (Security Definer)
+-- 3. HELPER: is_admin() (Security Definer)
 -- ────────────────────────────────────────────────────────────
--- Used by RLS policies below. SECURITY DEFINER lets it read
--- public.profiles without triggering RLS infinite recursion.
+-- Called by RLS policies. SECURITY DEFINER avoids RLS recursion.
 
 create or replace function public.is_admin()
 returns boolean
@@ -93,22 +141,19 @@ $$;
 
 alter table public.profiles enable row level security;
 
--- Drop existing policies first (safe re-run)
-drop policy if exists "read own profile"      on public.profiles;
-drop policy if exists "update own profile"     on public.profiles;
-drop policy if exists "admin read all profiles" on public.profiles;
-
--- Users can read their own profile
+-- Each user can read their own row
 create policy "read own profile"
   on public.profiles for select
   using (auth.uid() = id);
 
--- Users can update their own profile (role changes blocked by trigger below)
+-- Each user can update their own row
+-- (role column is protected by the trigger below)
 create policy "update own profile"
   on public.profiles for update
-  using (auth.uid() = id);
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
 
--- Admins can read all profiles
+-- Admins can read all rows (AdminUsers page)
 create policy "admin read all profiles"
   on public.profiles for select
   using (public.is_admin());
@@ -117,11 +162,9 @@ create policy "admin read all profiles"
 -- ────────────────────────────────────────────────────────────
 -- 5. ROLE ESCALATION PREVENTION (Trigger)
 -- ────────────────────────────────────────────────────────────
--- Even if a client sends a raw UPDATE with role = 'admin',
--- this trigger silently reverts the role unless the CALLER
--- already has role = 'admin'.
--- When auth.uid() is NULL (e.g. Supabase SQL Editor / Table
--- Editor running as postgres), the change is allowed.
+-- Silently reverts role changes from non-admin clients.
+-- SQL Editor / postgres (auth.uid() IS NULL) is exempt —
+-- that is how manual admin promotion works.
 
 create or replace function public.prevent_role_escalation()
 returns trigger
@@ -135,13 +178,16 @@ begin
       new.role := old.role;
     end if;
   end if;
-
   return new;
 end;
 $$;
 
-drop trigger if exists enforce_role_lock on public.profiles;
-
 create trigger enforce_role_lock
   before update on public.profiles
   for each row execute function public.prevent_role_escalation();
+
+
+-- ────────────────────────────────────────────────────────────
+-- ADMIN PROMOTION (SQL Editor only — never expose client-side)
+-- ────────────────────────────────────────────────────────────
+--   update public.profiles set role = 'admin' where email = 'you@example.com';

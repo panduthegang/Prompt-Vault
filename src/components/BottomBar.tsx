@@ -48,16 +48,9 @@ export default function BottomBar({
     }
   }, [isBottomSheetOpen]);
 
-  const userAvatar = (() => {
-    try {
-      const saved = localStorage.getItem('prompt_vault_user_profile');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.avatar && !parsed.avatar.includes('unsplash')) return parsed.avatar;
-      }
-    } catch {}
-    return '/avatars/avatar-1.svg';
-  })();
+  // Derive avatar from AuthContext — always reflects the latest profile save
+  const userAvatar = profile?.avatar_url || '/avatars/avatar-1.svg';
+
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },

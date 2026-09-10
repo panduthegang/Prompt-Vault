@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
-import {
-  UserProfile,
-  PresetAvatar,
-  DEFAULT_PROFILE,
-} from '../components/Settings-Page/settingsData';
+import { useAuth } from '../context/AuthContext';
+import { updateProfile, updatePassword } from '../services/profileService';
+import { DEFAULT_AVATAR_SRC } from '../lib/avatars';
+import type { Profile } from '../types/auth';
 import SettingsHeader from '../components/Settings-Page/SettingsHeader';
 import SettingsProfileSection from '../components/Settings-Page/SettingsProfileSection';
 import SettingsSecuritySection from '../components/Settings-Page/SettingsSecuritySection';
 
-// Re-export types for backward compatibility
-export type { UserProfile, PresetAvatar };
+// ─── Local edit-form shape (in-progress draft before saving) ─────────────────
+// Fields match the DB column names exactly — no translation layer needed.
+export interface EditProfileForm {
+  display_name: string;
+  username: string;
+  bio: string;
+  avatar_url: string;
+}
 
 interface ActiveToast {
   id: string;
@@ -21,87 +25,89 @@ interface ActiveToast {
 }
 
 export default function Settings() {
-  const navigate = useNavigate();
+  const { profile, refreshProfile } = useAuth();
+
   const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile');
   const [activeToast, setActiveToast] = useState<ActiveToast | null>(null);
 
-  // Profile State (initialized from localStorage or default)
-  const [profile, setProfile] = useState<UserProfile>(() => {
-    try {
-      const saved = localStorage.getItem('prompt_vault_user_profile');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        const avatar =
-          parsed.avatar && !parsed.avatar.includes('unsplash')
-            ? parsed.avatar
-            : DEFAULT_PROFILE.avatar;
-        return {
-          name: parsed.name || DEFAULT_PROFILE.name,
-          username: parsed.username || DEFAULT_PROFILE.username,
-          email: parsed.email || DEFAULT_PROFILE.email,
-          bio: parsed.bio || DEFAULT_PROFILE.bio,
-          avatar: avatar,
-        };
-      }
-      return DEFAULT_PROFILE;
-    } catch {
-      return DEFAULT_PROFILE;
-    }
+  // Edit mode —  draft state, initialized from profile when entering edit mode
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editForm, setEditForm] = useState<EditProfileForm>({
+    display_name: '',
+    username: '',
+    bio: '',
+    avatar_url: DEFAULT_AVATAR_SRC,
   });
 
-  // Edit Mode State
-  const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
-  const [editForm, setEditForm] = useState<UserProfile>(profile);
-
-  // Password Updating State
+  // Loading states
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
+  // ─── Toast helper ────────────────────────────────────────────────────────────
   const showToast = (message: string, type: ToastType = 'success', title?: string) => {
-    setActiveToast({
-      id: Date.now().toString(),
-      type,
-      title,
-      message,
-    });
+    setActiveToast({ id: Date.now().toString(), type, title, message });
   };
 
+  // ─── Profile edit handlers ───────────────────────────────────────────────────
   const handleStartEditing = () => {
-    setEditForm(profile);
+    // Seed the draft form from live profile data
+    setEditForm({
+      display_name: profile?.display_name ?? '',
+      username: profile?.username ?? '',
+      bio: profile?.bio ?? '',
+      avatar_url: profile?.avatar_url ?? DEFAULT_AVATAR_SRC,
+    });
     setIsEditingProfile(true);
   };
 
   const handleCancelEditing = () => {
-    setEditForm(profile);
     setIsEditingProfile(false);
     showToast('Profile edits were discarded', 'info', 'Cancelled');
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!editForm.display_name.trim()) {
+      showToast('Full name cannot be empty', 'error', 'Validation Error');
+      return;
+    }
     if (!editForm.username.trim()) {
       showToast('Username cannot be empty', 'error', 'Validation Error');
       return;
     }
-    if (!editForm.name.trim()) {
-      showToast('Full name cannot be empty', 'error', 'Validation Error');
+    if (!profile?.id) {
+      showToast('Session expired — please sign in again', 'error', 'Auth Error');
       return;
     }
 
-    const updated = {
-      ...editForm,
-      username: editForm.username.toLowerCase().replace(/[^a-z0-9_]/g, ''),
-    };
+    const sanitizedUsername = editForm.username.toLowerCase().replace(/[^a-z0-9_]/g, '');
 
-    setProfile(updated);
+    setIsSavingProfile(true);
     try {
-      localStorage.setItem('prompt_vault_user_profile', JSON.stringify(updated));
-    } catch {}
-
-    setIsEditingProfile(false);
-    showToast('Your profile information has been saved successfully!', 'success', 'Profile Updated');
+      await updateProfile(profile.id, {
+        display_name: editForm.display_name.trim(),
+        username: sanitizedUsername,
+        bio: editForm.bio.trim(),
+        avatar_url: editForm.avatar_url,
+      });
+      await refreshProfile();
+      setIsEditingProfile(false);
+      showToast('Your profile information has been saved successfully!', 'success', 'Profile Updated');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to save profile';
+      showToast(msg, 'error', 'Save Failed');
+    } finally {
+      setIsSavingProfile(false);
+    }
   };
 
-  const handlePasswordSubmit = (currentPass: string, newPass: string, confirmPass: string) => {
+  // ─── Password handler ────────────────────────────────────────────────────────
+  const handlePasswordSubmit = async (
+    currentPass: string,
+    newPass: string,
+    confirmPass: string
+  ) => {
     if (!currentPass) {
       showToast('Please enter your current password to continue', 'error', 'Authentication Required');
       return;
@@ -114,13 +120,25 @@ export default function Settings() {
       showToast('New passwords do not match. Please verify and retype.', 'error', 'Mismatch');
       return;
     }
+    if (!profile?.email) {
+      showToast('Session expired — please sign in again', 'error', 'Auth Error');
+      return;
+    }
 
     setIsUpdatingPassword(true);
-    setTimeout(() => {
-      setIsUpdatingPassword(false);
+    try {
+      await updatePassword(profile.email, currentPass, newPass);
       showToast('Your master password has been changed securely!', 'success', 'Password Changed');
-    }, 800);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to update password';
+      showToast(msg, 'error', 'Update Failed');
+    } finally {
+      setIsUpdatingPassword(false);
+    }
   };
+
+  // ─── Derived display values (safe fallbacks for nullable DB fields) ───────────
+  const displayUsername = profile?.username ?? profile?.display_name ?? 'user';
 
   return (
     <>
@@ -142,7 +160,7 @@ export default function Settings() {
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-24 lg:pb-8">
         {/* Header & Section Tabs */}
         <SettingsHeader
-          username={profile.username}
+          username={displayUsername}
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
@@ -152,6 +170,7 @@ export default function Settings() {
           <SettingsProfileSection
             profile={profile}
             isEditing={isEditingProfile}
+            isSaving={isSavingProfile}
             editForm={editForm}
             onStartEditing={handleStartEditing}
             onCancelEditing={handleCancelEditing}

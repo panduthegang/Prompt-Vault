@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  refreshProfile: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ data: AuthResponse['data'] | null; error: AuthError | null }>;
   signUp: (email: string, password: string, username?: string) => Promise<{ data: AuthResponse['data'] | null; error: AuthError | null }>;
   signOut: () => Promise<{ error: AuthError | null }>;
@@ -113,6 +114,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
+  const refreshProfile = useCallback(async () => {
+    const currentUser = (await supabase.auth.getUser()).data.user;
+    if (currentUser) {
+      await fetchProfile(currentUser.id);
+    }
+  }, [fetchProfile]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -120,6 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         profile,
         loading,
+        refreshProfile,
         signIn,
         signUp,
         signOut,
