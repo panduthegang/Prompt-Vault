@@ -3,7 +3,6 @@ import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile, updatePassword } from '../services/profileService';
 import { DEFAULT_AVATAR_SRC } from '../lib/avatars';
-import type { Profile } from '../types/auth';
 import SettingsHeader from '../components/Settings-Page/SettingsHeader';
 import SettingsProfileSection from '../components/Settings-Page/SettingsProfileSection';
 import SettingsSecuritySection from '../components/Settings-Page/SettingsSecuritySection';
@@ -30,6 +29,12 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile');
   const [activeToast, setActiveToast] = useState<ActiveToast | null>(null);
 
+  // ─── Tab switching — always exits edit mode ───────────────────────────────────
+  const handleTabChange = (tab: 'profile' | 'security') => {
+    setActiveTab(tab);
+    setIsEditingProfile(false); // discard any in-progress edit draft on tab switch
+  };
+
   // Edit mode —  draft state, initialized from profile when entering edit mode
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editForm, setEditForm] = useState<EditProfileForm>({
@@ -42,6 +47,9 @@ export default function Settings() {
   // Loading states
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  // Incrementing this key remounts <SettingsSecuritySection>, resetting all its
+  // local form fields (currentPassword, newPassword, confirmPassword) to ''.
+  const [securityFormKey, setSecurityFormKey] = useState(0);
 
   // ─── Toast helper ────────────────────────────────────────────────────────────
   const showToast = (message: string, type: ToastType = 'success', title?: string) => {
@@ -128,6 +136,7 @@ export default function Settings() {
     setIsUpdatingPassword(true);
     try {
       await updatePassword(profile.email, currentPass, newPass);
+      setSecurityFormKey((k) => k + 1); // remounts the form → clears all password inputs
       showToast('Your master password has been changed securely!', 'success', 'Password Changed');
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to update password';
@@ -162,7 +171,7 @@ export default function Settings() {
         <SettingsHeader
           username={displayUsername}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
         />
 
         {/* Tab 1: Profile View & Edit */}
@@ -182,6 +191,7 @@ export default function Settings() {
         {/* Tab 2: Security & Password Reset */}
         {activeTab === 'security' && (
           <SettingsSecuritySection
+            key={securityFormKey}
             isUpdating={isUpdatingPassword}
             onPasswordSubmit={handlePasswordSubmit}
           />

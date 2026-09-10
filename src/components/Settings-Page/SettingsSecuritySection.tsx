@@ -115,16 +115,16 @@ export default function SettingsSecuritySection({
           <button
             type="submit"
             disabled={isUpdating}
-            className="px-6 py-2.5 bg-vault-dark text-vault-cream border-2 border-vault-dark rounded-full font-sans font-bold text-xs sm:text-sm hover:bg-vault-darker active:scale-95 transition-all shadow-xs cursor-pointer flex items-center gap-2"
+            className="px-6 py-2.5 bg-vault-green text-vault-dark border-2 border-vault-dark rounded-full font-sans font-bold text-xs sm:text-sm hover:brightness-105 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
           >
             {isUpdating ? (
               <>
-                <RefreshCw className="w-4 h-4 animate-spin text-vault-green" />
+                <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>Updating Password...</span>
               </>
             ) : (
               <>
-                <Lock className="w-4 h-4 text-vault-green" />
+                <Lock className="w-4 h-4 stroke-[2.5]" />
                 <span>Update Password</span>
               </>
             )}
