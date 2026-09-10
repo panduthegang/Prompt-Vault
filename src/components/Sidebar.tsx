@@ -63,7 +63,14 @@ export default function Sidebar({
     }
   };
 
+  const isAdmin = profile?.role === 'admin';
+
   const navItems = [
+    // Admin items render first for admin users
+    ...(isAdmin ? [
+      { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
+      { id: 'admin-users', label: 'User Directory', icon: UserCheck },
+    ] : []),
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
     { id: 'community', label: 'Community', icon: Users, count: 4 },
@@ -85,6 +92,10 @@ export default function Sidebar({
       onTabChange?.('vault');
     } else if (tabId === 'community') {
       navigate('/community');
+    } else if (tabId === 'admin') {
+      navigate('/admin');
+    } else if (tabId === 'admin-users') {
+      navigate('/admin/users');
     } else {
       if (window.location.pathname !== '/dashboard') {
         navigate('/dashboard');
@@ -201,113 +212,6 @@ export default function Sidebar({
           </nav>
         </div>
 
-        {/* Admin Navigation Links - strictly visible to admin role */}
-        {profile?.role === 'admin' && (
-          <div className="pt-3 pb-2 border-t border-vault-cream/15 space-y-1.5">
-            {!isCollapsed && (
-              <div className="px-1.5 pb-0.5 flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-vault-cream/40">
-                <span>Admin Terminal</span>
-                <span className="text-vault-green font-bold">ROOT</span>
-              </div>
-            )}
-
-            {/* 1. Admin Overview Button */}
-            <div className="relative group/adminlink flex items-center justify-center w-full">
-              <button
-                type="button"
-                onClick={() => {
-                  navigate('/admin');
-                  onTabChange?.('admin');
-                }}
-                className={`w-full flex items-center ${
-                  isCollapsed ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
-                } rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeTab === 'admin'
-                    ? 'bg-vault-yellow text-vault-dark border-2 border-vault-dark shadow-xs font-bold'
-                    : 'bg-vault-cream/10 hover:bg-vault-yellow hover:text-vault-dark text-vault-cream border border-vault-cream/20'
-                }`}
-                title="Admin Overview & Velocity"
-              >
-                <div className="flex items-center gap-2">
-                  <ShieldCheck
-                    className={`w-4 h-4 ${
-                      activeTab === 'admin' ? 'text-vault-dark' : 'text-vault-green'
-                    }`}
-                  />
-                  {!isCollapsed && <span className="font-mono text-xs">Admin Overview</span>}
-                </div>
-                {!isCollapsed && (
-                  <span
-                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                      activeTab === 'admin'
-                        ? 'bg-vault-dark text-vault-yellow font-bold'
-                        : 'bg-vault-green/20 text-vault-green'
-                    }`}
-                  >
-                    OVERVIEW
-                  </span>
-                )}
-              </button>
-
-              {/* Floating Tooltip when Collapsed */}
-              {isCollapsed && (
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/adminlink:opacity-100 group-hover/adminlink:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
-                  <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-xl font-sans text-xs font-bold">
-                    Admin Overview
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* 2. User Directory Button */}
-            <div className="relative group/userlink flex items-center justify-center w-full">
-              <button
-                type="button"
-                onClick={() => {
-                  navigate('/admin/users');
-                  onTabChange?.('admin-users');
-                }}
-                className={`w-full flex items-center ${
-                  isCollapsed ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
-                } rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeTab === 'admin-users'
-                    ? 'bg-vault-yellow text-vault-dark border-2 border-vault-dark shadow-xs font-bold'
-                    : 'bg-vault-cream/10 hover:bg-vault-yellow hover:text-vault-dark text-vault-cream border border-vault-cream/20'
-                }`}
-                title="User & Creator Directory"
-              >
-                <div className="flex items-center gap-2">
-                  <UserCheck
-                    className={`w-4 h-4 ${
-                      activeTab === 'admin-users' ? 'text-vault-dark' : 'text-vault-green'
-                    }`}
-                  />
-                  {!isCollapsed && <span className="font-mono text-xs">User Directory</span>}
-                </div>
-                {!isCollapsed && (
-                  <span
-                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                      activeTab === 'admin-users'
-                        ? 'bg-vault-dark text-vault-yellow font-bold'
-                        : 'bg-vault-yellow/20 text-vault-yellow'
-                    }`}
-                  >
-                    USERS
-                  </span>
-                )}
-              </button>
-
-              {/* Floating Tooltip when Collapsed */}
-              {isCollapsed && (
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 translate-x-1 group-hover/userlink:opacity-100 group-hover/userlink:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
-                  <div className="bg-vault-cream text-vault-dark border-2 border-vault-dark px-3 py-1.5 rounded-xl shadow-xl font-sans text-xs font-bold">
-                    User Directory
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Bottom User Profile & Logout */}
         <div className="pt-3 border-t border-vault-cream/15">

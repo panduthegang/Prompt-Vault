@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../lib/supabase';
 import Toast, { ToastContainer } from '../../components/ui/Toast';
 
 export interface SigninProps {
@@ -61,19 +62,28 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
         return;
       }
 
-      if (data?.session) {
+      if (!data?.session) {
+        // signIn returned no error and no session — shouldn't happen but guard anyway
         setIsLoading(false);
-        setSubmitted(true);
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 800);
-      } else {
-        setIsLoading(false);
-        setSubmitted(true);
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 800);
+        return;
       }
+
+      // Query the profile row directly using the fresh session's user ID.
+      // Do NOT rely on useAuth()'s profile state here — AuthContext fetches it
+      // in a separate reactive effect, so it may still be null at this point.
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.session.user.id)
+        .single();
+
+      const destination = profileData?.role === 'admin' ? '/admin' : '/dashboard';
+
+      setIsLoading(false);
+      setSubmitted(true);
+      setTimeout(() => {
+        navigate(destination);
+      }, 800);
     } catch (err: any) {
       setIsLoading(false);
       setToast({
