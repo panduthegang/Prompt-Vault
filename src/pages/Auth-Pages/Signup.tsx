@@ -10,11 +10,11 @@ import {
   Eye,
   EyeOff,
   Sparkles,
-  CheckCircle2,
 } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext';
 import Toast, { ToastContainer } from '../../components/ui/Toast';
+import AuthSuccessCheck from '../../components/ui/AuthSuccessCheck';
 
 export interface SignupProps {
   onBackToHome?: () => void;
@@ -68,7 +68,7 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
       setSubmitted(true);
       setTimeout(() => {
         navigate('/dashboard');
-      }, 800);
+      }, 1200);
     } catch (err: any) {
       setIsLoading(false);
       setToast({
@@ -184,7 +184,7 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
           {/* Header & Mobile Brand Indicator */}
           <AnimatePresence mode="wait">
             <motion.div
-              key="signup-header"
+              key={submitted ? 'signup-success-header' : 'signup-header'}
               variants={fadeSlideVariants}
               initial="initial"
               animate="animate"
@@ -195,30 +195,27 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
                 Prompt Vault
               </span>
               <span className="font-sans text-xs font-bold uppercase tracking-widest text-vault-dark/60 block">
-                Start Free
+                {submitted ? 'Vault Initialized' : 'Start Free'}
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl text-vault-dark font-normal tracking-tight uppercase">
-                CREATE YOUR ACCOUNT
+                {submitted ? 'ACCOUNT READY' : 'CREATE YOUR ACCOUNT'}
               </h2>
               <p className="font-sans text-xs sm:text-sm text-vault-dark/75">
-                Set up your private repository in less than 30 seconds.
+                {submitted
+                  ? 'Your private repository is ready. Preparing your workspace...'
+                  : 'Set up your private repository in less than 30 seconds.'}
               </p>
             </motion.div>
           </AnimatePresence>
 
           {submitted ? (
-            /* Success confirmation state */
-            <div className="py-8 flex flex-col items-center text-center space-y-4 bg-vault-yellow/40 border-2 border-vault-dark rounded-2xl p-6">
-              <div className="w-12 h-12 rounded-full bg-vault-green text-vault-dark border-2 border-vault-dark flex items-center justify-center">
-                <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
-              </div>
-              <h3 className="font-serif text-2xl text-vault-dark font-normal">
-                Account Created Successfully!
-              </h3>
-              <p className="font-sans text-xs sm:text-sm text-vault-dark/80 max-w-xs">
-                Welcome to Prompt Vault. Preparing your workspace...
-              </p>
-            </div>
+            /* Next-level animated success tick confirmation */
+            <AuthSuccessCheck
+              badgeLabel="VAULT INITIALIZED"
+              title="Account Created Successfully!"
+              subtitle="Welcome to Prompt Vault. Preparing your workspace..."
+              redirectDuration={1200}
+            />
           ) : (
             <>
               {/* Form Fields First */}
@@ -309,9 +306,16 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
                     className="group relative w-full inline-flex items-stretch cursor-pointer select-none active:scale-[0.98] transition-transform duration-200"
                   >
                     <span className="relative z-10 w-full inline-flex items-center justify-center bg-vault-green text-vault-dark border-2 border-vault-dark rounded-full py-3 font-sans font-bold text-xs sm:text-sm tracking-tight shadow-xs group-hover:brightness-[1.03] transition-all duration-300">
-                      {isLoading ? 'Creating Vault...' : 'Create Your Free Vault'}
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-vault-dark border-t-transparent rounded-full animate-spin mr-2" />
+                          <span>Creating Vault...</span>
+                        </>
+                      ) : (
+                        <span>Create Your Free Vault</span>
+                      )}
                     </span>
-                    <span className="relative -ml-6 sm:-ml-7 z-0 inline-flex items-center justify-center bg-vault-darker text-vault-green border-2 border-vault-dark rounded-r-full pl-7 pr-4 max-w-0 opacity-0 -translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-w-[68px] group-hover:opacity-100 group-hover:translate-x-0 overflow-hidden">
+                    <span className="relative -ml-6 sm:-ml-7 z-0 inline-flex items-center justify-center bg-vault-darker text-vault-green rounded-r-full max-w-0 w-0 p-0 border-0 opacity-0 -translate-x-4 pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-w-[68px] group-hover:w-auto group-hover:pl-7 group-hover:pr-4 group-hover:border-2 group-hover:border-vault-dark group-hover:border-l-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto overflow-hidden">
                       <ArrowUpRight className="w-4 h-4 stroke-[2.5] shrink-0 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-105" />
                     </span>
                   </button>
@@ -321,33 +325,35 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
           )}
 
           {/* Bottom Switch to Sign In */}
-          <div className="text-center pt-2 border-t border-vault-dark/15">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key="signup-switch-text"
-                variants={fadeSlideVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="font-sans text-xs sm:text-[13px] text-vault-dark/80"
-              >
-                Already have a vault?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onSwitchToSignin) {
-                      onSwitchToSignin();
-                    } else {
-                      navigate('/signin');
-                    }
-                  }}
-                  className="font-bold text-vault-dark hover:underline underline-offset-4 cursor-pointer"
+          {!submitted && (
+            <div className="text-center pt-2 border-t border-vault-dark/15">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key="signup-switch-text"
+                  variants={fadeSlideVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="font-sans text-xs sm:text-[13px] text-vault-dark/80"
                 >
-                  Sign in ↗
-                </button>
-              </motion.p>
-            </AnimatePresence>
-          </div>
+                  Already have a vault?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onSwitchToSignin) {
+                        onSwitchToSignin();
+                      } else {
+                        navigate('/signin');
+                      }
+                    }}
+                    className="font-bold text-vault-dark hover:underline underline-offset-4 cursor-pointer"
+                  >
+                    Sign in ↗
+                  </button>
+                </motion.p>
+              </AnimatePresence>
+            </div>
+          )}
         </motion.div>
       </motion.div>
 
