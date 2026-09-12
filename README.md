@@ -92,38 +92,57 @@
 ```
 Prompt-Vault/
 ├── public/
-│   ├── avatars/                          # Default user profile avatar SVGs
-│   ├── Hero.png                          # Visual artwork panel used in Hero section
-│   ├── Thumbnail.png                     # Full-resolution OpenGraph social preview banner
+│   ├── avatars/                          # Preset user avatar SVGs (avatar-1.svg … avatar-5.svg)
+│   ├── Hero.png                          # Visual photo artwork for landing page Hero
+│   ├── Thumbnail.png                     # Full-resolution OpenGraph preview banner
 │   └── Thumbnail.jpg                     # Compressed OpenGraph thumbnail
+├── supabase/
+│   └── schema.sql                        # Single-pass clean schema (profiles table, RLS, triggers)
 ├── src/
+│   ├── lib/
+│   │   ├── supabase.ts                   # Supabase client singleton (createClient)
+│   │   └── avatars.ts                    # PRESET_AVATARS static reference array
+│   ├── types/
+│   │   └── auth.ts                       # Profile, Role, AuthContextType TypeScript interfaces
+│   ├── context/
+│   │   └── AuthContext.tsx               # Global auth context: session, user, profile, refreshProfile(), signIn/Out/Up
+│   ├── services/
+│   │   └── profileService.ts             # updateProfile(), updatePassword() — Supabase mutations
 │   ├── components/
-│   │   ├── Landing-Page/                 # Marketing landing page domain components & CSS
+│   │   ├── Landing-Page/                 # Landing page domain components & vanilla CSS
 │   │   │   ├── landingData.ts            # Centralized TypeScript models, constants & datasets
 │   │   │   ├── Landing.module.css        # Vanilla CSS module with clear section headers
-│   │   │   ├── Hero.tsx                  # Centered editorial hero section with CTAs
-│   │   │   ├── Stats.tsx                 # 4-column metric statistics showcase
-│   │   │   ├── Process.tsx               # 12-column process & feature step grid
-│   │   │   ├── Comparison.tsx            # Chaos in Notion vs. Order in the Vault
+│   │   │   ├── Hero.tsx                  # Hero section with 2-tone expanding CTA
+│   │   │   ├── Stats.tsx                 # 4-column metric statistics bar
+│   │   │   ├── Process.tsx               # "Our Process" 12-column grid section
+│   │   │   ├── Comparison.tsx            # "Chaos in Notion vs. Order in the Vault"
 │   │   │   └── FAQ.tsx                   # Interactive FAQ accordion with animated eye
 │   │   ├── Dashboard-Page/               # Dashboard domain components
-│   │   │   ├── dashboardData.ts          # PromptItem, CommunityItem types & datasets
-│   │   │   ├── DashboardHeader.tsx       # Welcome greeting, notifications & avatar
-│   │   │   ├── DashboardStats.tsx        # 4 KPI metric summary cards
-│   │   │   ├── DashboardPrompts.tsx      # Saved prompts gallery with category filters
+│   │   │   ├── dashboardData.ts          # PromptItem, CommunityItem types & mock datasets
+│   │   │   ├── DashboardHeader.tsx       # Welcome greeting, notifications & avatar button
+│   │   │   ├── DashboardStats.tsx        # 4 KPI metric cards (Total, Published, Links, Skills)
+│   │   │   ├── DashboardPrompts.tsx      # Saved prompts gallery with category pill filters
 │   │   │   └── DashboardCommunityTable.tsx # Community published snapshots table
 │   │   ├── Vault-Page/                   # Vault Library modular components
 │   │   │   ├── vaultData.ts              # VaultItem, VaultItemType models, presets & localStorage helpers
-│   │   │   ├── VaultHeader.tsx           # Title, count badge & "+ Add to Vault" button
+│   │   │   ├── VaultHeader.tsx           # Title ("Vault Library"), count badge & "+ Add to Vault" button
 │   │   │   ├── VaultFilters.tsx          # 5 filter tabs (all, prompt, skill, website, starred), search & pills
 │   │   │   ├── VaultCard.tsx             # Responsive card with header badges, code preview, action tray & menu
-│   │   │   ├── VaultModalSheet.tsx       # Desktop modal + mobile draggable bottom sheet (useDragControls)
+│   │   │   ├── VaultSkeletonCard.tsx     # Animated Neo-Brutalist skeleton shimmer card
+│   │   │   ├── VaultModalSheet.tsx       # Desktop centered modal + mobile draggable bottom sheet (useDragControls)
 │   │   │   └── VaultDeleteDialog.tsx     # Neo-Brutalist confirmation modal for item deletion
+│   │   ├── Community-Page/               # Community Vault modular components
+│   │   │   ├── communityData.ts          # CommunityItem, CommunityTab types, tabs & master datasets
+│   │   │   ├── CommunityHeader.tsx       # Yellow top banner with live status badge & template counter
+│   │   │   ├── CommunityFilters.tsx      # Tab pills (all, prompt, skill, website, my-shares) & search bar
+│   │   │   ├── CommunityCard.tsx         # Single template card with like, copy, clone & inspect actions
+│   │   │   ├── CommunitySkeletonCard.tsx # Animated Neo-Brutalist skeleton shimmer card
+│   │   │   ├── CommunityModalSheet.tsx   # Mobile draggable bottom sheet + desktop centered modal
+│   │   │   └── CommunityStates.tsx       # Error with retry, blank search state & End-of-Vault milestone
 │   │   ├── Settings-Page/                # Settings domain components
-│   │   │   ├── settingsData.ts           # UserProfile, PresetAvatar types & defaults
-│   │   │   ├── SettingsHeader.tsx        # Title, @username live badge & section tabs
-│   │   │   ├── SettingsProfileSection.tsx # Profile display card & interactive edit form
-│   │   │   └── SettingsSecuritySection.tsx # Password reset form with eye toggles & validation
+│   │   │   ├── SettingsHeader.tsx        # Title, @username live badge & section tab switcher
+│   │   │   ├── SettingsProfileSection.tsx # Profile display card & interactive edit form (Supabase-backed)
+│   │   │   └── SettingsSecuritySection.tsx # Password reset form with eye toggles, validation & Supabase update
 │   │   ├── Prompts-Page/                 # Public Prompts gallery domain components & CSS
 │   │   │   ├── promptsData.ts            # Prompts catalog, model badge styles & metrics
 │   │   │   ├── Prompts.module.css        # Vanilla CSS module with zero @apply
@@ -131,7 +150,7 @@ Prompt-Vault/
 │   │   │   ├── PromptsGrid.tsx           # Responsive prompts cards grid layout
 │   │   │   ├── PromptCard.tsx            # Terminal-style code card with 1-click copy
 │   │   │   └── PromptsCurveLock.tsx      # Locked vault blur teaser with unlock CTA
-│   │   ├── Legal/                        # Shared presentational legal components & CSS
+│   │   ├── Legal/                        # Shared presentational legal components & vanilla CSS
 │   │   │   ├── privacyData.ts            # PrivacyPolicy clause data models & principles
 │   │   │   ├── termsData.ts              # Terms & Conditions clause data models & metrics
 │   │   │   ├── Legal.module.css          # Shared vanilla CSS module with zero @apply
@@ -143,34 +162,42 @@ Prompt-Vault/
 │   │   │   ├── LegalSidebar.tsx          # Quick Index table of contents & creator card
 │   │   │   └── LegalCTA.tsx              # Bottom community banner with expanding pill buttons
 │   │   ├── ui/                           # Reusable design system primitives
-│   │   │   ├── Select.tsx                # Bespoke Neo-Brutalist select with mobile expansion
-│   │   │   └── Toast.tsx                 # Floating dynamic toast notification system
+│   │   │   ├── Select.tsx                # Neo-Brutalist select with in-flow mobile expansion
+│   │   │   └── Toast.tsx                 # Floating toast notification system
+│   │   ├── ProtectedRoute.tsx            # Auth guard: redirects to /signin or renders 404 for role mismatches
 │   │   ├── Navbar.tsx                    # Sticky top navigation with mobile drawer
-│   │   ├── Sidebar.tsx                   # Collapsible desktop sidebar & mobile dock
-│   │   └── Footer.tsx                    # Footer with link grids, watermark & attribution
+│   │   ├── Sidebar.tsx                   # Collapsible desktop sidebar; admin items first for admin role
+│   │   ├── BottomBar.tsx                 # Mobile floating dock & physics-based draggable bottom sheet; admin-aware
+│   │   ├── WorkspaceLayout.tsx           # Persistent workspace layout orchestrating Sidebar & BottomBar
+│   │   └── Footer.tsx                    # Footer with links, watermark & creator attribution
 │   ├── pages/
-│   │   ├── static-pages/                 # Marketing & legal page orchestrators
-│   │   │   ├── LandingPage.tsx           # Marketing landing page orchestrator
+│   │   ├── Static-Pages/                 # Marketing & legal pages
+│   │   │   ├── LandingPage.tsx           # Clean page orchestrator for landing page
 │   │   │   ├── NotFound.tsx              # Editorial Neo-Brutalist 404 page
-│   │   │   ├── Privacy.tsx               # Creator Privacy Policy orchestrator
-│   │   │   └── Terms.tsx                 # Terms & Conditions orchestrator
+│   │   │   ├── Privacy.tsx               # Clean page orchestrator for Privacy Policy
+│   │   │   └── Terms.tsx                 # Clean page orchestrator for Terms & Conditions
+│   │   ├── Auth-Pages/                   # Auth flows
+│   │   │   ├── Signin.tsx                # Neo-Brutalist sign-in; queries profile for role on success → /admin or /dashboard
+│   │   │   └── Signup.tsx                # Neo-Brutalist account registration
+│   │   ├── Admin-Pages/                  # Role-gated admin pages (requireRole="admin" in ProtectedRoute)
+│   │   │   ├── AdminDashboard.tsx        # Admin overview, metrics & velocity
+│   │   │   └── AdminUsers.tsx            # User directory — lists all profiles
+│   │   ├── Community.tsx                 # Clean page orchestrator for Community Vault
 │   │   ├── Prompts.tsx                   # Public curated prompt catalog orchestrator
-│   │   ├── Vault.tsx                     # Main Vault library (search, filter, CRUD, sheets)
-│   │   ├── Dashboard.tsx                 # User workspace overview orchestrator
-│   │   ├── Settings.tsx                  # Profile management & security orchestrator
-│   │   ├── Signin.tsx                    # Neo-Brutalist authentication sign-in view
-│   │   └── Signup.tsx                    # Account registration view
+│   │   ├── Vault.tsx                     # Clean page orchestrator for Vault Library
+│   │   ├── Dashboard.tsx                 # Clean workspace dashboard orchestrator
+│   │   └── Settings.tsx                  # Settings orchestrator — profile & security, fully Supabase-backed
 │   ├── utils/
-│   │   └── clipboard.ts                  # Async clipboard copy helper with fallbacks
-│   ├── App.tsx                           # Top-level client router and route definitions
-│   ├── main.tsx                          # React DOM entry point
-│   └── index.css                         # Tailwind v4 theme variables & custom scrollbars
-├── index.html                            # HTML5 entry with preconnected Google Fonts
+│   │   └── clipboard.ts                  # Clipboard copy helper with browser fallbacks
+│   ├── App.tsx                           # Global router, route definitions & AnimatePresence
+│   ├── main.tsx                          # React root entry point
+│   └── index.css                         # Global CSS, theme tokens & custom scrollbars
+├── index.html                            # HTML template with Google Fonts preload
 ├── vercel.json                           # Vercel SPA routing rewrites
-├── package.json                          # Dependencies, scripts, and build configuration
-├── vite.config.ts                        # Vite build pipeline and plugin configuration
+├── package.json                          # Dependencies & NPM scripts
+├── vite.config.ts                        # Vite configuration
 ├── DESIGN.md                             # Design tokens, typography & interaction rules
-├── CONTEXT.md                            # Architecture & project context
+├── CONTEXT.md                            # Architecture & repository context (this file)
 └── MEMORY.md                             # Agent memory, decisions & changelog
 ```
 
