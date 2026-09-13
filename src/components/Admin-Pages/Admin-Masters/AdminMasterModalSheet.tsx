@@ -95,7 +95,6 @@ export default function AdminMasterModalSheet({
         <input
           type="text"
           required
-          autoFocus
           value={formName}
           onChange={(e) => setFormName(e.target.value)}
           placeholder="e.g. Agent Skills, Security Rules..."
