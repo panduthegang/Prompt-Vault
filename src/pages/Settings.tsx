@@ -103,8 +103,17 @@ export default function Settings() {
       setIsEditingProfile(false);
       showToast('Your profile information has been saved successfully!', 'success', 'Profile Updated');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save profile';
-      showToast(msg, 'error', 'Save Failed');
+      const raw = err instanceof Error ? err.message : '';
+      // Map known Supabase / Postgres errors to friendly copy
+      let msg = 'Something went wrong. Please try again.';
+      if (raw.includes('profiles_username_key') || raw.includes('duplicate key')) {
+        msg = 'That username is already taken. Please choose a different one.';
+      } else if (raw.includes('username')) {
+        msg = 'Invalid username. Use only letters, numbers, and underscores.';
+      } else if (raw.includes('network') || raw.includes('fetch')) {
+        msg = 'Network error — check your connection and try again.';
+      }
+      showToast(msg, 'error', 'Couldn\'t Save Profile');
     } finally {
       setIsSavingProfile(false);
     }
@@ -139,8 +148,16 @@ export default function Settings() {
       setSecurityFormKey((k) => k + 1); // remounts the form → clears all password inputs
       showToast('Your master password has been changed securely!', 'success', 'Password Changed');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to update password';
-      showToast(msg, 'error', 'Update Failed');
+      const raw = err instanceof Error ? err.message : '';
+      let msg = 'Something went wrong. Please try again.';
+      if (raw.includes('Invalid login') || raw.includes('invalid_credentials') || raw.includes('wrong password')) {
+        msg = 'Current password is incorrect. Please try again.';
+      } else if (raw.includes('network') || raw.includes('fetch')) {
+        msg = 'Network error — check your connection and try again.';
+      } else if (raw.includes('same password') || raw.includes('different from')) {
+        msg = 'New password must be different from your current one.';
+      }
+      showToast(msg, 'error', 'Couldn\'t Update Password');
     } finally {
       setIsUpdatingPassword(false);
     }
