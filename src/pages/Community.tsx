@@ -99,16 +99,22 @@ export default function Community() {
 
   const inspectDragControls = useDragControls();
 
-  // Background scroll locking when modal / bottom sheet is open (prevents dragging conflicts)
+  // Background scroll locking when modal / bottom sheet is open (prevents dragging conflicts).
+  // Compensate for scrollbar width to prevent sidebar layout shift.
   useEffect(() => {
     if (inspectItem) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       const originalOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+
       return () => {
         document.body.style.overflow = originalOverflow;
-        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [inspectItem]);

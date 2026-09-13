@@ -129,17 +129,22 @@ export default function Vault() {
   // Delete Confirmation State
   const [deleteConfirmItem, setDeleteConfirmItem] = useState<{ id: string; title: string } | null>(null);
 
-  // Lock background scrolling when modal or delete confirmation is open
+  // Lock background scrolling when modal or delete confirmation is open.
+  // Compensate for scrollbar width to prevent sidebar layout shift.
   useEffect(() => {
     if (isModalOpen || !!deleteConfirmItem) {
-      const originalBodyOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
 
       return () => {
-        document.body.style.overflow = originalBodyOverflow;
-        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [isModalOpen, deleteConfirmItem]);

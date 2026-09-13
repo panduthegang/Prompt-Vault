@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { FolderTree } from 'lucide-react';
+import { useDragControls } from 'framer-motion';
 import Toast, { ToastContainer, ToastType } from '../../components/ui/Toast';
 import {
   MasterCategory,
@@ -45,22 +46,40 @@ export default function AdminMasters() {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
+  // Responsive: mobile bottom sheet vs desktop centered modal
+  const [isMobile, setIsMobile] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Drag controls for the mobile bottom sheet
+  const modalDragControls = useDragControls();
+
   // Modal / Dialog states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<MasterCategory | null>(null);
   const [deletingCategory, setDeletingCategory] = useState<MasterCategory | null>(null);
 
-  // Lock background scrolling when modal or delete confirmation is open
+  // Lock background scrolling when modal or delete confirmation is open.
+  // We compensate for the scrollbar width so the sticky sidebar doesn't jump.
   useEffect(() => {
     if (isModalOpen || !!deletingCategory) {
-      const originalBodyOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
 
       return () => {
-        document.body.style.overflow = originalBodyOverflow;
-        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [isModalOpen, deletingCategory]);
@@ -239,6 +258,8 @@ export default function AdminMasters() {
         isOpen={isModalOpen}
         editingCategory={editingCategory}
         defaultType={activeTypeFilter !== 'all' ? activeTypeFilter : 'prompt'}
+        isMobile={isMobile}
+        dragControls={modalDragControls}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveCategory}
       />
