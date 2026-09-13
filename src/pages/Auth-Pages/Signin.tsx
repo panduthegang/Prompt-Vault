@@ -266,12 +266,12 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
                     >
                       Password
                     </label>
-                    <a
+                    {/* <a
                       href="#forgot-password"
                       className="font-sans text-[11px] font-semibold text-vault-dark/70 hover:text-vault-dark hover:underline"
                     >
                       Forgot password?
-                    </a>
+                    </a> */}
                   </div>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-vault-dark/50" />
