@@ -2,13 +2,13 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useDragControls } from 'framer-motion';
 
-import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
-import { copyToClipboard } from '../utils/clipboard';
+import Toast, { ToastContainer, ToastType } from '../../components/ui/Toast';
+import { copyToClipboard } from '../../utils/clipboard';
 import {
   VaultItem,
   getStoredVaultItems,
   saveStoredVaultItems,
-} from '../components/Vault-Page/vaultData';
+} from '../../components/Users-Page/Vault-Page/vaultData';
 
 // Modular Community Components & Data
 import {
@@ -16,17 +16,17 @@ import {
   CommunityTab,
   MASTER_COMMUNITY_ITEMS,
   BATCH_SIZE,
-} from '../components/Community-Page/communityData';
-import CommunityHeader from '../components/Community-Page/CommunityHeader';
-import CommunityFilters from '../components/Community-Page/CommunityFilters';
-import CommunityCard from '../components/Community-Page/CommunityCard';
-import CommunitySkeletonCard from '../components/Community-Page/CommunitySkeletonCard';
-import CommunityModalSheet from '../components/Community-Page/CommunityModalSheet';
+} from '../../components/Users-Page/Community-Page/communityData';
+import CommunityHeader from '../../components/Users-Page/Community-Page/CommunityHeader';
+import CommunityFilters from '../../components/Users-Page/Community-Page/CommunityFilters';
+import CommunityCard from '../../components/Users-Page/Community-Page/CommunityCard';
+import CommunitySkeletonCard from '../../components/Users-Page/Community-Page/CommunitySkeletonCard';
+import CommunityModalSheet from '../../components/Users-Page/Community-Page/CommunityModalSheet';
 import {
   CommunityErrorState,
   CommunityEmptyState,
   CommunityEndOfVault,
-} from '../components/Community-Page/CommunityStates';
+} from '../../components/Users-Page/Community-Page/CommunityStates';
 
 export type { CommunityItem, CommunityTab };
 
@@ -45,7 +45,7 @@ export default function Community() {
     try {
       const saved = localStorage.getItem('prompt_vault_liked_community_items');
       if (saved) return new Set(JSON.parse(saved));
-    } catch {}
+    } catch { }
     return new Set(['comm-1', 'comm-2']);
   });
 
@@ -261,7 +261,7 @@ export default function Community() {
       }
       try {
         localStorage.setItem('prompt_vault_liked_community_items', JSON.stringify([...next]));
-      } catch {}
+      } catch { }
       return next;
     });
   };

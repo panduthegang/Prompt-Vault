@@ -1,8 +1,8 @@
 import React from 'react';
 import { Pencil, Check, X, RefreshCw } from 'lucide-react';
-import type { Profile } from '../../types/auth';
-import { PRESET_AVATARS, DEFAULT_AVATAR_SRC } from '../../lib/avatars';
-import type { EditProfileForm } from '../../pages/Settings';
+import type { Profile } from '../../../types/auth';
+import { PRESET_AVATARS, DEFAULT_AVATAR_SRC } from '../../../lib/avatars';
+import type { EditProfileForm } from '../../../pages/User-Pages/Settings';
 
 export interface SettingsProfileSectionProps {
   profile: Profile | null;
@@ -148,11 +148,10 @@ export default function SettingsProfileSection({
                       key={preset.id}
                       type="button"
                       onClick={() => onFormChange({ ...editForm, avatar_url: preset.src })}
-                      className={`rounded-full border-2 transition-all p-0.5 cursor-pointer ${
-                        editForm.avatar_url === preset.src
-                          ? 'border-vault-dark ring-2 ring-vault-green scale-110 shadow-xs'
-                          : 'border-vault-dark/30 hover:border-vault-dark opacity-80 hover:opacity-100 hover:scale-105'
-                      }`}
+                      className={`rounded-full border-2 transition-all p-0.5 cursor-pointer ${editForm.avatar_url === preset.src
+                        ? 'border-vault-dark ring-2 ring-vault-green scale-110 shadow-xs'
+                        : 'border-vault-dark/30 hover:border-vault-dark opacity-80 hover:opacity-100 hover:scale-105'
+                        }`}
                       title={preset.label}
                     >
                       <img src={preset.src} alt={preset.label} className="w-11 h-11 rounded-full object-cover bg-vault-cream" />

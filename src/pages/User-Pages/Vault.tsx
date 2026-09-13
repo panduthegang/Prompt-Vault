@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDragControls } from 'framer-motion';
-import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
-import { copyToClipboard } from '../utils/clipboard';
+import Toast, { ToastContainer, ToastType } from '../../components/ui/Toast';
+import { copyToClipboard } from '../../utils/clipboard';
 import { Plus, Search } from 'lucide-react';
 
 // Modular Vault Components & Data Store
@@ -11,13 +11,13 @@ import {
   VaultItemType,
   getStoredVaultItems,
   saveStoredVaultItems,
-} from '../components/Vault-Page/vaultData';
-import VaultHeader from '../components/Vault-Page/VaultHeader';
-import VaultFilters, { VaultTabType } from '../components/Vault-Page/VaultFilters';
-import VaultCard from '../components/Vault-Page/VaultCard';
-import VaultSkeletonCard from '../components/Vault-Page/VaultSkeletonCard';
-import VaultModalSheet from '../components/Vault-Page/VaultModalSheet';
-import { VaultDeleteDialog } from '../components/Vault-Page/VaultDeleteDialog';
+} from '../../components/Users-Page/Vault-Page/vaultData';
+import VaultHeader from '../../components/Users-Page/Vault-Page/VaultHeader';
+import VaultFilters, { VaultTabType } from '../../components/Users-Page/Vault-Page/VaultFilters';
+import VaultCard from '../../components/Users-Page/Vault-Page/VaultCard';
+import VaultSkeletonCard from '../../components/Users-Page/Vault-Page/VaultSkeletonCard';
+import VaultModalSheet from '../../components/Users-Page/Vault-Page/VaultModalSheet';
+import { VaultDeleteDialog } from '../../components/Users-Page/Vault-Page/VaultDeleteDialog';
 
 export type { VaultItem, VaultItemType };
 

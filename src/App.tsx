@@ -12,10 +12,10 @@ import Prompts from './pages/Static-Pages/Prompts';
 import Signin from './pages/Auth-Pages/Signin';
 import Signup from './pages/Auth-Pages/Signup';
 import WorkspaceLayout from './components/WorkspaceLayout';
-import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
-import Vault from './pages/Vault';
-import Community from './pages/Community';
+import Dashboard from './pages/User-Pages/Dashboard';
+import Settings from './pages/User-Pages/Settings';
+import Vault from './pages/User-Pages/Vault';
+import Community from './pages/User-Pages/Community';
 import AdminDashboard from './pages/Admin-Pages/AdminDashboard';
 import AdminUsers from './pages/Admin-Pages/AdminUsers';
 import AdminMasters from './pages/Admin-Pages/AdminMasters';
@@ -146,7 +146,7 @@ export default function App() {
             onComplete={() => {
               try {
                 sessionStorage.setItem('prompt_vault_seen_intro', 'true');
-              } catch {}
+              } catch { }
               setIsLoading(false);
             }}
           />

@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { copyToClipboard } from '../utils/clipboard';
+import { copyToClipboard } from '../../utils/clipboard';
 import { Sparkles } from 'lucide-react';
 import {
   PromptItem,
   CommunityItem,
   INITIAL_PROMPTS,
   COMMUNITY_PROMPTS,
-} from '../components/Dashboard-Page/dashboardData';
-import DashboardHeader from '../components/Dashboard-Page/DashboardHeader';
-import DashboardStats from '../components/Dashboard-Page/DashboardStats';
-import DashboardPrompts from '../components/Dashboard-Page/DashboardPrompts';
-import DashboardCommunityTable from '../components/Dashboard-Page/DashboardCommunityTable';
-import { useAuth } from '../context/AuthContext';
+} from '../../components/Users-Page/Dashboard-Page/dashboardData';
+import DashboardHeader from '../../components/Users-Page/Dashboard-Page/DashboardHeader';
+import DashboardStats from '../../components/Users-Page/Dashboard-Page/DashboardStats';
+import DashboardPrompts from '../../components/Users-Page/Dashboard-Page/DashboardPrompts';
+import DashboardCommunityTable from '../../components/Users-Page/Dashboard-Page/DashboardCommunityTable';
+import { useAuth } from '../../context/AuthContext';
 
 // Re-export types for backward compatibility
 export type { PromptItem, CommunityItem };

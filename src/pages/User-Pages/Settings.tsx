@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Toast, { ToastContainer, ToastType } from '../components/ui/Toast';
-import { useAuth } from '../context/AuthContext';
-import { updateProfile, updatePassword } from '../services/profileService';
-import { DEFAULT_AVATAR_SRC } from '../lib/avatars';
-import SettingsHeader from '../components/Settings-Page/SettingsHeader';
-import SettingsProfileSection from '../components/Settings-Page/SettingsProfileSection';
-import SettingsSecuritySection from '../components/Settings-Page/SettingsSecuritySection';
+import Toast, { ToastContainer, ToastType } from '../../components/ui/Toast';
+import { useAuth } from '../../context/AuthContext';
+import { updateProfile, updatePassword } from '../../services/profileService';
+import { DEFAULT_AVATAR_SRC } from '../../lib/avatars';
+import SettingsHeader from '../../components/Users-Page/Settings-Page/SettingsHeader';
+import SettingsProfileSection from '../../components/Users-Page/Settings-Page/SettingsProfileSection';
+import SettingsSecuritySection from '../../components/Users-Page/Settings-Page/SettingsSecuritySection';
 
 // ─── Local edit-form shape (in-progress draft before saving) ─────────────────
 // Fields match the DB column names exactly — no translation layer needed.

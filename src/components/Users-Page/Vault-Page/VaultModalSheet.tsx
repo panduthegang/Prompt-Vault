@@ -8,7 +8,7 @@ import {
   Share2,
   CheckCircle2,
 } from 'lucide-react';
-import CustomSelect from '../ui/Select';
+import CustomSelect from '../../ui/Select';
 import { VaultItemType, TOOL_OPTIONS, CATEGORY_OPTIONS } from './vaultData';
 
 export interface VaultModalSheetProps {

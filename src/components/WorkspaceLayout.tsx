@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import BottomBar from './BottomBar';
-import { getStoredVaultItems } from './Vault-Page/vaultData';
+import { getStoredVaultItems } from './Users-Page/Vault-Page/vaultData';
 import { useAuth } from '../context/AuthContext';
 import NotFound from '../pages/Static-Pages/NotFound';
 
