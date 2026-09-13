@@ -14,6 +14,8 @@ import {
   AdminMastersTable,
   AdminMasterModal,
   AdminMasterDeleteDialog,
+  AdminMastersSkeletonCard,
+  AdminMastersStatsSkeleton,
   TYPE_CONFIG,
 } from '../../components/Admin-Pages/Admin-Masters';
 
@@ -45,6 +47,16 @@ export default function AdminMasters() {
   const [activeTypeFilter, setActiveTypeFilter] = useState<'all' | MasterItemType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Initial and tab switch shimmer loading (matches Vault & Community pattern)
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [activeTypeFilter]);
 
   // Responsive: mobile bottom sheet vs desktop centered modal
   const [isMobile, setIsMobile] = useState<boolean>(() =>
@@ -194,11 +206,15 @@ export default function AdminMasters() {
         />
 
         {/* 2. 4-Card Metrics Summary */}
-        <AdminMastersStats
-          metrics={metrics}
-          activeFilter={activeTypeFilter}
-          onSelectFilter={setActiveTypeFilter}
-        />
+        {isLoading ? (
+          <AdminMastersStatsSkeleton />
+        ) : (
+          <AdminMastersStats
+            metrics={metrics}
+            activeFilter={activeTypeFilter}
+            onSelectFilter={setActiveTypeFilter}
+          />
+        )}
 
         {/* 3. Filter Tabs & Toolbar */}
         <AdminMastersToolbar
@@ -215,7 +231,13 @@ export default function AdminMasters() {
         />
 
         {/* 4. Categories Listing */}
-        {filteredCategories.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <AdminMastersSkeletonCard key={`admin-skel-${idx}`} />
+            ))}
+          </div>
+        ) : filteredCategories.length === 0 ? (
           <div className="bg-vault-cream rounded-[26px] p-10 border-2 border-vault-dark/15 text-center space-y-3">
             <FolderTree className="w-10 h-10 text-vault-dark/30 mx-auto" />
             <h3 className="font-serif text-2xl text-vault-dark font-normal">No categories found</h3>
