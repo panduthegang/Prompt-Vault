@@ -54,10 +54,28 @@ export default function Signin({ onBackToHome, onSwitchToSignup }: SigninProps) 
 
       if (error) {
         setIsLoading(false);
+        const raw = (error.message || '').toLowerCase();
+        let title = 'Sign In Failed';
+        let message = 'Invalid email or password. Please verify your credentials.';
+
+        if (raw.includes('invalid login credentials') || raw.includes('invalid credentials')) {
+          title = 'Invalid Credentials';
+          message = 'Incorrect email or password. Please check your credentials and try again.';
+        } else if (raw.includes('email not confirmed')) {
+          title = 'Email Unconfirmed';
+          message = 'Please confirm your email address before signing in.';
+        } else if (raw.includes('rate limit') || raw.includes('too many')) {
+          title = 'Too Many Attempts';
+          message = 'Too many sign in attempts. Please wait a few moments and try again.';
+        } else if (raw.includes('network') || raw.includes('fetch')) {
+          title = 'Connection Error';
+          message = 'Network error — please check your internet connection and try again.';
+        }
+
         setToast({
           type: 'error',
-          title: 'Sign In Failed',
-          message: error.message || 'Invalid email or password. Please verify your credentials.',
+          title,
+          message,
         });
         return;
       }

@@ -27,6 +27,80 @@ const fadeSlideVariants = {
   exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
 };
 
+interface ErrorCopy {
+  title: string;
+  message: string;
+}
+
+function mapSignupError(rawError: unknown, username?: string): ErrorCopy {
+  const raw = (
+    rawError instanceof Error
+      ? rawError.message
+      : typeof rawError === 'string'
+      ? rawError
+      : (rawError as any)?.message || ''
+  ).toLowerCase();
+
+  if (
+    raw.includes('database error saving new user') ||
+    raw.includes('saving new user') ||
+    raw.includes('profiles_username_key') ||
+    raw.includes('duplicate key')
+  ) {
+    return {
+      title: 'Username Taken',
+      message: username
+        ? `That username (@${username}) is already taken. Please choose a different one.`
+        : 'That username is already taken. Please choose a different one.',
+    };
+  }
+
+  if (
+    raw.includes('user already registered') ||
+    raw.includes('already registered') ||
+    raw.includes('already exists') ||
+    raw.includes('email already in use')
+  ) {
+    return {
+      title: 'Account Already Exists',
+      message: 'An account with this email address already exists. Please sign in instead.',
+    };
+  }
+
+  if (raw.includes('password') && (raw.includes('least') || raw.includes('short') || raw.includes('characters'))) {
+    return {
+      title: 'Weak Password',
+      message: 'Password must be at least 6 characters long.',
+    };
+  }
+
+  if (raw.includes('valid email') || raw.includes('invalid email')) {
+    return {
+      title: 'Invalid Email',
+      message: 'Please enter a valid email address.',
+    };
+  }
+
+  if (raw.includes('rate limit') || raw.includes('too many')) {
+    return {
+      title: 'Too Many Attempts',
+      message: 'Too many signup attempts. Please wait a few moments and try again.',
+    };
+  }
+
+  if (raw.includes('network') || raw.includes('fetch')) {
+    return {
+      title: 'Connection Error',
+      message: 'Network error — please check your internet connection and try again.',
+    };
+  }
+
+  return {
+    title: 'Registration Failed',
+    message: 'Unable to create account. Please verify your details.',
+  };
+}
+
 export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) {
   const navigate = useNavigate();
   const { signUp } = useAuth();
@@ -44,7 +118,28 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    const trimmedEmail = email.trim();
+    const cleanUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+
+    if (!trimmedEmail || !password) return;
+
+    if (username.trim() && !cleanUsername) {
+      setToast({
+        type: 'error',
+        title: 'Invalid Username',
+        message: 'Username can only contain letters, numbers, and underscores.',
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      setToast({
+        type: 'error',
+        title: 'Weak Password',
+        message: 'Password must be at least 6 characters long.',
+      });
+      return;
+    }
 
     setIsLoading(true);
     setToast(null);
@@ -52,15 +147,12 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
     try {
       // Role is managed strictly server-side by DB trigger.
       // Never send role in signUp payload.
-      const { data: _data, error } = await signUp(email, password, username);
+      const { data: _data, error } = await signUp(trimmedEmail, password, cleanUsername);
 
       if (error) {
         setIsLoading(false);
-        setToast({
-          type: 'error',
-          title: 'Registration Failed',
-          message: error.message || 'Unable to create account. Please verify your details.',
-        });
+        const { title, message } = mapSignupError(error, cleanUsername);
+        setToast({ type: 'error', title, message });
         return;
       }
 
@@ -71,11 +163,8 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
       }, 1200);
     } catch (err: any) {
       setIsLoading(false);
-      setToast({
-        type: 'error',
-        title: 'Registration Error',
-        message: err?.message || 'An unexpected error occurred during signup.',
-      });
+      const { title, message } = mapSignupError(err, cleanUsername);
+      setToast({ type: 'error', title, message });
     }
   };
 
@@ -235,11 +324,14 @@ export default function Signup({ onBackToHome, onSwitchToSignin }: SignupProps) 
                       type="text"
                       required
                       value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                       placeholder="harshrathod"
                       className="w-full bg-white text-vault-dark border-2 border-vault-dark rounded-xl pl-10 pr-4 py-2.5 font-sans text-xs sm:text-sm placeholder:text-vault-dark/40 focus:outline-none focus:ring-2 focus:ring-vault-green"
                     />
                   </div>
+                  <p className="font-sans text-[11px] text-vault-dark/50">
+                    Letters, numbers, and underscores only
+                  </p>
                 </div>
 
                 {/* Email Field */}
