@@ -39,21 +39,33 @@
 - **Real-time Search & Category Filtering**: Instant debounced full-text search across titles, instructions, and target tools, with pill filters for 9 categories.
 - **1-Click Copy with Dynamic Toast Feedback**: Copy prompts or website URLs instantly with animated top-center toast notifications featuring hover-to-pause and timeout indicators.
 
+### 🛡️ Admin Category Masters & Governance (`/admin/masters`)
+- **Centralized Taxonomy Management**: Admins can manage, create, and refine categories across **Prompts**, **Skills**, and **Websites**.
+- **Dual View Modes**: Seamless toggle between responsive Neo-Brutalist **Card Grid** and dense **Table View**.
+- **Live Metrics Dashboard**: Real-time KPI summary tracking category counts per domain with instant one-click filtering.
+- **Interactive Create & Edit Modal Sheet**: Physics-based draggable bottom sheet on mobile and centered modal on desktop with smooth touch gestures.
+- **Protected Category Deletion**: Safe deletion workflow with confirmation dialog and scrollbar compensation to eliminate layout jumps.
+
+### ⚡ Pure Skeleton Shimmer Loading (Zero Spinners)
+- **Eliminated Spinners**: Replaced generic loading spinners with bespoke Neo-Brutalist skeleton shimmer cards (`VaultSkeletonCard`, `CommunitySkeletonCard`, `AdminMastersSkeletonCard`).
+- **KPI Metrics Shimmer**: Integrated `AdminMastersStatsSkeleton` preserving 4-card metric dimensions during loading without layout shift.
+- **Pure CSS Shimmer**: Smooth `animate-pulse` animations using custom palette tokens (`bg-vault-dark/15`, `bg-vault-cream/20`).
+
 ### 📱 Responsive Mobile Gestures & Viewport Safeguards
-- **Single-Line Invariance Across Viewports**: Enforced `whitespace-nowrap shrink-0` across buttons, icons, and timestamps to eliminate awkward word-wrapping on narrow mobile screens (e.g. 360px Android devices).
+- **Draggable Mobile Bottom Sheets**: On mobile viewports (`< 768px`), all dialogs adapt into smooth, gesture-driven bottom sheets with dedicated grab handles, spring physics (`damping: 28, stiffness: 300`), and swipe-down dismissal via `useDragControls`.
+- **Zero Scrollbar Jumps**: Dynamic scrollbar-width compensation applied to body overflow locks prevents sticky sidebars from shifting when dialogs open.
+- **Single-Line Invariance Across Viewports**: Enforced `whitespace-nowrap shrink-0` across buttons, icons, and timestamps to eliminate awkward word-wrapping on narrow mobile screens.
 - **Flexbox Compression Protection**: Form toggle switches use `shrink-0` and `min-w-0 flex-1` label containers, preventing pill distortion across all device aspect ratios.
-- **Draggable Mobile Bottom Sheets**: On mobile viewports (`< 768px`), modal dialogs adapt into smooth, gesture-driven bottom sheets with dedicated grab handles, spring physics (`damping: 28, stiffness: 300`), and swipe-down dismissal via `useDragControls`.
-- **Zero Double-Scroll Mobile Selects**: In-flow option expansion on mobile screens displays all categories and tool options without nested scrollbar collisions.
-- **Contextual Mobile Floating Dock**: Quick-access bottom dock with navigation buttons and a prominent **`+ Add to Vault`** trigger.
+- **Contextual Mobile Floating Dock**: Quick-access bottom dock with navigation buttons and role-aware admin controls.
 
 ### 🧩 Clean Modular Architecture (Responsibility-Based Splitting)
 - **Domain-Decoupled Component Folders**:
-  - `Dashboard-Page/`: KPI metrics, saved prompts gallery, and community snapshots table.
-  - `Settings-Page/`: User profile management, preset avatar selectors, and security password reset forms.
+  - `Users-Page/`: User domain modules (`Dashboard-Page/`, `Vault-Page/`, `Community-Page/`, `Settings-Page/`).
+  - `Admin-Pages/`: Admin domain modules (`Admin-Dashboard/`, `Admin-Users/`, `Admin-Masters/`).
+  - `Landing-Page/`: Landing page sections, benchmarks, and CSS module.
   - `Prompts-Page/`: Public curated catalog, terminal prompt cards, and locked teaser states.
-  - `Legal/`: Shared presentational legal components (`LegalSubHeader`, `LegalHero`, `LegalPillars`, `LegalContent`, `LegalSectionCard`, `LegalSidebar`, `LegalCTA`) with vanilla CSS module styling, rendering both `/privacy` and `/terms` with 100% exact design and interactive parity.
-- **Database-Ready Data Models**: Centralized data modules (`dashboardData.ts`, `settingsData.ts`, `promptsData.ts`, `privacyData.ts`, `termsData.ts`) ready for immediate plug-and-play Supabase or PostgreSQL integration.
-- **Ultra-Clean Page Orchestrators**: Page files (`Dashboard.tsx`, `Settings.tsx`, `Terms.tsx`, `Privacy.tsx`) act as lightweight orchestrators (~40–190 lines).
+  - `Legal/`: Shared presentational legal components rendering `/privacy` and `/terms` with exact design parity.
+- **Ultra-Clean Page Orchestrators**: Pages are grouped into `Admin-Pages/`, `Auth-Pages/`, `Static-Pages/`, and `User-Pages/` as lightweight orchestrators (~40–250 lines).
 
 ### 🎨 Neo-Brutalist Design System
 - **Signature Aesthetics**: 2px high-contrast solid borders (`border-vault-dark`), bold drop shadows, rounded pill containers (`rounded-full`, `rounded-[28px]`), and curated color palettes (`#F1F78C` Vault Yellow, `#F8F9E9` Vault Cream, `#1ECC62` Vault Green, `#002D0F` Forest Dark).
@@ -83,6 +95,7 @@
 - **Bundler & Dev Server**: [Vite](https://vitejs.dev/)
 - **Iconography**: [Lucide React](https://lucide.dev/)
 - **Typography**: [Google Fonts](https://fonts.google.com/) (*Instrument Serif* & *Manrope*)
+- **Backend & Auth**: [Supabase](https://supabase.com/) (Email/Password Auth, RLS-secured Profiles, Role triggers)
 - **Analytics & Hosting**: [Vercel](https://vercel.com/) with SPA rewrite configuration (`vercel.json`)
 
 ---
@@ -105,7 +118,7 @@ Prompt-Vault/
 │   ├── types/
 │   │   └── auth.ts                       # Profile, Role, AuthContextType TypeScript interfaces
 │   ├── context/
-│   │   └── AuthContext.tsx               # Global auth context: session, user, profile, refreshProfile(), signIn/Out/Up
+│   │   └── AuthContext.tsx               # Global auth context: session, user, profile, refreshProfile()
 │   ├── services/
 │   │   └── profileService.ts             # updateProfile(), updatePassword() — Supabase mutations
 │   ├── components/
@@ -117,32 +130,33 @@ Prompt-Vault/
 │   │   │   ├── Process.tsx               # "Our Process" 12-column grid section
 │   │   │   ├── Comparison.tsx            # "Chaos in Notion vs. Order in the Vault"
 │   │   │   └── FAQ.tsx                   # Interactive FAQ accordion with animated eye
-│   │   ├── Dashboard-Page/               # Dashboard domain components
-│   │   │   ├── dashboardData.ts          # PromptItem, CommunityItem types & mock datasets
-│   │   │   ├── DashboardHeader.tsx       # Welcome greeting, notifications & avatar button
-│   │   │   ├── DashboardStats.tsx        # 4 KPI metric cards (Total, Published, Links, Skills)
-│   │   │   ├── DashboardPrompts.tsx      # Saved prompts gallery with category pill filters
-│   │   │   └── DashboardCommunityTable.tsx # Community published snapshots table
-│   │   ├── Vault-Page/                   # Vault Library modular components
-│   │   │   ├── vaultData.ts              # VaultItem, VaultItemType models, presets & localStorage helpers
-│   │   │   ├── VaultHeader.tsx           # Title ("Vault Library"), count badge & "+ Add to Vault" button
-│   │   │   ├── VaultFilters.tsx          # 5 filter tabs (all, prompt, skill, website, starred), search & pills
-│   │   │   ├── VaultCard.tsx             # Responsive card with header badges, code preview, action tray & menu
-│   │   │   ├── VaultSkeletonCard.tsx     # Animated Neo-Brutalist skeleton shimmer card
-│   │   │   ├── VaultModalSheet.tsx       # Desktop centered modal + mobile draggable bottom sheet (useDragControls)
-│   │   │   └── VaultDeleteDialog.tsx     # Neo-Brutalist confirmation modal for item deletion
-│   │   ├── Community-Page/               # Community Vault modular components
-│   │   │   ├── communityData.ts          # CommunityItem, CommunityTab types, tabs & master datasets
-│   │   │   ├── CommunityHeader.tsx       # Yellow top banner with live status badge & template counter
-│   │   │   ├── CommunityFilters.tsx      # Tab pills (all, prompt, skill, website, my-shares) & search bar
-│   │   │   ├── CommunityCard.tsx         # Single template card with like, copy, clone & inspect actions
-│   │   │   ├── CommunitySkeletonCard.tsx # Animated Neo-Brutalist skeleton shimmer card
-│   │   │   ├── CommunityModalSheet.tsx   # Mobile draggable bottom sheet + desktop centered modal
-│   │   │   └── CommunityStates.tsx       # Error with retry, blank search state & End-of-Vault milestone
-│   │   ├── Settings-Page/                # Settings domain components
-│   │   │   ├── SettingsHeader.tsx        # Title, @username live badge & section tab switcher
-│   │   │   ├── SettingsProfileSection.tsx # Profile display card & interactive edit form (Supabase-backed)
-│   │   │   └── SettingsSecuritySection.tsx # Password reset form with eye toggles, validation & Supabase update
+│   │   ├── Users-Page/                   # Authenticated user domain components
+│   │   │   ├── Dashboard-Page/           # Dashboard domain components
+│   │   │   │   ├── dashboardData.ts      # PromptItem, CommunityItem types & mock datasets
+│   │   │   │   ├── DashboardHeader.tsx   # Welcome greeting, notifications & avatar button
+│   │   │   │   ├── DashboardStats.tsx    # 4 KPI metric cards (Total, Published, Links, Skills)
+│   │   │   │   ├── DashboardPrompts.tsx  # Saved prompts gallery with category pill filters
+│   │   │   │   └── DashboardCommunityTable.tsx # Community published snapshots table
+│   │   │   ├── Vault-Page/               # Vault Library modular components
+│   │   │   │   ├── vaultData.ts          # VaultItem, VaultItemType models, presets & localStorage helpers
+│   │   │   │   ├── VaultHeader.tsx       # Title ("Vault Library"), count badge & "+ Add to Vault" button
+│   │   │   │   ├── VaultFilters.tsx      # 5 filter tabs (all, prompt, skill, website, starred), search & pills
+│   │   │   │   ├── VaultCard.tsx         # Responsive card with header badges, code preview, action tray & menu
+│   │   │   │   ├── VaultSkeletonCard.tsx # Animated Neo-Brutalist skeleton shimmer card
+│   │   │   │   ├── VaultModalSheet.tsx   # Desktop centered modal + mobile draggable bottom sheet
+│   │   │   │   └── VaultDeleteDialog.tsx # Neo-Brutalist confirmation modal with scrollbar jump lock
+│   │   │   ├── Community-Page/           # Community Vault modular components
+│   │   │   │   ├── communityData.ts      # CommunityItem, CommunityTab types, tabs & master datasets
+│   │   │   │   ├── CommunityHeader.tsx   # Yellow top banner with live status badge & template counter
+│   │   │   │   ├── CommunityFilters.tsx  # Tab pills (all, prompt, skill, website, my-shares) & search bar
+│   │   │   │   ├── CommunityCard.tsx     # Single template card with like, copy, clone & inspect actions
+│   │   │   │   ├── CommunitySkeletonCard.tsx # Animated Neo-Brutalist skeleton shimmer card
+│   │   │   │   ├── CommunityModalSheet.tsx # Mobile draggable bottom sheet + desktop centered modal
+│   │   │   │   └── CommunityStates.tsx   # Error with retry, blank search state & End-of-Vault milestone
+│   │   │   └── Settings-Page/            # Settings domain components
+│   │   │       ├── SettingsHeader.tsx    # Title, @username live badge & section tab switcher
+│   │   │       ├── SettingsProfileSection.tsx # Profile display card & interactive edit form (Supabase-backed)
+│   │   │       └── SettingsSecuritySection.tsx # Password reset form with eye toggles, validation & Supabase update
 │   │   ├── Prompts-Page/                 # Public Prompts gallery domain components & CSS
 │   │   │   ├── promptsData.ts            # Prompts catalog, model badge styles & metrics
 │   │   │   ├── Prompts.module.css        # Vanilla CSS module with zero @apply
@@ -161,9 +175,38 @@ Prompt-Vault/
 │   │   │   ├── LegalSectionCard.tsx      # Interactive expandable policy drawer with animated eye
 │   │   │   ├── LegalSidebar.tsx          # Quick Index table of contents & creator card
 │   │   │   └── LegalCTA.tsx              # Bottom community banner with expanding pill buttons
+│   │   ├── Admin-Pages/                  # Admin domain components
+│   │   │   ├── Admin-Dashboard/          # Admin Dashboard modular components & datasets
+│   │   │   │   ├── adminDashboardData.ts # AdminUserItem, TopPromptLeaderboardItem, velocity & category datasets
+│   │   │   │   ├── AdminDashboardHeader.tsx # Title, subtitle & profile avatar trigger
+│   │   │   │   ├── AdminDashboardStats.tsx  # 4 KPI metric cards (Total Creators, Clones, Registry, Health)
+│   │   │   │   ├── AdminDashboardVelocity.tsx # Daily velocity bar chart & category distribution breakdown
+│   │   │   │   ├── AdminDashboardLeaderboard.tsx # Top Cloned Community Templates real-time leaderboard
+│   │   │   │   ├── AdminDashboardCreatorsTable.tsx # Platform Creators directory table with search & filter
+│   │   │   │   └── index.ts              # Barrel exports
+│   │   │   ├── Admin-Users/              # Admin Creator Directory modular components & datasets
+│   │   │   │   ├── adminUsersData.ts     # AdminUser, AdminUsersMetrics, mock datasets & sort options
+│   │   │   │   ├── AdminUsersHeader.tsx  # Header with title, author count badge & profile avatar
+│   │   │   │   ├── AdminUsersStats.tsx   # 4 content-focused metrics cards (Creators, Clones, Rules, Upvotes)
+│   │   │   │   ├── AdminUsersToolbar.tsx # Search input, CustomSelect sort dropdown & view switcher
+│   │   │   │   ├── CreatorCard.tsx       # Reusable creator card for mobile and desktop grid
+│   │   │   │   ├── AdminUsersTable.tsx   # Desktop creator directory data table
+│   │   │   │   ├── AdminUserInspectModal.tsx # View-only inspection modal & mobile bottom sheet
+│   │   │   │   └── index.ts              # Barrel exports
+│   │   │   └── Admin-Masters/            # Category Masters governance modular components & datasets
+│   │   │       ├── adminMastersData.ts   # MasterCategory, MasterItemType, TYPE_CONFIG & storage helpers
+│   │   │       ├── AdminMastersHeader.tsx # Header with title, category counter & "+ Add Category"
+│   │   │       ├── AdminMastersStats.tsx  # 4 KPI cards (All, Prompts, Skills, Websites)
+│   │   │       ├── AdminMastersToolbar.tsx # Type filter tabs, search & view switcher (grid vs. table)
+│   │   │       ├── AdminMastersCard.tsx  # Neo-Brutalist category card with action buttons
+│   │   │       ├── AdminMastersTable.tsx # Desktop category table view
+│   │   │       ├── AdminMasterModalSheet.tsx # Smooth draggable mobile bottom sheet + desktop centered modal
+│   │   │       ├── AdminMasterDeleteDialog.tsx # Delete confirmation dialog with scrollbar jump lock
+│   │   │       ├── AdminMastersSkeletonCard.tsx # Skeleton card + AdminMastersStatsSkeleton suite
+│   │   │       └── index.ts              # Barrel exports
 │   │   ├── ui/                           # Reusable design system primitives
 │   │   │   ├── Select.tsx                # Neo-Brutalist select with in-flow mobile expansion
-│   │   │   └── Toast.tsx                 # Floating toast notification system
+│   │   │   └── Toast.tsx                 # Floating toast notification system with auto-dismiss
 │   │   ├── ProtectedRoute.tsx            # Auth guard: redirects to /signin or renders 404 for role mismatches
 │   │   ├── Navbar.tsx                    # Sticky top navigation with mobile drawer
 │   │   ├── Sidebar.tsx                   # Collapsible desktop sidebar; admin items first for admin role
@@ -175,18 +218,20 @@ Prompt-Vault/
 │   │   │   ├── LandingPage.tsx           # Clean page orchestrator for landing page
 │   │   │   ├── NotFound.tsx              # Editorial Neo-Brutalist 404 page
 │   │   │   ├── Privacy.tsx               # Clean page orchestrator for Privacy Policy
+│   │   │   ├── Prompts.tsx               # Public curated prompt catalog orchestrator
 │   │   │   └── Terms.tsx                 # Clean page orchestrator for Terms & Conditions
 │   │   ├── Auth-Pages/                   # Auth flows
 │   │   │   ├── Signin.tsx                # Neo-Brutalist sign-in; queries profile for role on success → /admin or /dashboard
 │   │   │   └── Signup.tsx                # Neo-Brutalist account registration
 │   │   ├── Admin-Pages/                  # Role-gated admin pages (requireRole="admin" in ProtectedRoute)
 │   │   │   ├── AdminDashboard.tsx        # Admin overview, metrics & velocity
-│   │   │   └── AdminUsers.tsx            # User directory — lists all profiles
-│   │   ├── Community.tsx                 # Clean page orchestrator for Community Vault
-│   │   ├── Prompts.tsx                   # Public curated prompt catalog orchestrator
-│   │   ├── Vault.tsx                     # Clean page orchestrator for Vault Library
-│   │   ├── Dashboard.tsx                 # Clean workspace dashboard orchestrator
-│   │   └── Settings.tsx                  # Settings orchestrator — profile & security, fully Supabase-backed
+│   │   │   ├── AdminUsers.tsx            # User directory — lists all platform creators
+│   │   │   └── AdminMasters.tsx          # Category masters governance — Prompt, Skill & Website taxonomies
+│   │   └── User-Pages/                   # Authenticated user workspaces
+│   │       ├── Community.tsx             # Clean page orchestrator for Community Vault
+│   │       ├── Dashboard.tsx             # Clean workspace dashboard orchestrator
+│   │       ├── Settings.tsx              # Settings orchestrator — profile & security, fully Supabase-backed
+│   │       └── Vault.tsx                 # Clean page orchestrator for Vault Library
 │   ├── utils/
 │   │   └── clipboard.ts                  # Clipboard copy helper with browser fallbacks
 │   ├── App.tsx                           # Global router, route definitions & AnimatePresence
@@ -197,7 +242,7 @@ Prompt-Vault/
 ├── package.json                          # Dependencies & NPM scripts
 ├── vite.config.ts                        # Vite configuration
 ├── DESIGN.md                             # Design tokens, typography & interaction rules
-├── CONTEXT.md                            # Architecture & repository context (this file)
+├── CONTEXT.md                            # Architecture & repository context
 └── MEMORY.md                             # Agent memory, decisions & changelog
 ```
 
