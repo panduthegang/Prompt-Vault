@@ -117,14 +117,6 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin/categories"
-            element={
-              <ProtectedRoute requireRole="admin">
-                <Navigate to="/admin/masters" replace />
-              </ProtectedRoute>
-            }
-          />
         </Route>
 
         <Route path="*" element={<NotFound />} />

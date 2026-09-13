@@ -39,7 +39,7 @@ export default function WorkspaceLayout() {
     if (location.pathname.startsWith('/community')) return 'community';
     if (location.pathname.startsWith('/settings')) return 'settings';
     if (location.pathname.startsWith('/admin/users')) return 'admin-users';
-    if (location.pathname.startsWith('/admin/masters') || location.pathname.startsWith('/admin/categories')) return 'admin-masters';
+    if (location.pathname.startsWith('/admin/masters')) return 'admin-masters';
     if (location.pathname.startsWith('/admin')) return 'admin';
     return 'dashboard';
   }, [location.pathname]);
