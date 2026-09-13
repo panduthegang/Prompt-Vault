@@ -18,6 +18,7 @@ import Vault from './pages/Vault';
 import Community from './pages/Community';
 import AdminDashboard from './pages/Admin-Pages/AdminDashboard';
 import AdminUsers from './pages/Admin-Pages/AdminUsers';
+import AdminMasters from './pages/Admin-Pages/AdminMasters';
 
 function AppRoutes() {
   const location = useLocation();
@@ -105,6 +106,22 @@ function AppRoutes() {
             element={
               <ProtectedRoute requireRole="admin">
                 <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/masters"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <AdminMasters />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/categories"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <Navigate to="/admin/masters" replace />
               </ProtectedRoute>
             }
           />

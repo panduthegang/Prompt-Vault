@@ -10,6 +10,7 @@ import {
   LogOut,
   ShieldCheck,
   UserCheck,
+  FolderTree,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -70,6 +71,7 @@ export default function Sidebar({
     ...(isAdmin ? [
       { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
       { id: 'admin-users', label: 'User Directory', icon: UserCheck },
+      { id: 'admin-masters', label: 'Category Masters', icon: FolderTree },
     ] : []),
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
@@ -96,6 +98,8 @@ export default function Sidebar({
       navigate('/admin');
     } else if (tabId === 'admin-users') {
       navigate('/admin/users');
+    } else if (tabId === 'admin-masters') {
+      navigate('/admin/masters');
     } else {
       if (window.location.pathname !== '/dashboard') {
         navigate('/dashboard');

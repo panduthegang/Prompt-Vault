@@ -12,6 +12,7 @@ import {
   Plus,
   ShieldCheck,
   UserCheck,
+  FolderTree,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -59,6 +60,7 @@ export default function BottomBar({
     ...(isAdmin ? [
       { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
       { id: 'admin-users', label: 'User Directory', icon: UserCheck },
+      { id: 'admin-masters', label: 'Category Masters', icon: FolderTree },
     ] : []),
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
@@ -82,6 +84,7 @@ export default function BottomBar({
   const handleSelectTab = (id: string) => {
     if (id === 'admin') navigate('/admin');
     else if (id === 'admin-users') navigate('/admin/users');
+    else if (id === 'admin-masters') navigate('/admin/masters');
     onTabChange(id);
     setIsBottomSheetOpen(false);
   };
