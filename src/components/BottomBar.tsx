@@ -55,25 +55,27 @@ export default function BottomBar({
 
   const isAdmin = profile?.role === 'admin';
 
-  const navItems = [
-    // Admin items first for admins
-    ...(isAdmin ? [
-      { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
-      { id: 'admin-users', label: 'User Directory', icon: UserCheck },
-      { id: 'admin-masters', label: 'Category Masters', icon: FolderTree },
-    ] : []),
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
-    { id: 'community', label: 'Community', icon: Users, count: 4 },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+  const navItems = isAdmin
+    ? [
+        // Admin-only navigation — no user-facing pages
+        { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
+        { id: 'admin-users', label: 'User Directory', icon: UserCheck },
+        { id: 'admin-masters', label: 'Category Masters', icon: FolderTree },
+        { id: 'settings', label: 'Settings', icon: Settings },
+      ]
+    : [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
+        { id: 'community', label: 'Community', icon: Users, count: 4 },
+        { id: 'settings', label: 'Settings', icon: Settings },
+      ];
 
   // The 3 quick-access items shown directly in the floating dock (no sheet needed)
   const mobileQuickItems = isAdmin
     ? [
         { id: 'admin', label: 'Admin', icon: ShieldCheck },
         { id: 'admin-users', label: 'Users', icon: UserCheck },
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'admin-masters', label: 'Masters', icon: FolderTree },
       ]
     : [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },

@@ -66,18 +66,20 @@ export default function Sidebar({
 
   const isAdmin = profile?.role === 'admin';
 
-  const navItems = [
-    // Admin items render first for admin users
-    ...(isAdmin ? [
-      { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
-      { id: 'admin-users', label: 'User Directory', icon: UserCheck },
-      { id: 'admin-masters', label: 'Category Masters', icon: FolderTree },
-    ] : []),
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
-    { id: 'community', label: 'Community', icon: Users, count: 4 },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+  const navItems = isAdmin
+    ? [
+        // Admin-only navigation — no user-facing pages
+        { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck },
+        { id: 'admin-users', label: 'User Directory', icon: UserCheck },
+        { id: 'admin-masters', label: 'Category Masters', icon: FolderTree },
+        { id: 'settings', label: 'Settings', icon: Settings },
+      ]
+    : [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'vault', label: 'Vault', icon: Bookmark, count: promptCount },
+        { id: 'community', label: 'Community', icon: Users, count: 4 },
+        { id: 'settings', label: 'Settings', icon: Settings },
+      ];
 
   const handleLogout = async () => {
     await signOut();
