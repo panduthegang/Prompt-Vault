@@ -2,11 +2,19 @@ import { useState, useMemo, useEffect } from 'react';
 import { FolderTree } from 'lucide-react';
 import { useDragControls } from 'framer-motion';
 import Toast, { ToastContainer, ToastType } from '../../components/ui/Toast';
+import { useAuth } from '../../context/AuthContext';
 import {
   MasterCategory,
   MasterItemType,
-  getStoredCategories,
-  saveStoredCategories,
+  TYPE_CONFIG,
+} from '../../types/master';
+import {
+  getMasterCategories,
+  createMasterCategory,
+  updateMasterCategory,
+  deleteMasterCategory,
+} from '../../services/masterService';
+import {
   AdminMastersHeader,
   AdminMastersStats,
   AdminMastersToolbar,
@@ -16,7 +24,6 @@ import {
   AdminMasterDeleteDialog,
   AdminMastersSkeletonCard,
   AdminMastersStatsSkeleton,
-  TYPE_CONFIG,
 } from '../../components/Admin-Pages/Admin-Masters';
 
 // Re-export types for consumer convenience
@@ -30,6 +37,8 @@ interface ActiveToast {
 }
 
 export default function AdminMasters() {
+  const { user } = useAuth();
+
   // Toast feedback state
   const [activeToast, setActiveToast] = useState<ActiveToast | null>(null);
 
@@ -43,20 +52,30 @@ export default function AdminMasters() {
   };
 
   // State
-  const [categories, setCategories] = useState<MasterCategory[]>(getStoredCategories);
+  const [categories, setCategories] = useState<MasterCategory[]>([]);
   const [activeTypeFilter, setActiveTypeFilter] = useState<'all' | MasterItemType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Initial and tab switch shimmer loading (matches Vault & Community pattern)
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
+  // Fetch real categories from Supabase database via masterService
+  const loadCategories = async (showShimmer = false) => {
+    if (showShimmer) setIsLoading(true);
+    try {
+      const data = await getMasterCategories();
+      setCategories(data);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to load master categories';
+      showToast(message, 'error', 'Error');
+    } finally {
       setIsLoading(false);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [activeTypeFilter]);
+    }
+  };
+
+  // Initial load on mount
+  useEffect(() => {
+    loadCategories(true);
+  }, []);
 
   // Responsive: mobile bottom sheet vs desktop centered modal
   const [isMobile, setIsMobile] = useState<boolean>(() =>
@@ -96,11 +115,6 @@ export default function AdminMasters() {
     }
   }, [isModalOpen, deletingCategory]);
 
-  // Sync to localStorage
-  useEffect(() => {
-    saveStoredCategories(categories);
-  }, [categories]);
-
   // Derived metrics
   const metrics = useMemo(() => {
     const total = categories.length;
@@ -137,48 +151,51 @@ export default function AdminMasters() {
     setIsModalOpen(true);
   };
 
-  // Handle Save / Create from Modal
-  const handleSaveCategory = (data: { name: string; itemType: MasterItemType; description: string }) => {
-    if (editingCategory) {
-      setCategories((prev) =>
-        prev.map((cat) =>
-          cat.id === editingCategory.id
-            ? {
-                ...cat,
-                name: data.name,
-                itemType: data.itemType,
-                description: data.description,
-              }
-            : cat
-        )
-      );
-      showToast(`Category "${data.name}" updated successfully!`, 'success', 'Updated');
-    } else {
-      const newCategory: MasterCategory = {
-        id: `cat-${Date.now()}`,
-        name: data.name,
-        itemType: data.itemType,
-        description: data.description,
-        itemCount: 0,
-        createdAt: 'Just now',
-      };
-      setCategories((prev) => [newCategory, ...prev]);
-      showToast(
-        `Category "${newCategory.name}" added to ${TYPE_CONFIG[newCategory.itemType].label}!`,
-        'success',
-        'Created'
-      );
+  // Handle Save / Create from Modal (Persisted directly to Supabase DB)
+  const handleSaveCategory = async (data: { name: string; itemType: MasterItemType; description: string }) => {
+    try {
+      if (editingCategory) {
+        await updateMasterCategory(editingCategory.id, {
+          name: data.name,
+          itemType: data.itemType,
+          description: data.description,
+          userId: user?.id,
+        });
+        showToast(`Category "${data.name}" updated successfully!`, 'success', 'Updated');
+      } else {
+        await createMasterCategory({
+          name: data.name,
+          itemType: data.itemType,
+          description: data.description,
+          userId: user?.id,
+        });
+        showToast(
+          `Category "${data.name}" added to ${TYPE_CONFIG[data.itemType].label}!`,
+          'success',
+          'Created'
+        );
+      }
+      setIsModalOpen(false);
+      await loadCategories(false);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to save category';
+      showToast(message, 'error', 'Error');
     }
-    setIsModalOpen(false);
   };
 
-  // Confirm delete category
-  const handleDeleteCategory = (id: string) => {
+  // Confirm soft delete category (active = 0 in Supabase DB)
+  const handleDeleteCategory = async (id: string) => {
     const target = categories.find((c) => c.id === id);
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-    setDeletingCategory(null);
-    if (target) {
-      showToast(`Category "${target.name}" removed from masters.`, 'info', 'Deleted');
+    try {
+      await deleteMasterCategory(id, user?.id);
+      setDeletingCategory(null);
+      if (target) {
+        showToast(`Category "${target.name}" removed from masters.`, 'info', 'Deleted');
+      }
+      await loadCategories(false);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete category';
+      showToast(message, 'error', 'Error');
     }
   };
 
@@ -199,7 +216,7 @@ export default function AdminMasters() {
 
       {/* Main Workspace Area */}
       <main className="flex-1 flex flex-col space-y-6 min-w-0 w-full pb-24 lg:pb-0">
-        {/* 1. Header */}
+        {/* 1. Header with dynamic avatar from AuthContext DB */}
         <AdminMastersHeader
           totalCategories={metrics.total}
           onOpenCreate={handleOpenCreateModal}

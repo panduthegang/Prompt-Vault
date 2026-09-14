@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 
 interface AdminMastersHeaderProps {
   totalCategories: number;
@@ -11,6 +12,11 @@ export default function AdminMastersHeader({
   onOpenCreate,
 }: AdminMastersHeaderProps) {
   const navigate = useNavigate();
+  const { profile, user } = useAuth();
+
+  // Derive dynamic profile avatar & display name directly from Supabase DB via AuthContext
+  const userAvatar = profile?.avatar_url || '/avatars/avatar-1.svg';
+  const displayName = profile?.display_name || user?.user_metadata?.display_name || 'Admin';
 
   return (
     <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative">
@@ -46,8 +52,8 @@ export default function AdminMastersHeader({
           title="Account Settings"
         >
           <img
-            src="/avatars/avatar-1.svg"
-            alt="Admin Avatar"
+            src={userAvatar}
+            alt={`${displayName} Avatar`}
             className="w-10 h-10 rounded-full border-2 border-vault-dark object-cover group-hover:ring-2 group-hover:ring-vault-green group-hover:scale-105 transition-all shadow-xs bg-vault-cream"
           />
         </div>

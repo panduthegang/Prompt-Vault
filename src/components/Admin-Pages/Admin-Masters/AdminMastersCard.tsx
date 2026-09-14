@@ -1,5 +1,5 @@
 import { Edit3, Trash2 } from 'lucide-react';
-import { MasterCategory, TYPE_CONFIG } from './adminMastersData';
+import { MasterCategory, TYPE_CONFIG } from '../../../types/master';
 
 interface AdminMastersCardProps {
   category: MasterCategory;

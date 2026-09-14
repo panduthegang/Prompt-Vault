@@ -17,12 +17,20 @@
 
 
 -- ────────────────────────────────────────────────────────────
--- TEARDOWN  (safe to run from any state)
+-- NON-DESTRUCTIVE RE-RUN PREPARATION
 -- ────────────────────────────────────────────────────────────
--- DROP POLICY / DROP TRIGGER require the table to exist even with IF EXISTS.
--- Wrap them in a DO block that skips gracefully when the table is already gone.
+-- Drops and refreshes functions, policies, and triggers WITHOUT
+-- touching or deleting existing table rows or dropping tables.
 
 do $$ begin
+  if exists (select from pg_tables where schemaname = 'public' and tablename = 'master_categories') then
+    drop policy if exists "read active master categories"  on public.master_categories;
+    drop policy if exists "admin insert master categories" on public.master_categories;
+    drop policy if exists "admin update master categories" on public.master_categories;
+    drop policy if exists "admin delete master categories" on public.master_categories;
+    drop trigger if exists set_master_categories_updated_at on public.master_categories;
+  end if;
+
   if exists (select from pg_tables where schemaname = 'public' and tablename = 'profiles') then
     drop policy if exists "read own profile"        on public.profiles;
     drop policy if exists "update own profile"      on public.profiles;
@@ -31,13 +39,9 @@ do $$ begin
   end if;
 end $$;
 
-drop trigger  if exists on_auth_user_created on auth.users;
+drop trigger if exists on_auth_user_created on auth.users;
 
-drop function if exists public.prevent_role_escalation();
-drop function if exists public.handle_new_user();
-drop function if exists public.is_admin();
-
-drop table if exists public.profiles;
+-- Note: Tables are preserved with IF NOT EXISTS. Existing data is NEVER dropped.
 
 
 -- ────────────────────────────────────────────────────────────
@@ -69,6 +73,18 @@ create table if not exists public.profiles (
 create unique index if not exists profiles_username_key
   on public.profiles (username)
   where username is not null;
+
+-- Auto-backfill profiles for any existing auth.users accounts
+insert into public.profiles (id, email, role, display_name, username, created_at)
+select
+  id,
+  email,
+  'user' as role,
+  nullif(trim(coalesce(raw_user_meta_data ->> 'display_name', raw_user_meta_data ->> 'full_name', '')), '') as display_name,
+  nullif(trim(coalesce(raw_user_meta_data ->> 'username', raw_user_meta_data ->> 'user_name', '')), '') as username,
+  created_at
+from auth.users
+on conflict (id) do nothing;
 
 
 -- ────────────────────────────────────────────────────────────
@@ -188,6 +204,80 @@ create trigger enforce_role_lock
 
 
 -- ────────────────────────────────────────────────────────────
+-- 6. MASTER CATEGORIES TABLE (Taxonomy Governance & Soft-Delete)
+-- ────────────────────────────────────────────────────────────
+
+create table if not exists public.master_categories (
+  id            uuid        not null primary key default gen_random_uuid(),
+  name          text        not null,
+  description   text,
+  category_type text        not null check (category_type in ('prompt', 'skill', 'website')),
+  is_active     boolean     not null default true,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now(),
+  created_by    uuid        references auth.users (id) on delete set null,
+  updated_by    uuid        references auth.users (id) on delete set null
+);
+
+create index if not exists idx_master_categories_is_active
+  on public.master_categories (is_active);
+
+create index if not exists idx_master_categories_type
+  on public.master_categories (category_type);
+
+-- Ensure active category names are unique per scope (prompt, skill, website)
+create unique index if not exists idx_master_categories_unique_active
+  on public.master_categories (lower(name), category_type)
+  where is_active = true;
+
+-- Trigger to maintain updated_at automatically
+create or replace function public.handle_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger set_master_categories_updated_at
+  before update on public.master_categories
+  for each row execute function public.handle_updated_at();
+
+
+-- ────────────────────────────────────────────────────────────
+-- 7. MASTER CATEGORIES RLS POLICIES
+-- ────────────────────────────────────────────────────────────
+
+alter table public.master_categories enable row level security;
+
+-- Active categories can be read by all authenticated users; admins can read all
+create policy "read active master categories"
+  on public.master_categories for select
+  using (is_active = true or public.is_admin());
+
+-- Only admins can create categories
+create policy "admin insert master categories"
+  on public.master_categories for insert
+  with check (public.is_admin());
+
+-- Only admins can update categories (including soft deletion: is_active = false)
+create policy "admin update master categories"
+  on public.master_categories for update
+  using (public.is_admin())
+  with check (public.is_admin());
+
+-- Admins can hard delete via SQL if necessary
+create policy "admin delete master categories"
+  on public.master_categories for delete
+  using (public.is_admin());
+
+
+-- ────────────────────────────────────────────────────────────
 -- ADMIN PROMOTION (SQL Editor only — never expose client-side)
 -- ────────────────────────────────────────────────────────────
 --   update public.profiles set role = 'admin' where email = 'you@example.com';
+
+
+

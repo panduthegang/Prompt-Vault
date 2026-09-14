@@ -1,5 +1,5 @@
 import { FolderTree, Bookmark, FileCode, Globe } from 'lucide-react';
-import { MasterItemType } from './adminMastersData';
+import { MasterItemType } from '../../../types/master';
 
 interface AdminMastersStatsProps {
   metrics: {

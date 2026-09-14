@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, DragControls } from 'framer-motion';
 import { Bookmark, FileCode, Globe, Check, X } from 'lucide-react';
-import { MasterCategory, MasterItemType } from './adminMastersData';
+import { MasterCategory, MasterItemType } from '../../../types/master';
 
 interface AdminMasterModalSheetProps {
   isOpen: boolean;

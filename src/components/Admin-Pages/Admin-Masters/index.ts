@@ -1,4 +1,4 @@
-export * from './adminMastersData';
+export * from '../../../types/master';
 export { default as AdminMastersHeader } from './AdminMastersHeader';
 export { default as AdminMastersStats } from './AdminMastersStats';
 export { default as AdminMastersToolbar } from './AdminMastersToolbar';

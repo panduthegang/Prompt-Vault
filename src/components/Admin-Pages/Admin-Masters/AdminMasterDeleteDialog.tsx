@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
-import { MasterCategory } from './adminMastersData';
+import { MasterCategory } from '../../../types/master';
 
 interface AdminMasterDeleteDialogProps {
   category: MasterCategory | null;

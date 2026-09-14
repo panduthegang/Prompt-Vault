@@ -1,5 +1,5 @@
 import { FolderTree, Bookmark, FileCode, Globe, Search, X, LayoutGrid, List } from 'lucide-react';
-import { MasterItemType } from './adminMastersData';
+import { MasterItemType } from '../../../types/master';
 
 interface AdminMastersToolbarProps {
   activeFilter: 'all' | MasterItemType;
