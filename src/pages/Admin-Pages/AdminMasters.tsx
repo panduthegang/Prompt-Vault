@@ -36,6 +36,73 @@ interface ActiveToast {
   message: string;
 }
 
+interface CategoryErrorCopy {
+  title: string;
+  message: string;
+}
+
+function mapCategoryError(
+  rawError: unknown,
+  categoryName?: string,
+  itemType?: MasterItemType
+): CategoryErrorCopy {
+  const raw = (
+    rawError instanceof Error
+      ? rawError.message
+      : typeof rawError === 'string'
+      ? rawError
+      : (rawError as any)?.message || ''
+  ).toLowerCase();
+
+  // 1. Unique constraint violation on category name per scope
+  if (
+    raw.includes('idx_master_categories_unique_active') ||
+    raw.includes('duplicate key') ||
+    raw.includes('unique constraint') ||
+    raw.includes('already exists')
+  ) {
+    const scopeLabel = itemType ? TYPE_CONFIG[itemType]?.label : 'this scope';
+    return {
+      title: 'Category Already Exists',
+      message: categoryName
+        ? `A category named "${categoryName}" already exists in ${scopeLabel}. Please choose a different name.`
+        : `A category with this name already exists in ${scopeLabel}. Please choose a different name.`,
+    };
+  }
+
+  // 2. Row Level Security / Permission Denied
+  if (
+    raw.includes('row-level security') ||
+    raw.includes('permission denied') ||
+    raw.includes('violates row-level security policy') ||
+    raw.includes('unauthorized')
+  ) {
+    return {
+      title: 'Admin Access Required',
+      message: 'Only authenticated administrators have permission to modify master categories.',
+    };
+  }
+
+  // 3. Network dropouts / Supabase connection errors
+  if (
+    raw.includes('failed to fetch') ||
+    raw.includes('network') ||
+    raw.includes('abort') ||
+    raw.includes('load failed')
+  ) {
+    return {
+      title: 'Connection Error',
+      message: 'Unable to reach the database. Please check your internet connection and try again.',
+    };
+  }
+
+  // 4. Fallback default
+  return {
+    title: 'Operation Failed',
+    message: rawError instanceof Error ? rawError.message : 'An unexpected error occurred. Please try again.',
+  };
+}
+
 export default function AdminMasters() {
   const { user } = useAuth();
 
@@ -65,8 +132,8 @@ export default function AdminMasters() {
       const data = await getMasterCategories();
       setCategories(data);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to load master categories';
-      showToast(message, 'error', 'Error');
+      const errCopy = mapCategoryError(err);
+      showToast(errCopy.message, 'error', errCopy.title);
     } finally {
       setIsLoading(false);
     }
@@ -178,12 +245,12 @@ export default function AdminMasters() {
       setIsModalOpen(false);
       await loadCategories(false);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to save category';
-      showToast(message, 'error', 'Error');
+      const errCopy = mapCategoryError(err, data.name, data.itemType);
+      showToast(errCopy.message, 'error', errCopy.title);
     }
   };
 
-  // Confirm soft delete category (active = 0 in Supabase DB)
+  // Confirm soft delete category (is_active = false in Supabase DB)
   const handleDeleteCategory = async (id: string) => {
     const target = categories.find((c) => c.id === id);
     try {
@@ -194,8 +261,8 @@ export default function AdminMasters() {
       }
       await loadCategories(false);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to delete category';
-      showToast(message, 'error', 'Error');
+      const errCopy = mapCategoryError(err, target?.name, target?.itemType);
+      showToast(errCopy.message, 'error', errCopy.title);
     }
   };
 
