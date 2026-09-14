@@ -49,6 +49,7 @@ export async function getMasterCategories(): Promise<MasterCategory[]> {
     description: row.description || '',
     itemCount: 0,
     createdAt: formatCreatedAt(row.created_at),
+    updatedAt: row.updated_at ? formatCreatedAt(row.updated_at) : null,
     isActive: row.is_active,
     createdBy: row.created_by,
     updatedBy: row.updated_by,
@@ -72,7 +73,7 @@ export async function createMasterCategory(payload: {
       description: payload.description.trim() || null,
       is_active: true,
       created_by: payload.userId || null,
-      updated_by: payload.userId || null,
+      // Note: updated_at and updated_by remain null on creation; only populated when edited
     })
     .select()
     .single();
@@ -89,6 +90,7 @@ export async function createMasterCategory(payload: {
     description: row.description || '',
     itemCount: 0,
     createdAt: formatCreatedAt(row.created_at),
+    updatedAt: row.updated_at ? formatCreatedAt(row.updated_at) : null,
     isActive: row.is_active,
     createdBy: row.created_by,
     updatedBy: row.updated_by,
@@ -97,6 +99,7 @@ export async function createMasterCategory(payload: {
 
 /**
  * Update an existing master category's name, type, and description.
+ * Records updated_at and updated_by.
  */
 export async function updateMasterCategory(
   id: string,
@@ -113,6 +116,7 @@ export async function updateMasterCategory(
       name: payload.name.trim(),
       category_type: payload.itemType,
       description: payload.description.trim() || null,
+      updated_at: new Date().toISOString(),
       updated_by: payload.userId || null,
     })
     .eq('id', id);
@@ -134,6 +138,7 @@ export async function deleteMasterCategory(
     .from('master_categories')
     .update({
       is_active: false,
+      updated_at: new Date().toISOString(),
       updated_by: userId || null,
     })
     .eq('id', id);

@@ -17,7 +17,7 @@ export interface MasterCategoryRow {
   category_type: MasterItemType;
   is_active: boolean;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
   created_by: string | null;
   updated_by: string | null;
 }
@@ -32,6 +32,7 @@ export interface MasterCategory {
   description: string;
   itemCount: number;
   createdAt: string;
+  updatedAt?: string | null;
   isActive: boolean;
   createdBy?: string | null;
   updatedBy?: string | null;

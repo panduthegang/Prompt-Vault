@@ -60,7 +60,7 @@ export default function AdminMasterModalSheet({
     <form
       id="admin-master-form"
       onSubmit={handleSubmit}
-      className="flex-1 overflow-y-auto overscroll-contain py-4 space-y-4 pr-1 [scrollbar-width:thin]"
+      className="flex-1 overflow-y-auto overscroll-contain py-4 px-1.5 space-y-4 pr-2.5 [scrollbar-width:thin]"
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
       {/* 1. Target Scope */}

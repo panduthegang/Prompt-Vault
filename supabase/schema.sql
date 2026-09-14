@@ -214,7 +214,7 @@ create table if not exists public.master_categories (
   category_type text        not null check (category_type in ('prompt', 'skill', 'website')),
   is_active     boolean     not null default true,
   created_at    timestamptz not null default now(),
-  updated_at    timestamptz not null default now(),
+  updated_at    timestamptz,
   created_by    uuid        references auth.users (id) on delete set null,
   updated_by    uuid        references auth.users (id) on delete set null
 );
