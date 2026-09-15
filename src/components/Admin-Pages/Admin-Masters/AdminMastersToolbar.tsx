@@ -106,8 +106,8 @@ export default function AdminMastersToolbar({
           )}
         </div>
 
-        {/* View Switcher: Grid vs List */}
-        <div className="flex items-center bg-white rounded-xl border border-vault-dark/20 p-1 h-[38px] shrink-0 self-end sm:self-auto">
+        {/* View Switcher: Grid vs List — hidden on mobile, table is desktop-only */}
+        <div className="hidden sm:flex items-center bg-white rounded-xl border border-vault-dark/20 p-1 h-[38px] shrink-0 self-end sm:self-auto">
           <button
             type="button"
             onClick={() => onViewModeChange('grid')}

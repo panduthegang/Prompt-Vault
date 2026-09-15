@@ -339,7 +339,7 @@ export default function AdminMasters() {
               Reset Filters
             </button>
           </div>
-        ) : viewMode === 'grid' ? (
+        ) : viewMode === 'grid' || isMobile ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
             {filteredCategories.map((category) => (
               <AdminMastersCard
