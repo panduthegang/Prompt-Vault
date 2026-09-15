@@ -257,7 +257,7 @@ export default function AdminMasters() {
       await deleteMasterCategory(id, user?.id);
       setDeletingCategory(null);
       if (target) {
-        showToast(`Category "${target.name}" removed from masters.`, 'info', 'Deleted');
+        showToast(`Category "${target.name}" removed from masters.`, 'error', 'Deleted');
       }
       await loadCategories(false);
     } catch (err: unknown) {
